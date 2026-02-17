@@ -152,14 +152,78 @@ class WeatherService {
   }
 
   static Map<String, String> _mapWeatherCode(int code) {
-    if (code == 0) return {'condition': '晴朗', 'icon': '☀️'};
-    if (code >= 1 && code <= 3) return {'condition': '多云', 'icon': '⛅'};
-    if (code >= 45 && code <= 48) return {'condition': '雾', 'icon': '🌫️'};
-    if (code >= 51 && code <= 67) return {'condition': '雨', 'icon': '🌧️'};
-    if (code >= 71 && code <= 77) return {'condition': '雪', 'icon': '❄️'};
-    if (code >= 80 && code <= 82) return {'condition': '阵雨', 'icon': '🌦️'};
-    if (code >= 95 && code <= 99) return {'condition': '雷雨', 'icon': '⛈️'};
-    return {'condition': '未知', 'icon': '❓'};
+    switch (code) {
+      // 晴朗
+      case 0:
+        return {'condition': '晴朗', 'icon': 'assets/weather/晴朗.svg'};
+      // 云量
+      case 1:
+        return {'condition': '少云', 'icon': 'assets/weather/少云.svg'};
+      case 2:
+        return {'condition': '多云', 'icon': 'assets/weather/多云.svg'};
+      case 3:
+        return {'condition': '阴天', 'icon': 'assets/weather/阴天.svg'};
+      // 雾
+      case 45:
+        return {'condition': '雾', 'icon': 'assets/weather/雾.svg'};
+      case 48:
+        return {'condition': '冻雾', 'icon': 'assets/weather/冻雾.svg'};
+      // 毛毛雨
+      case 51:
+        return {'condition': '小毛毛雨', 'icon': 'assets/weather/毛毛雨.svg'};
+      case 53:
+        return {'condition': '毛毛雨', 'icon': 'assets/weather/毛毛雨.svg'};
+      case 55:
+        return {'condition': '密集毛毛雨', 'icon': 'assets/weather/毛毛雨.svg'};
+      // 冻毛毛雨
+      case 56:
+        return {'condition': '轻冻雨', 'icon': 'assets/weather/冻雨.svg'};
+      case 57:
+        return {'condition': '冻雨', 'icon': 'assets/weather/冻雨.svg'};
+      // 降雨
+      case 61:
+        return {'condition': '小雨', 'icon': 'assets/weather/小雨.svg'};
+      case 63:
+        return {'condition': '中雨', 'icon': 'assets/weather/中雨.svg'};
+      case 65:
+        return {'condition': '大雨', 'icon': 'assets/weather/大雨.svg'};
+      // 冻雨
+      case 66:
+        return {'condition': '轻冻雨', 'icon': 'assets/weather/冻雨.svg'};
+      case 67:
+        return {'condition': '强冻雨', 'icon': 'assets/weather/冻雨.svg'};
+      // 降雪
+      case 71:
+        return {'condition': '小雪', 'icon': 'assets/weather/小雪.svg'};
+      case 73:
+        return {'condition': '中雪', 'icon': 'assets/weather/中雪.svg'};
+      case 75:
+        return {'condition': '大雪', 'icon': 'assets/weather/大雪.svg'};
+      // 雪粒
+      case 77:
+        return {'condition': '雪粒', 'icon': 'assets/weather/雪粒.svg'};
+      // 阵雨
+      case 80:
+        return {'condition': '小阵雨', 'icon': 'assets/weather/阵雨.svg'};
+      case 81:
+        return {'condition': '阵雨', 'icon': 'assets/weather/阵雨.svg'};
+      case 82:
+        return {'condition': '强阵雨', 'icon': 'assets/weather/阵雨.svg'};
+      // 阵雪
+      case 85:
+        return {'condition': '小阵雪', 'icon': 'assets/weather/阵雪.svg'};
+      case 86:
+        return {'condition': '强阵雪', 'icon': 'assets/weather/阵雪.svg'};
+      // 雷暴
+      case 95:
+        return {'condition': '雷暴', 'icon': 'assets/weather/雷暴.svg'};
+      case 96:
+        return {'condition': '雷暴伴冰雹', 'icon': 'assets/weather/雷暴伴冰雹.svg'};
+      case 99:
+        return {'condition': '强雷暴伴冰雹', 'icon': 'assets/weather/雷暴伴冰雹.svg'};
+      default:
+        return {'condition': '未知', 'icon': 'assets/weather/晴朗.svg'};
+    }
   }
 
   static String _calculateComfortLevel(double temp, double humidity) {

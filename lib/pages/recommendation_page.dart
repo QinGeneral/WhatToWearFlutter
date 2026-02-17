@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -179,10 +180,13 @@ class _WeatherCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Text(
-                      weather.icon ?? '☀️',
-                      style: const TextStyle(fontSize: 28),
-                    ),
+                    if (weather.icon != null && weather.icon!.endsWith('.svg'))
+                      SvgPicture.asset(weather.icon!, width: 32, height: 32)
+                    else
+                      Text(
+                        weather.icon ?? '☀️',
+                        style: const TextStyle(fontSize: 28),
+                      ),
                   ],
                 ),
                 const SizedBox(height: 4),
@@ -247,11 +251,16 @@ class _WeatherCard extends StatelessWidget {
               gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Color(0xFFF97316), Color(0xFFEF4444)],
+                colors: [Color(0xFF87CEEB), Color(0xFF4A90D9)],
               ),
             ),
-            child: const Center(
-              child: Text('🌅', style: TextStyle(fontSize: 40)),
+            child: Center(
+              child: weather.icon != null && weather.icon!.endsWith('.svg')
+                  ? SvgPicture.asset(weather.icon!, width: 48, height: 48)
+                  : Text(
+                      weather.icon ?? '☀️',
+                      style: const TextStyle(fontSize: 40),
+                    ),
             ),
           ),
         ],

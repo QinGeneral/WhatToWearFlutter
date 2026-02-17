@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 
@@ -452,10 +453,14 @@ class OutfitDetailPage extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              Text(
-                rec.weather.icon ?? '☀️',
-                style: const TextStyle(fontSize: 32),
-              ),
+              if (rec.weather.icon != null &&
+                  rec.weather.icon!.endsWith('.svg'))
+                SvgPicture.asset(rec.weather.icon!, width: 36, height: 36)
+              else
+                Text(
+                  rec.weather.icon ?? '☀️',
+                  style: const TextStyle(fontSize: 32),
+                ),
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
