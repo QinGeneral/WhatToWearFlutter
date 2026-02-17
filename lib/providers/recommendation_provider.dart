@@ -281,6 +281,14 @@ class RecommendationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> clearHistory() async {
+    _history = [];
+    _currentRecommendation = null;
+    _alternativeRecommendations = [];
+    await _storage.setRecommendationHistory(_history);
+    notifyListeners();
+  }
+
   Future<void> deleteRecommendation(String id) async {
     _favorites = _favorites.where((rec) => rec.id != id).toList();
     await _storage.setRecommendations(_favorites);

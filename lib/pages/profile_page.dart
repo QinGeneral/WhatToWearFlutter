@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/profile_provider.dart';
@@ -5,6 +6,7 @@ import '../providers/recommendation_provider.dart';
 import '../providers/wardrobe_provider.dart';
 import '../theme/app_theme.dart';
 import 'favorite_outfits_page.dart';
+import 'developer_page.dart';
 import 'history_page.dart';
 import 'onboarding_page.dart';
 
@@ -191,6 +193,19 @@ class ProfilePage extends StatelessWidget {
                           color: AppTheme.accentPurple,
                           onTap: () {},
                         ),
+                        if (kDebugMode) ...[
+                          const SizedBox(height: 12),
+                          _FunctionButton(
+                            icon: Icons.developer_mode,
+                            label: '开发者选项',
+                            color: Colors.teal,
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const DeveloperPage(),
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),

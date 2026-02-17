@@ -74,4 +74,18 @@ class ProfileProvider extends ChangeNotifier {
     await _storage.setPreferences(_preferences);
     notifyListeners();
   }
+
+  Future<void> resetOnboarding() async {
+    if (_profile != null) {
+      _profile = UserProfile(
+        id: _profile!.id,
+        nickname: _profile!.nickname,
+        createdAt: _profile!.createdAt,
+        identity: _profile!.identity,
+        onboardingCompletedAt: null,
+      );
+      await _storage.setProfile(_profile!);
+      notifyListeners();
+    }
+  }
 }
