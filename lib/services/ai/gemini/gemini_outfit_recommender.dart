@@ -1,93 +1,21 @@
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import '../models/models.dart';
+import '../../../models/models.dart';
+import '../ai_outfit_recommender.dart';
 
-/// User request data for AI outfit recommendation.
-class UserRequest {
-  final String date;
-  final String location;
-  final String activity;
-  final String person;
-  final String requirements;
+/// Gemini 实现的穿搭推荐服务。
+class GeminiOutfitRecommender implements AIOutfitRecommender {
+  final String _apiKey;
 
-  UserRequest({
-    this.date = '',
-    this.location = '',
-    this.activity = '',
-    this.person = '',
-    this.requirements = '',
-  });
+  GeminiOutfitRecommender({String? apiKey})
+    : _apiKey =
+          apiKey ??
+          const String.fromEnvironment('GEMINI_API_KEY', defaultValue: '');
 
-  Map<String, dynamic> toJson() => {
-    'date': date,
-    'location': location,
-    'activity': activity,
-    'person': person,
-    'requirements': requirements,
-  };
-}
-
-/// Single outfit result from AI.
-class OutfitResult {
-  final String? topId;
-  final String? bottomId;
-  final String? shoesId;
-  final String? outerwearId;
-  final List<String>? accessoryIds;
-  final String reasoning;
-  final int matchPercentage;
-
-  OutfitResult({
-    this.topId,
-    this.bottomId,
-    this.shoesId,
-    this.outerwearId,
-    this.accessoryIds,
-    required this.reasoning,
-    required this.matchPercentage,
-  });
-
-  factory OutfitResult.fromJson(Map<String, dynamic> json) {
-    return OutfitResult(
-      topId: json['topId'] as String?,
-      bottomId: json['bottomId'] as String?,
-      shoesId: json['shoesId'] as String?,
-      outerwearId: json['outerwearId'] as String?,
-      accessoryIds: json['accessoryIds'] != null
-          ? List<String>.from(json['accessoryIds'])
-          : null,
-      reasoning: json['reasoning'] as String? ?? '',
-      matchPercentage: json['matchPercentage'] as int? ?? 80,
-    );
-  }
-}
-
-/// Result wrapper containing multiple outfit suggestions.
-class AIRecommendationResult {
-  final List<OutfitResult> outfits;
-
-  AIRecommendationResult({required this.outfits});
-
-  factory AIRecommendationResult.fromJson(Map<String, dynamic> json) {
-    final outfitsList =
-        (json['outfits'] as List?)
-            ?.map((e) => OutfitResult.fromJson(e as Map<String, dynamic>))
-            .toList() ??
-        [];
-    return AIRecommendationResult(outfits: outfitsList);
-  }
-}
-
-/// Service for generating AI-powered outfit recommendations using Gemini.
-class AIRecommendationService {
-  static const _apiKey = String.fromEnvironment(
-    'GEMINI_API_KEY',
-    defaultValue: '',
-  );
-
-  /// Generates outfit recommendations based on wardrobe, weather, and user request.
-  static Future<AIRecommendationResult> getRecommendation({
+  @override
+  Future<AIRecommendationResult> getRecommendation({
     required UserRequest request,
     required List<WardrobeItem> wardrobe,
     required WeatherInfo weather,
@@ -166,7 +94,7 @@ Example:
 }
 ''';
 
-      debugPrint('[AIRecommendation] Sending request to Gemini...');
+      debugPrint('[GeminiOutfitRecommender] Sending request to Gemini...');
       final content = Content.text(prompt);
       final response = await model.generateContent([content]);
       final text = response.text;
@@ -175,12 +103,12 @@ Example:
         throw Exception('Gemini 返回了空响应');
       }
 
-      debugPrint('[AIRecommendation] Response: $text');
+      debugPrint('[GeminiOutfitRecommender] Response: $text');
 
       final decoded = jsonDecode(text) as Map<String, dynamic>;
       return AIRecommendationResult.fromJson(decoded);
     } catch (e) {
-      debugPrint('[AIRecommendation] Error: $e');
+      debugPrint('[GeminiOutfitRecommender] Error: $e');
       rethrow;
     }
   }

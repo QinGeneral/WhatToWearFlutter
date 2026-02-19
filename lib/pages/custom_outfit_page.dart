@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/recommendation_provider.dart';
 import '../providers/wardrobe_provider.dart';
-import '../services/ai_recommendation_service.dart';
+import '../services/ai/ai_outfit_recommender.dart';
 import '../theme/app_theme.dart';
 
 class CustomOutfitPage extends StatefulWidget {

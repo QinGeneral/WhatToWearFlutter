@@ -5,6 +5,16 @@ import 'package:provider/provider.dart';
 import 'providers/profile_provider.dart';
 import 'providers/recommendation_provider.dart';
 import 'providers/wardrobe_provider.dart';
+import 'services/ai/ai_service_provider.dart';
+import 'services/ai/gemini/gemini_image_analyzer.dart';
+import 'services/ai/gemini/gemini_image_generator.dart';
+import 'services/ai/gemini/gemini_outfit_recommender.dart';
+import 'services/ai/zhipu/zhipu_image_analyzer.dart';
+import 'services/ai/zhipu/zhipu_image_generator.dart';
+import 'services/ai/zhipu/zhipu_outfit_recommender.dart';
+import 'services/ai/qianwen/qianwen_image_analyzer.dart';
+import 'services/ai/qianwen/qianwen_image_generator.dart';
+import 'services/ai/qianwen/qianwen_outfit_recommender.dart';
 import 'services/storage_service.dart';
 import 'theme/app_theme.dart';
 import 'pages/onboarding_page.dart';
@@ -30,18 +40,53 @@ void main() async {
     ),
   );
 
-  runApp(WhatToWearApp(storageService: storageService));
+  // Create AI service provider based on AI_PROVIDER env var
+  // Usage: --dart-define=AI_PROVIDER=zhipu (default: gemini)
+  const aiProvider = String.fromEnvironment(
+    'AI_PROVIDER',
+    defaultValue: 'gemini',
+  );
+  final aiServiceProvider = switch (aiProvider) {
+    'zhipu' => AIServiceProvider(
+      imageAnalyzer: ZhipuImageAnalyzer(),
+      imageGenerator: ZhipuImageGenerator(),
+      outfitRecommender: ZhipuOutfitRecommender(),
+    ),
+    'qianwen' => AIServiceProvider(
+      imageAnalyzer: QianwenImageAnalyzer(),
+      imageGenerator: QianwenImageGenerator(),
+      outfitRecommender: QianwenOutfitRecommender(),
+    ),
+    _ => AIServiceProvider(
+      imageAnalyzer: GeminiImageAnalyzer(),
+      imageGenerator: GeminiImageGenerator(),
+      outfitRecommender: GeminiOutfitRecommender(),
+    ),
+  };
+
+  runApp(
+    WhatToWearApp(
+      storageService: storageService,
+      aiServiceProvider: aiServiceProvider,
+    ),
+  );
 }
 
 class WhatToWearApp extends StatelessWidget {
   final StorageService storageService;
+  final AIServiceProvider aiServiceProvider;
 
-  const WhatToWearApp({super.key, required this.storageService});
+  const WhatToWearApp({
+    super.key,
+    required this.storageService,
+    required this.aiServiceProvider,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider<AIServiceProvider>.value(value: aiServiceProvider),
         ChangeNotifierProvider(
           create: (_) => ProfileProvider(storageService)..loadProfile(),
         ),
@@ -49,7 +94,8 @@ class WhatToWearApp extends StatelessWidget {
           create: (_) => WardrobeProvider(storageService)..loadWardrobe(),
         ),
         ChangeNotifierProvider(
-          create: (_) => RecommendationProvider(storageService),
+          create: (_) =>
+              RecommendationProvider(storageService, aiServiceProvider),
         ),
       ],
       child: Consumer<ProfileProvider>(
