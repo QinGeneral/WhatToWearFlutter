@@ -7,6 +7,7 @@ import '../models/models.dart';
 import '../providers/recommendation_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/share_dialog.dart';
+import 'add_item_page.dart';
 
 class OutfitDetailPage extends StatelessWidget {
   final String recommendationId;
@@ -64,28 +65,7 @@ class OutfitDetailPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      actions: [
-                        GestureDetector(
-                          onTap: () => rp.toggleFavorite(rec),
-                          child: Container(
-                            margin: const EdgeInsets.all(8),
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.black.withValues(alpha: 0.3),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              rec.isFavorite
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color: rec.isFavorite
-                                  ? AppTheme.errorRed
-                                  : Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
+                      actions: const [],
                       flexibleSpace: FlexibleSpaceBar(
                         background: _buildHeroImage(context, rec),
                       ),
@@ -346,66 +326,67 @@ class OutfitDetailPage extends StatelessWidget {
 
     return entries.where((e) => e.value != null).map((entry) {
       final item = entry.value!;
-      return Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: context.cardColor.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: context.borderColor),
-        ),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: SizedBox(
-                width: 64,
-                height: 64,
-                child: _buildItemImage(context, item),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.name,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: context.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${entry.key} · ${item.category.label}',
-                    style: TextStyle(fontSize: 12, color: context.textTertiary),
-                  ),
-                  if (item.brand != null) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      item.brand!,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: context.textTertiary.withValues(alpha: 0.7),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            if (item.color.isNotEmpty)
-              Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: context.borderColor),
-                  color: _getColorFromName(item.color.first),
+      return GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => AddItemPage(itemId: item.id)),
+          );
+        },
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: context.cardColor.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: context.borderColor),
+          ),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: SizedBox(
+                  width: 64,
+                  height: 64,
+                  child: _buildItemImage(context, item),
                 ),
               ),
-          ],
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.name,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: context.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${entry.key} · ${item.category.label}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: context.textTertiary,
+                      ),
+                    ),
+                    if (item.brand != null) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        item.brand!,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: context.textTertiary.withValues(alpha: 0.7),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right, color: context.textTertiary, size: 20),
+            ],
+          ),
         ),
       );
     }).toList();
@@ -485,24 +466,6 @@ class OutfitDetailPage extends StatelessWidget {
       ),
     );
   }
-
-  Color _getColorFromName(String name) {
-    final map = {
-      '黑色': Colors.black,
-      '白色': Colors.white,
-      '灰色': Colors.grey,
-      '红色': Colors.red,
-      '蓝色': Colors.blue,
-      '绿色': Colors.green,
-      '黄色': Colors.amber,
-      '紫色': Colors.purple,
-      '粉色': Colors.pink,
-      '棕色': Colors.brown,
-      '米色': const Color(0xFFF5F5DC),
-      '藏青': const Color(0xFF000080),
-    };
-    return map[name] ?? Colors.grey;
-  }
 }
 
 class ShareButton extends StatelessWidget {
@@ -513,6 +476,7 @@ class ShareButton extends StatelessWidget {
   void _handleShare(BuildContext context) {
     showDialog(
       context: context,
+      useSafeArea: false,
       barrierColor: Colors.transparent, // Handled by dialog backdrop
       builder: (context) => ShareDialog(recommendation: recommendation),
     );

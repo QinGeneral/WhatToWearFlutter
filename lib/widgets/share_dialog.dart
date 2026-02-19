@@ -56,7 +56,7 @@ class _ShareDialogState extends State<ShareDialog> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFF1E293B),
       body: Stack(
         children: [
           // Backdrop
@@ -152,99 +152,94 @@ class _ShareDialogState extends State<ShareDialog> {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 // Image Section
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(
-                                      19,
-                                    ), // radius-1 for border
-                                  ),
-                                  child: AspectRatio(
-                                    aspectRatio: 3 / 4,
-                                    child: Stack(
-                                      fit: StackFit.expand,
-                                      children: [
-                                        _buildMainImage(),
+                                AspectRatio(
+                                  aspectRatio: 3 / 4,
+                                  child: Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      _buildMainImage(),
 
-                                        // Match Badge
-                                        Positioned(
-                                          top: 16,
-                                          right: 16,
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 10,
-                                              vertical: 6,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: Colors.black.withValues(
-                                                alpha: 0.4,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              border: Border.all(
-                                                color: Colors.white.withValues(
-                                                  alpha: 0.1,
-                                                ),
-                                              ),
-                                            ),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                const Icon(
-                                                  Icons.check_circle,
-                                                  color: Colors.greenAccent,
-                                                  size: 14,
-                                                ),
-                                                const SizedBox(width: 4),
-                                                Text(
-                                                  '${widget.recommendation.matchPercentage ?? 85}% 匹配',
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                      // Match Badge
+                                      Positioned(
+                                        top: 16,
+                                        right: 16,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 6,
                                           ),
-                                        ),
-
-                                        // Tag
-                                        Positioned(
-                                          bottom: 16,
-                                          left: 16,
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 8,
-                                              vertical: 4,
+                                          decoration: BoxDecoration(
+                                            color: Colors.black.withValues(
+                                              alpha: 0.4,
                                             ),
-                                            decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                            border: Border.all(
                                               color: Colors.white.withValues(
-                                                alpha: 0.2,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              border: Border.all(
-                                                color: Colors.white.withValues(
-                                                  alpha: 0.1,
-                                                ),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              widget
-                                                      .recommendation
-                                                      .occasion
-                                                      ?.label ??
-                                                  '日常搭配',
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.w500,
+                                                alpha: 0.1,
                                               ),
                                             ),
                                           ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const Icon(
+                                                Icons.check_circle,
+                                                color: Colors.greenAccent,
+                                                size: 14,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                '${widget.recommendation.matchPercentage ?? 85}% 匹配',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+
+                                      // Tag
+                                      Positioned(
+                                        bottom: 16,
+                                        left: 16,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withValues(
+                                              alpha: 0.2,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            border: Border.all(
+                                              color: Colors.white.withValues(
+                                                alpha: 0.1,
+                                              ),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            widget
+                                                    .recommendation
+                                                    .occasion
+                                                    ?.label ??
+                                                '日常搭配',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
 
@@ -308,6 +303,9 @@ class _ShareDialogState extends State<ShareDialog> {
                   Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFF1E293B),
+                      borderRadius: const BorderRadius.vertical(
+                        bottom: Radius.circular(24),
+                      ),
                       border: Border(
                         top: BorderSide(
                           color: Colors.white.withValues(alpha: 0.05),

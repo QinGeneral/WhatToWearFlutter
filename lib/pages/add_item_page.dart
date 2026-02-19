@@ -398,7 +398,7 @@ class _AddItemPageState extends State<AddItemPage> {
                               : context.borderColor,
                           width: 2,
                           strokeAlign: _imageBase64 != null
-                              ? BorderSide.strokeAlignInside
+                              ? BorderSide.strokeAlignOutside
                               : BorderSide.strokeAlignCenter,
                         ),
                         boxShadow: _imageBase64 != null
