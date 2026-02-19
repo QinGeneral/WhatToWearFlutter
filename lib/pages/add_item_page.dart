@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../models/models.dart';
 import '../providers/wardrobe_provider.dart';
-import '../services/image_analysis_service.dart';
+import '../services/ai/ai_service_provider.dart';
 import '../theme/app_theme.dart';
 
 class AddItemPage extends StatefulWidget {
@@ -137,7 +137,8 @@ class _AddItemPageState extends State<AddItemPage> {
   Future<void> _analyzeImage(String base64Image) async {
     setState(() => _isAnalyzing = true);
     try {
-      final result = await ImageAnalysisService.analyzeClothingImage(
+      final aiServices = Provider.of<AIServiceProvider>(context, listen: false);
+      final result = await aiServices.imageAnalyzer.analyzeClothingImage(
         base64Image,
       );
       if (!mounted) return;
@@ -193,7 +194,8 @@ class _AddItemPageState extends State<AddItemPage> {
     setState(() => _isOptimizing = true);
 
     try {
-      final optimized = await ImageAnalysisService.optimizeImage(
+      final aiServices = Provider.of<AIServiceProvider>(context, listen: false);
+      final optimized = await aiServices.imageGenerator.optimizeClothingImage(
         _imageBase64!,
         color:
             _selectedColor, // Use currently selected color for background hint

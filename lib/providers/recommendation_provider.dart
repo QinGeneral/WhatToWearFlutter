@@ -2,13 +2,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../models/models.dart';
+import '../services/ai/ai_outfit_recommender.dart';
+import '../services/ai/ai_service_provider.dart';
 import '../services/storage_service.dart';
 import '../services/weather_service.dart';
-import '../services/ai_recommendation_service.dart';
-import '../services/virtual_try_on_service.dart';
 
 class RecommendationProvider extends ChangeNotifier {
   final StorageService _storage;
+  final AIServiceProvider _aiServices;
   final _uuid = const Uuid();
   final _random = Random();
 
@@ -21,7 +22,7 @@ class RecommendationProvider extends ChangeNotifier {
   bool _isWeatherLoading = false;
   String? _error;
 
-  RecommendationProvider(this._storage);
+  RecommendationProvider(this._storage, this._aiServices);
 
   Recommendation? get currentRecommendation => _currentRecommendation;
   List<Recommendation> get alternativeRecommendations =>
@@ -342,8 +343,8 @@ class RecommendationProvider extends ChangeNotifier {
         }
       }
 
-      // Call AI service
-      final result = await AIRecommendationService.getRecommendation(
+      // Call AI service via interface
+      final result = await _aiServices.outfitRecommender.getRecommendation(
         request: request,
         wardrobe: wardrobeItems,
         weather: _weather!,
@@ -489,8 +490,9 @@ class RecommendationProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final service = VirtualTryOnService();
-      final imageUrl = await service.generateTryOnImage(recommendation);
+      final imageUrl = await _aiServices.imageGenerator.generateOutfitImage(
+        recommendation,
+      );
       await updateRecommendationImage(recommendation.id, imageUrl);
     } catch (e) {
       _error = '生成试穿图失败：$e';
