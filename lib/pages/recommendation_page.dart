@@ -451,14 +451,7 @@ class _AlternativePlans extends StatelessWidget {
                   color: context.textPrimary,
                 ),
               ),
-              Text(
-                '查看全部',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: AppTheme.primaryBlue,
-                ),
-              ),
+
             ],
           ),
         ),
