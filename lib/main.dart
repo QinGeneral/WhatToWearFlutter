@@ -9,6 +9,9 @@ import 'services/ai/ai_service_provider.dart';
 import 'services/ai/gemini/gemini_image_analyzer.dart';
 import 'services/ai/gemini/gemini_image_generator.dart';
 import 'services/ai/gemini/gemini_outfit_recommender.dart';
+import 'services/ai/zhipu/zhipu_image_analyzer.dart';
+import 'services/ai/zhipu/zhipu_image_generator.dart';
+import 'services/ai/zhipu/zhipu_outfit_recommender.dart';
 import 'services/storage_service.dart';
 import 'theme/app_theme.dart';
 import 'pages/onboarding_page.dart';
@@ -34,12 +37,24 @@ void main() async {
     ),
   );
 
-  // Create AI service provider with Gemini implementations
-  final aiServiceProvider = AIServiceProvider(
-    imageAnalyzer: GeminiImageAnalyzer(),
-    imageGenerator: GeminiImageGenerator(),
-    outfitRecommender: GeminiOutfitRecommender(),
+  // Create AI service provider based on AI_PROVIDER env var
+  // Usage: --dart-define=AI_PROVIDER=zhipu (default: gemini)
+  const aiProvider = String.fromEnvironment(
+    'AI_PROVIDER',
+    defaultValue: 'gemini',
   );
+  final aiServiceProvider = switch (aiProvider) {
+    'zhipu' => AIServiceProvider(
+      imageAnalyzer: ZhipuImageAnalyzer(),
+      imageGenerator: ZhipuImageGenerator(),
+      outfitRecommender: ZhipuOutfitRecommender(),
+    ),
+    _ => AIServiceProvider(
+      imageAnalyzer: GeminiImageAnalyzer(),
+      imageGenerator: GeminiImageGenerator(),
+      outfitRecommender: GeminiOutfitRecommender(),
+    ),
+  };
 
   runApp(
     WhatToWearApp(
