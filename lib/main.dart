@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'providers/profile_provider.dart';
 import 'providers/recommendation_provider.dart';
@@ -101,11 +103,20 @@ class WhatToWearApp extends StatelessWidget {
       child: Consumer<ProfileProvider>(
         builder: (context, profileProvider, _) {
           return MaterialApp(
-            title: '今天穿什么',
+            onGenerateTitle: (context) =>
+                AppLocalizations.of(context)?.appName ?? '今天穿什么',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme(),
             darkTheme: AppTheme.darkTheme(),
             themeMode: profileProvider.themeMode,
+            locale: profileProvider.locale,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [Locale('zh'), Locale('en')],
             home: profileProvider.isLoading
                 ? const _SplashScreen()
                 : profileProvider.hasCompletedOnboarding()
@@ -141,9 +152,9 @@ class _SplashScreen extends StatelessWidget {
               child: const Icon(Icons.checkroom, color: Colors.white, size: 40),
             ),
             const SizedBox(height: 24),
-            const Text(
-              '今天穿什么',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)?.appName ?? '今天穿什么',
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -188,21 +199,22 @@ class _MainShellState extends State<_MainShell> {
                 _NavItem(
                   icon: Icons.style_outlined,
                   activeIcon: Icons.style,
-                  label: '推荐',
+                  label:
+                      AppLocalizations.of(context)?.tabRecommendation ?? '推荐',
                   isActive: _currentIndex == 0,
                   onTap: () => setState(() => _currentIndex = 0),
                 ),
                 _NavItem(
                   icon: Icons.checkroom_outlined,
                   activeIcon: Icons.checkroom,
-                  label: '衣橱',
+                  label: AppLocalizations.of(context)?.tabWardrobe ?? '衣橱',
                   isActive: _currentIndex == 1,
                   onTap: () => setState(() => _currentIndex = 1),
                 ),
                 _NavItem(
                   icon: Icons.person_outline,
                   activeIcon: Icons.person,
-                  label: '我的',
+                  label: AppLocalizations.of(context)?.tabProfile ?? '我的',
                   isActive: _currentIndex == 2,
                   onTap: () => setState(() => _currentIndex = 2),
                 ),

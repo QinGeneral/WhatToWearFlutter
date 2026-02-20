@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../models/models.dart';
+import '../providers/profile_provider.dart';
 import '../providers/wardrobe_provider.dart';
 import '../services/ai/ai_service_provider.dart';
 import '../theme/app_theme.dart';
+import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 
 class AddItemPage extends StatefulWidget {
   final String? itemId;
@@ -45,22 +47,6 @@ class _AddItemPageState extends State<AddItemPage> {
     {'name': '粉色', 'hex': '#EC4899', 'color': const Color(0xFFEC4899)},
     {'name': '棕色', 'hex': '#92400E', 'color': const Color(0xFF92400E)},
     {'name': '藏青', 'hex': '#000080', 'color': const Color(0xFF000080)},
-  ];
-
-  static const _categories = [
-    {'value': ClothingCategory.top, 'label': '上衣'},
-    {'value': ClothingCategory.bottom, 'label': '裤子'},
-    {'value': ClothingCategory.outerwear, 'label': '外套'},
-    {'value': ClothingCategory.shoes, 'label': '鞋履'},
-    {'value': ClothingCategory.accessory, 'label': '配饰'},
-  ];
-
-  static const _seasons = [
-    {'value': Season.spring, 'label': '春季'},
-    {'value': Season.summer, 'label': '夏季'},
-    {'value': Season.autumn, 'label': '秋季'},
-    {'value': Season.winter, 'label': '冬季'},
-    {'value': Season.all, 'label': '四季'},
   ];
 
   @override
@@ -138,8 +124,15 @@ class _AddItemPageState extends State<AddItemPage> {
     setState(() => _isAnalyzing = true);
     try {
       final aiServices = Provider.of<AIServiceProvider>(context, listen: false);
+      final profileProvider = Provider.of<ProfileProvider>(
+        context,
+        listen: false,
+      );
+      final lang = profileProvider.locale.languageCode;
+
       final result = await aiServices.imageAnalyzer.analyzeClothingImage(
         base64Image,
+        language: lang,
       );
       if (!mounted) return;
 
@@ -177,7 +170,7 @@ class _AddItemPageState extends State<AddItemPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'AI 识别失败：${e.toString().replaceFirst('Exception: ', '')}',
+              '${AppLocalizations.of(context)?.aiRecognitionFailed ?? 'AI 识别失败'}：${e.toString().replaceFirst('Exception: ', '')}',
             ),
             behavior: SnackBarBehavior.floating,
           ),
@@ -195,10 +188,17 @@ class _AddItemPageState extends State<AddItemPage> {
 
     try {
       final aiServices = Provider.of<AIServiceProvider>(context, listen: false);
+      final profileProvider = Provider.of<ProfileProvider>(
+        context,
+        listen: false,
+      );
+      final lang = profileProvider.locale.languageCode;
+
       final optimized = await aiServices.imageGenerator.optimizeClothingImage(
         _imageBase64!,
         color:
             _selectedColor, // Use currently selected color for background hint
+        language: lang,
       );
 
       if (!mounted) return;
@@ -209,10 +209,12 @@ class _AddItemPageState extends State<AddItemPage> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('图片优化成功！'),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)?.aiOptimizationSuccess ?? '图片优化成功！',
+          ),
           behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
     } catch (e) {
@@ -221,7 +223,7 @@ class _AddItemPageState extends State<AddItemPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              '优化失败：${e.toString().replaceFirst('Exception: ', '')}',
+              '${AppLocalizations.of(context)?.aiOptimizationFailed ?? '优化失败'}：${e.toString().replaceFirst('Exception: ', '')}',
             ),
             behavior: SnackBarBehavior.floating,
           ),
@@ -235,17 +237,29 @@ class _AddItemPageState extends State<AddItemPage> {
   Future<void> _save() async {
     // Validation
     final errors = <String>[];
-    if (_imageBase64 == null) errors.add('请上传衣物照片');
-    if (_nameController.text.trim().isEmpty) errors.add('请输入衣物名称');
-    if (_category == null) errors.add('请选择衣物分类');
-    if (_selectedColor == null) errors.add('请选择衣物颜色');
-    if (_selectedSeason == null) errors.add('请选择适用季节');
-    if (_materialController.text.trim().isEmpty) errors.add('请输入材质信息');
+    if (_imageBase64 == null)
+      errors.add(
+        AppLocalizations.of(context)?.uploadClothingPhoto ?? '请上传衣物照片',
+      );
+    if (_nameController.text.trim().isEmpty)
+      errors.add(
+        AppLocalizations.of(context)?.pleaseEnterClothingName ?? '请输入衣物名称',
+      );
+    if (_category == null)
+      errors.add(AppLocalizations.of(context)?.selectCategory ?? '请选择衣物分类');
+    if (_selectedColor == null)
+      errors.add(AppLocalizations.of(context)?.selectColor ?? '请选择衣物颜色');
+    if (_selectedSeason == null)
+      errors.add(AppLocalizations.of(context)?.selectSeason ?? '请选择适用季节');
+    if (_materialController.text.trim().isEmpty)
+      errors.add(AppLocalizations.of(context)?.enterMaterialInfo ?? '请输入材质信息');
 
     if (errors.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('请完善信息：\n${errors.join('\n')}'),
+          content: Text(
+            '${AppLocalizations.of(context)?.completeInfo ?? '请完善信息'}：\n${errors.join('\n')}',
+          ),
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 3),
         ),
@@ -315,16 +329,21 @@ class _AddItemPageState extends State<AddItemPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('确认删除'),
-        content: const Text('确定要删除这件衣物吗？'),
+        title: Text(AppLocalizations.of(context)?.confirmDelete ?? '确认删除'),
+        content: Text(
+          AppLocalizations.of(context)?.confirmDeleteClothing ?? '确定要删除这件衣物吗？',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('取消'),
+            child: Text(AppLocalizations.of(context)?.cancel ?? '取消'),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('删除', style: TextStyle(color: Colors.red)),
+            child: Text(
+              AppLocalizations.of(context)?.delete ?? '删除',
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),
@@ -347,7 +366,9 @@ class _AddItemPageState extends State<AddItemPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          _isEditing ? '衣物详情' : '添加衣物',
+          _isEditing
+              ? (AppLocalizations.of(context)?.clothingDetails ?? '衣物详情')
+              : (AppLocalizations.of(context)?.addClothing ?? '添加衣物'),
           style: TextStyle(
             color: context.textPrimary,
             fontSize: 18,
@@ -424,48 +445,69 @@ class _AddItemPageState extends State<AddItemPage> {
                 const SizedBox(height: 32),
 
                 // ━━━ 基础信息 Section ━━━
-                _buildSectionTitle('基础信息'),
+                _buildSectionTitle(
+                  AppLocalizations.of(context)?.basicInfo ?? '基础信息',
+                ),
                 const SizedBox(height: 20),
 
                 // Name
-                _buildFieldLabel('衣物名称'),
+                _buildFieldLabel(
+                  AppLocalizations.of(context)?.itemName ?? '衣物名称',
+                ),
                 const SizedBox(height: 8),
-                _buildInputField(_nameController, '例如：白色亚麻衬衫'),
+                _buildInputField(
+                  _nameController,
+                  AppLocalizations.of(context)?.egWhiteLinenShirt ??
+                      '例如：白色亚麻衬衫',
+                ),
                 const SizedBox(height: 16),
 
                 // Category
-                _buildFieldLabel('分类'),
+                _buildFieldLabel(
+                  AppLocalizations.of(context)?.category ?? '分类',
+                ),
                 const SizedBox(height: 8),
                 _buildCategorySelector(),
 
                 const SizedBox(height: 32),
 
                 // ━━━ 详细细节 Section ━━━
-                _buildSectionTitle('详细细节'),
+                _buildSectionTitle(
+                  AppLocalizations.of(context)?.details ?? '详细细节',
+                ),
                 const SizedBox(height: 20),
 
                 // Color
-                _buildFieldLabel('颜色'),
+                _buildFieldLabel(AppLocalizations.of(context)?.color ?? '颜色'),
                 const SizedBox(height: 12),
                 _buildColorSelector(),
                 const SizedBox(height: 20),
 
                 // Season
-                _buildFieldLabel('季节'),
+                _buildFieldLabel(AppLocalizations.of(context)?.season ?? '季节'),
                 const SizedBox(height: 12),
                 _buildSeasonSelector(),
                 const SizedBox(height: 20),
 
                 // Material
-                _buildFieldLabel('材质'),
+                _buildFieldLabel(
+                  AppLocalizations.of(context)?.material ?? '材质',
+                ),
                 const SizedBox(height: 8),
-                _buildInputField(_materialController, '例如：100% 纯棉'),
+                _buildInputField(
+                  _materialController,
+                  AppLocalizations.of(context)?.egHundredPercentCotton ??
+                      '例如：100% 纯棉',
+                ),
                 const SizedBox(height: 16),
 
                 // Brand
-                _buildFieldLabel('品牌'),
+                _buildFieldLabel(AppLocalizations.of(context)?.brand ?? '品牌'),
                 const SizedBox(height: 8),
-                _buildInputField(_brandController, '例如：优衣库'),
+                _buildInputField(
+                  _brandController,
+                  AppLocalizations.of(context)?.egUniqlo ?? '例如：优衣库',
+                ),
               ],
             ),
           ),
@@ -523,7 +565,15 @@ class _AddItemPageState extends State<AddItemPage> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                _isEditing ? '保存修改' : '保存到衣橱',
+                                _isEditing
+                                    ? (AppLocalizations.of(
+                                            context,
+                                          )?.saveChanges ??
+                                          '保存修改')
+                                    : (AppLocalizations.of(
+                                            context,
+                                          )?.saveToWardrobe ??
+                                          '保存到衣橱'),
                                 style: const TextStyle(
                                   fontSize: 17,
                                   fontWeight: FontWeight.bold,
@@ -571,7 +621,11 @@ class _AddItemPageState extends State<AddItemPage> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  _isOptimizing ? 'AI 优化中...' : 'AI 识别中...',
+                  _isOptimizing
+                      ? (AppLocalizations.of(context)?.aiOptimizing ??
+                            'AI 优化中...')
+                      : (AppLocalizations.of(context)?.aiRecognizing ??
+                            'AI 识别中...'),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
@@ -687,7 +741,7 @@ class _AddItemPageState extends State<AddItemPage> {
         ),
         const SizedBox(height: 16),
         Text(
-          '点击上传照片',
+          AppLocalizations.of(context)?.clickToUploadPhoto ?? '点击上传照片',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
@@ -777,7 +831,7 @@ class _AddItemPageState extends State<AddItemPage> {
         child: DropdownButton<ClothingCategory>(
           value: _category,
           hint: Text(
-            '选择分类',
+            AppLocalizations.of(context)?.selectCategory ?? '选择分类',
             style: TextStyle(
               color: context.textTertiary.withValues(alpha: 0.5),
               fontSize: 16,
@@ -787,10 +841,10 @@ class _AddItemPageState extends State<AddItemPage> {
           isExpanded: true,
           dropdownColor: context.cardColor,
           style: TextStyle(color: context.textPrimary, fontSize: 16),
-          items: _categories.map((cat) {
+          items: ClothingCategory.values.map((cat) {
             return DropdownMenuItem<ClothingCategory>(
-              value: cat['value'] as ClothingCategory,
-              child: Text(cat['label'] as String),
+              value: cat,
+              child: Text(cat.localizedName(context)),
             );
           }).toList(),
           onChanged: (value) => setState(() => _category = value),
@@ -863,14 +917,12 @@ class _AddItemPageState extends State<AddItemPage> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: _seasons.map((s) {
-          final season = s['value'] as Season;
-          final label = s['label'] as String;
-          final selected = _selectedSeason == season;
+        children: Season.values.map((s) {
+          final selected = _selectedSeason == s;
           return Padding(
             padding: const EdgeInsets.only(right: 10),
             child: GestureDetector(
-              onTap: () => setState(() => _selectedSeason = season),
+              onTap: () => setState(() => _selectedSeason = s),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 padding: const EdgeInsets.symmetric(
@@ -896,7 +948,7 @@ class _AddItemPageState extends State<AddItemPage> {
                       : null,
                 ),
                 child: Text(
-                  label,
+                  s.localizedName(context),
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,

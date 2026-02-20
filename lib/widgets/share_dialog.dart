@@ -5,6 +5,8 @@ import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import '../models/models.dart';
+import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
+import 'package:what_to_wear_flutter/l10n/weather_localizations.dart';
 
 class ShareDialog extends StatefulWidget {
   final Recommendation recommendation;
@@ -22,6 +24,8 @@ class _ShareDialogState extends State<ShareDialog> {
   Future<void> _handleShare() async {
     if (_isSharing) return;
     setState(() => _isSharing = true);
+    final String shareText =
+        '${AppLocalizations.of(context)?.todayOutfitRecommendation ?? "我的今日穿搭推荐"} #${widget.recommendation.title}';
 
     try {
       final imageBytes = await _screenshotController.capture(
@@ -40,9 +44,7 @@ class _ShareDialogState extends State<ShareDialog> {
           Navigator.of(context).pop(); // Close dialog usage
         }
 
-        await Share.shareXFiles([
-          XFile(imagePath),
-        ], text: '我的今日穿搭推荐 #${widget.recommendation.title}');
+        await Share.shareXFiles([XFile(imagePath)], text: shareText);
       }
     } catch (e) {
       debugPrint('Share error: $e');
@@ -89,9 +91,9 @@ class _ShareDialogState extends State<ShareDialog> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          '分享穿搭',
-                          style: TextStyle(
+                        Text(
+                          AppLocalizations.of(context)?.shareOutfit ?? '分享穿搭',
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -191,7 +193,7 @@ class _ShareDialogState extends State<ShareDialog> {
                                               ),
                                               const SizedBox(width: 4),
                                               Text(
-                                                '${widget.recommendation.matchPercentage ?? 85}% 匹配',
+                                                '${widget.recommendation.matchPercentage ?? 85}${AppLocalizations.of(context)?.matchSuffix ?? "% 匹配"}',
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 12,
@@ -230,7 +232,10 @@ class _ShareDialogState extends State<ShareDialog> {
                                                     .recommendation
                                                     .occasion
                                                     ?.label ??
-                                                '日常搭配',
+                                                (AppLocalizations.of(
+                                                      context,
+                                                    )?.dailyLiteral ??
+                                                    '日常搭配'),
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 10,
@@ -251,7 +256,7 @@ class _ShareDialogState extends State<ShareDialog> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        _getCardTitle(),
+                                        _getCardTitle(context),
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,
@@ -267,9 +272,13 @@ class _ShareDialogState extends State<ShareDialog> {
                                             child: _buildInfoBadge(
                                               icon: Icons.wb_sunny,
                                               iconColor: Colors.orangeAccent,
-                                              label: '今日天气',
+                                              label:
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )?.todayWeather ??
+                                                  '今日天气',
                                               value:
-                                                  '${widget.recommendation.weather.temperature}°C ${widget.recommendation.weather.condition}',
+                                                  '${widget.recommendation.weather.temperature}°C ${AppLocalizations.of(context)?.translateWeatherCondition(widget.recommendation.weather.condition) ?? widget.recommendation.weather.condition}',
                                             ),
                                           ),
                                           const SizedBox(width: 12),
@@ -277,13 +286,20 @@ class _ShareDialogState extends State<ShareDialog> {
                                             child: _buildInfoBadge(
                                               icon: Icons.event,
                                               iconColor: Colors.blueAccent,
-                                              label: '场合类型',
+                                              label:
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )?.occasionType ??
+                                                  '场合类型',
                                               value:
                                                   widget
                                                       .recommendation
                                                       .occasion
                                                       ?.label ??
-                                                  '日常',
+                                                  (AppLocalizations.of(
+                                                        context,
+                                                      )?.dailyLiteral ??
+                                                      '日常'),
                                             ),
                                           ),
                                         ],
@@ -340,9 +356,10 @@ class _ShareDialogState extends State<ShareDialog> {
                                 size: 20,
                               ),
                               const SizedBox(width: 8),
-                              const Text(
-                                '保存/分享图片',
-                                style: TextStyle(
+                              Text(
+                                AppLocalizations.of(context)?.saveShareImage ??
+                                    '保存/分享图片',
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -384,12 +401,14 @@ class _ShareDialogState extends State<ShareDialog> {
     );
   }
 
-  String _getCardTitle() {
+  String _getCardTitle(BuildContext context) {
     final items = widget.recommendation.items;
+    final top = AppLocalizations.of(context)?.topDefault ?? "上装";
+    final bottom = AppLocalizations.of(context)?.bottomDefault ?? "下装";
     if (items.outerwear != null) {
-      return '${items.outerwear!.name} & ${items.bottom?.name ?? "下装"}';
+      return '${items.outerwear!.name} & ${items.bottom?.name ?? bottom}';
     }
-    return '${items.top?.name ?? "上装"} & ${items.bottom?.name ?? "下装"}';
+    return '${items.top?.name ?? top} & ${items.bottom?.name ?? bottom}';
   }
 
   Widget _buildInfoBadge({

@@ -22,6 +22,7 @@ class GeminiImageGenerator implements AIImageGenerator {
   Future<String> optimizeClothingImage(
     String base64Image, {
     String? color,
+    String language = 'zh',
   }) async {
     if (_apiKey.isEmpty) {
       throw Exception(
@@ -157,7 +158,10 @@ CRITICAL REQUIREMENTS:
   }
 
   @override
-  Future<String> generateOutfitImage(Recommendation recommendation) async {
+  Future<String> generateOutfitImage(
+    Recommendation recommendation, {
+    String language = 'zh',
+  }) async {
     if (_apiKey.isEmpty) {
       throw Exception(
         'GEMINI_API_KEY 未配置。请通过 --dart-define=GEMINI_API_KEY=your_key 传入。',

@@ -119,6 +119,7 @@ class ZhipuImageGenerator implements AIImageGenerator {
   Future<String> optimizeClothingImage(
     String base64Image, {
     String? color,
+    String language = 'zh',
   }) async {
     if (_apiKey.isEmpty) {
       throw Exception(
@@ -240,7 +241,10 @@ class ZhipuImageGenerator implements AIImageGenerator {
   }
 
   @override
-  Future<String> generateOutfitImage(Recommendation recommendation) async {
+  Future<String> generateOutfitImage(
+    Recommendation recommendation, {
+    String language = 'zh',
+  }) async {
     if (_apiKey.isEmpty) {
       throw Exception(
         'ZHIPU_API_KEY 未配置。请通过 --dart-define=ZHIPU_API_KEY=your_key 传入。',

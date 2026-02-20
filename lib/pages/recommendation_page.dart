@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import '../models/models.dart';
 import '../providers/recommendation_provider.dart';
 import '../theme/app_theme.dart';
+import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
+import 'package:what_to_wear_flutter/l10n/weather_localizations.dart';
 import 'custom_outfit_page.dart';
 import 'outfit_detail_page.dart';
 
@@ -86,8 +88,10 @@ class _RecommendationPageState extends State<RecommendationPage> {
 
   Widget _buildHeader(BuildContext context) {
     final now = DateTime.now();
-    final dateStr =
-        '${now.month}月${now.day}日 ${DateFormat.EEEE('zh_CN').format(now)}';
+    final locale = Localizations.localeOf(context).languageCode;
+    final dateStr = locale == 'zh'
+        ? '${now.month}月${now.day}日 ${DateFormat.EEEE('zh_CN').format(now)}'
+        : DateFormat.yMMMMEEEEd('en_US').format(now);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
@@ -108,7 +112,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
               colors: [context.textPrimary, context.textSecondary],
             ).createShader(bounds),
             child: Text(
-              '为你推荐',
+              AppLocalizations.of(context)?.forYouRecommendation ?? '为你推荐',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -138,7 +142,8 @@ class _RecommendationPageState extends State<RecommendationPage> {
           Icon(Icons.style_outlined, size: 64, color: context.textTertiary),
           const SizedBox(height: 16),
           Text(
-            '点击右下角按钮获取穿搭推荐',
+            AppLocalizations.of(context)?.clickFabToGetRecommendation ??
+                '点击右下角按钮获取穿搭推荐',
             style: TextStyle(color: context.textSecondary, fontSize: 14),
           ),
         ],
@@ -193,7 +198,10 @@ class _WeatherCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      weather.condition,
+                      AppLocalizations.of(
+                            context,
+                          )?.translateWeatherCondition(weather.condition) ??
+                          weather.condition,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
@@ -216,7 +224,7 @@ class _WeatherCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '紫外线${weather.uvIndex ?? "中"}',
+                      '${AppLocalizations.of(context)?.uvIndexPrefix ?? "紫外线"}${weather.uvIndex ?? (AppLocalizations.of(context)?.uvMedium ?? "中")}',
                       style: TextStyle(
                         fontSize: 12,
                         color: context.textTertiary,
@@ -224,7 +232,7 @@ class _WeatherCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      '湿度 ${weather.humidity}%',
+                      '${AppLocalizations.of(context)?.humidityPrefix ?? "湿度 "}${weather.humidity}%',
                       style: TextStyle(
                         fontSize: 12,
                         color: context.textTertiary,
@@ -232,7 +240,7 @@ class _WeatherCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      '舒适度：${weather.comfortLevel ?? "一般"}',
+                      '${AppLocalizations.of(context)?.comfortLevelPrefix ?? "舒适度："}${AppLocalizations.of(context)?.translateComfortLevel(weather.comfortLevel ?? "一般") ?? (AppLocalizations.of(context)?.comfortNormal ?? "一般")}',
                       style: TextStyle(
                         fontSize: 12,
                         color: context.textTertiary,
@@ -324,7 +332,7 @@ class _TopPickCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          '${recommendation.matchPercentage ?? 85}% 匹配',
+                          '${recommendation.matchPercentage ?? 85}${AppLocalizations.of(context)?.matchSuffix ?? "% 匹配"}',
                           style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
@@ -360,7 +368,10 @@ class _TopPickCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          '商务休闲 • 透气棉质',
+                          AppLocalizations.of(
+                                context,
+                              )?.businessCasualBreathable ??
+                              '商务休闲 • 透气棉质',
                           style: TextStyle(
                             fontSize: 11,
                             color: context.textTertiary,
@@ -444,14 +455,13 @@ class _AlternativePlans extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '备选方案',
+                AppLocalizations.of(context)?.alternativePlan ?? '备选方案',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: context.textPrimary,
                 ),
               ),
-
             ],
           ),
         ),
@@ -481,7 +491,9 @@ class _AlternativeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = alt.items.top?.name ?? '时尚单品';
+    final title =
+        alt.items.top?.name ??
+        (AppLocalizations.of(context)?.fashionItem ?? '时尚单品');
     final image = alt.mainImage;
 
     return GestureDetector(
@@ -522,7 +534,7 @@ class _AlternativeCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '经典商务',
+                    AppLocalizations.of(context)?.classicBusiness ?? '经典商务',
                     style: TextStyle(fontSize: 10, color: context.textTertiary),
                   ),
                 ],

@@ -16,6 +16,7 @@ class ProfileProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   ThemeMode get themeMode =>
       _preferences.theme == 'light' ? ThemeMode.light : ThemeMode.dark;
+  Locale get locale => Locale(_preferences.language);
 
   bool hasCompletedOnboarding() {
     return _profile?.onboardingCompletedAt != null;
@@ -71,6 +72,12 @@ class ProfileProvider extends ChangeNotifier {
 
   Future<void> setTheme(String theme) async {
     _preferences = _preferences.copyWith(theme: theme);
+    await _storage.setPreferences(_preferences);
+    notifyListeners();
+  }
+
+  Future<void> setLanguage(String language) async {
+    _preferences = _preferences.copyWith(language: language);
     await _storage.setPreferences(_preferences);
     notifyListeners();
   }

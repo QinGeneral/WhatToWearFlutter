@@ -4,6 +4,7 @@ import '../providers/recommendation_provider.dart';
 import '../providers/wardrobe_provider.dart';
 import '../services/ai/ai_outfit_recommender.dart';
 import '../theme/app_theme.dart';
+import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 
 class CustomOutfitPage extends StatefulWidget {
   const CustomOutfitPage({super.key});
@@ -43,15 +44,88 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
     super.dispose();
   }
 
+  String _translateCategory(BuildContext context, String category) {
+    final l10n = AppLocalizations.of(context);
+    switch (category) {
+      case '日期':
+        return l10n?.categoryDate ?? category;
+      case '地点':
+        return l10n?.categoryLocation ?? category;
+      case '活动':
+        return l10n?.categoryActivity ?? category;
+      case '人物':
+        return l10n?.categoryPerson ?? category;
+      default:
+        return category;
+    }
+  }
+
+  String _translateOption(BuildContext context, String option) {
+    final l10n = AppLocalizations.of(context);
+    switch (option) {
+      case '今天':
+        return l10n?.optToday ?? option;
+      case '明天':
+        return l10n?.optTomorrow ?? option;
+      case '后天':
+        return l10n?.optDayAfter ?? option;
+      case '周末':
+        return l10n?.optWeekend ?? option;
+      case '下周':
+        return l10n?.optNextWeek ?? option;
+      case '工作日':
+        return l10n?.optWorkday ?? option;
+      case '室内':
+        return l10n?.optIndoor ?? option;
+      case '户外':
+        return l10n?.optOutdoor ?? option;
+      case '商场':
+        return l10n?.optMall ?? option;
+      case '咖啡厅':
+        return l10n?.optCafe ?? option;
+      case '办公室':
+        return l10n?.optOffice ?? option;
+      case '公园':
+        return l10n?.optPark ?? option;
+      case '生日聚会':
+        return l10n?.optBirthday ?? option;
+      case '开会':
+        return l10n?.optMeeting ?? option;
+      case '约会':
+        return l10n?.optDate ?? option;
+      case '运动':
+        return l10n?.optSports ?? option;
+      case '休闲':
+        return l10n?.optCasual ?? option;
+      case '正式晚宴':
+        return l10n?.optDinner ?? option;
+      case '朋友':
+        return l10n?.optFriend ?? option;
+      case '同事':
+        return l10n?.optColleague ?? option;
+      case '家人':
+        return l10n?.optFamily ?? option;
+      case '伴侣':
+        return l10n?.optPartner ?? option;
+      case '客户':
+        return l10n?.optClient ?? option;
+      default:
+        return option;
+    }
+  }
+
   void _handleTagClick(String tag) {
     setState(() {
       _selections[_activeCategory] = tag;
     });
 
     // Update text content
+    final translatedCategory = _translateCategory(context, _activeCategory);
+    final translatedOption = _translateOption(context, tag);
+
     final lines = _textController.text.split('\n');
-    final pattern = RegExp('^$_activeCategory:');
-    final newLine = '$_activeCategory: $tag';
+    final pattern = RegExp('^$translatedCategory:');
+    final newLine = '$translatedCategory: $translatedOption';
 
     bool found = false;
     final newLines = lines.map((line) {
@@ -83,7 +157,7 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
             borderRadius: BorderRadius.circular(24),
           ),
           title: Text(
-            '添加"$_activeCategory"选项',
+            '${AppLocalizations.of(context)?.addCustomOptionPrefix ?? "添加\""}${_translateCategory(context, _activeCategory)}${AppLocalizations.of(context)?.addCustomOptionSuffix ?? "\"选项"}',
             style: TextStyle(
               color: context.textPrimary,
               fontWeight: FontWeight.bold,
@@ -94,7 +168,9 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
             autofocus: true,
             style: TextStyle(color: context.textPrimary),
             decoration: InputDecoration(
-              hintText: '请输入自定义内容',
+              hintText:
+                  AppLocalizations.of(context)?.enterCustomContent ??
+                  '请输入自定义内容',
               hintStyle: TextStyle(color: context.textTertiary),
               filled: true,
               fillColor: context.bgPrimary,
@@ -107,7 +183,10 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(),
-              child: Text('取消', style: TextStyle(color: context.textSecondary)),
+              child: Text(
+                MaterialLocalizations.of(context).cancelButtonLabel,
+                style: TextStyle(color: context.textSecondary),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -129,7 +208,10 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text('确认', style: TextStyle(color: Colors.white)),
+              child: Text(
+                MaterialLocalizations.of(context).okButtonLabel,
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );
@@ -154,8 +236,9 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
 
     // Parse selections from tags or text
     String parseField(String category) {
+      final translatedCategory = _translateCategory(context, category);
       return _selections[category] ??
-          RegExp('$category:\\s*(.*)').firstMatch(text)?.group(1) ??
+          RegExp('$translatedCategory:\\s*(.*)').firstMatch(text)?.group(1) ??
           '';
     }
 
@@ -198,7 +281,7 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 title: Text(
-                  '定制穿搭',
+                  AppLocalizations.of(context)?.customOutfitTitle ?? '定制穿搭',
                   style: TextStyle(
                     color: context.textPrimary,
                     fontWeight: FontWeight.bold,
@@ -224,7 +307,10 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                         children: [
                           // Title
                           Text(
-                            '您的搭配需求？',
+                            AppLocalizations.of(
+                                  context,
+                                )?.customOutfitSubtitle ??
+                                '您的搭配需求？',
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -233,7 +319,10 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            '按指引填写日期、地点、活动和人物，获取精准方案',
+                            AppLocalizations.of(
+                                  context,
+                                )?.customOutfitDescription ??
+                                '按指引填写日期、地点、活动和人物，获取精准方案',
                             style: TextStyle(
                               fontSize: 13,
                               color: context.textSecondary,
@@ -265,6 +354,9 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                   ),
                                   decoration: InputDecoration(
                                     hintText:
+                                        AppLocalizations.of(
+                                          context,
+                                        )?.customOutfitHint ??
                                         '日期: [例如：本周末，下午]\n地点: [例如：户外，城市公园]\n活动: [例如：朋友的休闲生日聚会]\n人物: [例如：亲近的朋友]',
                                     hintStyle: TextStyle(
                                       color: context.textTertiary.withValues(
@@ -342,7 +434,7 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                     ),
                                     child: Center(
                                       child: Text(
-                                        cat,
+                                        _translateCategory(context, cat),
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
@@ -408,7 +500,7 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                            option,
+                                            _translateOption(context, option),
                                             style: TextStyle(
                                               fontSize: 13,
                                               color: isSelected
@@ -470,7 +562,10 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                         ),
                                         const SizedBox(width: 4),
                                         Text(
-                                          '自定义',
+                                          AppLocalizations.of(
+                                                context,
+                                              )?.customOption ??
+                                              '自定义',
                                           style: TextStyle(
                                             fontSize: 13,
                                             color: context.textTertiary
@@ -532,7 +627,15 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                rp.isLoading ? '生成中...' : '获取搭配方案',
+                                rp.isLoading
+                                    ? (AppLocalizations.of(
+                                            context,
+                                          )?.generatingOutcome ??
+                                          '生成中...')
+                                    : (AppLocalizations.of(
+                                            context,
+                                          )?.getOutfitPlan ??
+                                          '获取搭配方案'),
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -569,7 +672,10 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        '正在为您定制专属穿搭...',
+                        AppLocalizations.of(
+                              context,
+                            )?.generatingExclusiveOutfit ??
+                            '正在为您定制专属穿搭...',
                         style: TextStyle(
                           color: AppTheme.primaryBlue,
                           fontWeight: FontWeight.w500,

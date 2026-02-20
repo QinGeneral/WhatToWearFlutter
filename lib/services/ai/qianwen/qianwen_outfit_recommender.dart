@@ -23,6 +23,7 @@ class QianwenOutfitRecommender implements AIOutfitRecommender {
     required UserRequest request,
     required List<WardrobeItem> wardrobe,
     required WeatherInfo weather,
+    String language = 'zh',
   }) async {
     if (_apiKey.isEmpty) {
       throw Exception(
@@ -46,9 +47,14 @@ class QianwenOutfitRecommender implements AIOutfitRecommender {
           )
           .toList();
 
+      final langInstruction = language == 'en'
+          ? 'The "reasoning" field MUST be in English. '
+          : 'The "reasoning" field MUST be in Chinese. ';
+
       final prompt =
           '''
 You are a professional fashion stylist. Based on the user's wardrobe, current weather, and specific occasion, recommend up to 3 outfit combinations.
+$langInstruction
 
 ## Current Weather
 - Temperature: ${weather.temperature}°C

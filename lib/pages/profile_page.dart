@@ -10,6 +10,8 @@ import 'developer_page.dart';
 import 'history_page.dart';
 import 'onboarding_page.dart';
 import 'help_feedback_page.dart';
+import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
+import 'package:what_to_wear_flutter/l10n/weather_localizations.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -64,7 +66,9 @@ class ProfilePage extends StatelessWidget {
 
                   // Name
                   Text(
-                    profile?.nickname ?? 'Guest',
+                    profile?.nickname ??
+                        AppLocalizations.of(context)?.guest ??
+                        'Guest',
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -119,14 +123,16 @@ class ProfilePage extends StatelessWidget {
                   const SizedBox(height: 12),
 
                   // Weather info
-                  if (rp.weather != null)
+                  if (rp.weather != null) ...[
+                    const SizedBox(height: 8),
                     Text(
-                      '📍 ${rp.weather!.location ?? "未知"} · ${rp.weather!.temperature}°C ${rp.weather!.condition}',
+                      '📍 ${rp.weather!.location ?? AppLocalizations.of(context)?.unknown ?? "未知"} · ${rp.weather!.temperature}°C ${AppLocalizations.of(context)?.translateWeatherCondition(rp.weather!.condition) ?? rp.weather!.condition}',
                       style: TextStyle(
                         fontSize: 13,
                         color: context.textTertiary,
                       ),
                     ),
+                  ],
 
                   const SizedBox(height: 32),
 
@@ -137,13 +143,17 @@ class ProfilePage extends StatelessWidget {
                       children: [
                         _StatCard(
                           value: '${rp.favorites.length}',
-                          label: '收藏穿搭',
+                          label:
+                              AppLocalizations.of(context)?.favoriteOutfits ??
+                              '收藏穿搭',
                           color: AppTheme.errorRed,
                         ),
                         const SizedBox(width: 16),
                         _StatCard(
                           value: '${rp.history.length}',
-                          label: '穿搭历史',
+                          label:
+                              AppLocalizations.of(context)?.outfitHistory ??
+                              '穿搭历史',
                           color: AppTheme.primaryBlue,
                         ),
                       ],
@@ -159,7 +169,9 @@ class ProfilePage extends StatelessWidget {
                       children: [
                         _FunctionButton(
                           icon: Icons.favorite_border,
-                          label: '收藏穿搭',
+                          label:
+                              AppLocalizations.of(context)?.favoriteOutfits ??
+                              '收藏穿搭',
                           color: AppTheme.errorRed,
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
@@ -170,7 +182,9 @@ class ProfilePage extends StatelessWidget {
                         const SizedBox(height: 12),
                         _FunctionButton(
                           icon: Icons.history,
-                          label: '穿搭历史',
+                          label:
+                              AppLocalizations.of(context)?.outfitHistory ??
+                              '穿搭历史',
                           color: AppTheme.primaryBlue,
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
@@ -183,14 +197,36 @@ class ProfilePage extends StatelessWidget {
                           icon: context.isDark
                               ? Icons.light_mode
                               : Icons.dark_mode,
-                          label: context.isDark ? '切换浅色主题' : '切换深色主题',
+                          label: context.isDark
+                              ? (AppLocalizations.of(
+                                      context,
+                                    )?.switchLightMode ??
+                                    '切换浅色主题')
+                              : (AppLocalizations.of(context)?.switchDarkMode ??
+                                    '切换深色主题'),
                           color: AppTheme.warningYellow,
                           onTap: () => pp.toggleTheme(),
                         ),
                         const SizedBox(height: 12),
                         _FunctionButton(
+                          icon: Icons.language,
+                          label:
+                              AppLocalizations.of(context)?.switchLanguage ??
+                              '切换语言',
+                          color: AppTheme.successGreen,
+                          onTap: () {
+                            final newLang = pp.locale.languageCode == 'zh'
+                                ? 'en'
+                                : 'zh';
+                            pp.setLanguage(newLang);
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        _FunctionButton(
                           icon: Icons.help_outline,
-                          label: '帮助与反馈',
+                          label:
+                              AppLocalizations.of(context)?.helpAndFeedback ??
+                              '帮助与反馈',
                           color: AppTheme.accentPurple,
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
@@ -202,7 +238,11 @@ class ProfilePage extends StatelessWidget {
                           const SizedBox(height: 12),
                           _FunctionButton(
                             icon: Icons.developer_mode,
-                            label: '开发者选项',
+                            label:
+                                AppLocalizations.of(
+                                  context,
+                                )?.developerOptions ??
+                                '开发者选项',
                             color: Colors.teal,
                             onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(

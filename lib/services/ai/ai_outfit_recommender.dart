@@ -91,5 +91,6 @@ abstract class AIOutfitRecommender {
     required UserRequest request,
     required List<WardrobeItem> wardrobe,
     required WeatherInfo weather,
+    String language = 'zh',
   });
 }

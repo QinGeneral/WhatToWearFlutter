@@ -5,6 +5,7 @@ import '../models/models.dart';
 import '../providers/wardrobe_provider.dart';
 import '../theme/app_theme.dart';
 import 'add_item_page.dart';
+import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 
 class WardrobePage extends StatefulWidget {
   const WardrobePage({super.key});
@@ -57,7 +58,9 @@ class _WardrobePageState extends State<WardrobePage> {
                     onChanged: (v) => wp.setSearchQuery(v),
                     style: TextStyle(color: context.textPrimary),
                     decoration: InputDecoration(
-                      hintText: '搜索衣物...',
+                      hintText:
+                          AppLocalizations.of(context)?.searchClothing ??
+                          '搜索衣物...',
                       hintStyle: TextStyle(color: context.textTertiary),
                       prefixIcon: Icon(
                         Icons.search,
@@ -85,13 +88,13 @@ class _WardrobePageState extends State<WardrobePage> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     children: [
                       _CategoryChip(
-                        label: '全部',
+                        label: AppLocalizations.of(context)?.all ?? '全部',
                         selected: wp.selectedCategory == null,
                         onTap: () => wp.setCategory(null),
                       ),
                       ...ClothingCategory.values.map(
                         (cat) => _CategoryChip(
-                          label: cat.label,
+                          label: cat.localizedName(context),
                           selected: wp.selectedCategory == cat,
                           onTap: () => wp.setCategory(cat),
                         ),
@@ -119,8 +122,14 @@ class _WardrobePageState extends State<WardrobePage> {
                               const SizedBox(height: 16),
                               Text(
                                 wp.items.isEmpty
-                                    ? '衣橱为空，点击 + 添加衣物'
-                                    : '没有找到匹配的衣物',
+                                    ? AppLocalizations.of(
+                                            context,
+                                          )?.wardrobeEmpty ??
+                                          '衣橱为空，点击 + 添加衣物'
+                                    : AppLocalizations.of(
+                                            context,
+                                          )?.noMatchingClothing ??
+                                          '没有找到匹配的衣物',
                                 style: TextStyle(
                                   color: context.textSecondary,
                                   fontSize: 14,
@@ -249,7 +258,7 @@ class _WardrobeItemCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    item.category.label,
+                    item.category.localizedName(context),
                     style: TextStyle(fontSize: 11, color: context.textTertiary),
                   ),
                 ],

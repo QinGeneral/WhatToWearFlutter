@@ -344,10 +344,14 @@ class RecommendationProvider extends ChangeNotifier {
       }
 
       // Call AI service via interface
+      final prefs = _storage.getPreferences();
+      final lang = prefs?.language ?? 'zh';
+
       final result = await _aiServices.outfitRecommender.getRecommendation(
         request: request,
         wardrobe: wardrobeItems,
         weather: _weather!,
+        language: lang,
       );
 
       if (result.outfits.isEmpty) {
@@ -490,8 +494,12 @@ class RecommendationProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
+      final prefs = _storage.getPreferences();
+      final lang = prefs?.language ?? 'zh';
+
       final imageUrl = await _aiServices.imageGenerator.generateOutfitImage(
         recommendation,
+        language: lang,
       );
       await updateRecommendationImage(recommendation.id, imageUrl);
     } catch (e) {

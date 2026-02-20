@@ -58,5 +58,8 @@ abstract class AIImageAnalyzer {
   /// 分析衣物图片，返回结构化属性数据（名称、类别、颜色、季节等）。
   ///
   /// [base64Image] 应为原始 base64 编码的图片数据（不含 data URI 前缀）。
-  Future<ImageAnalysisResult> analyzeClothingImage(String base64Image);
+  Future<ImageAnalysisResult> analyzeClothingImage(
+    String base64Image, {
+    String language = 'zh',
+  });
 }

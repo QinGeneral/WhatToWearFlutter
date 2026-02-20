@@ -21,14 +21,22 @@ class QianwenImageAnalyzer implements AIImageAnalyzer {
           const String.fromEnvironment('DASHSCOPE_API_KEY', defaultValue: '');
 
   @override
-  Future<ImageAnalysisResult> analyzeClothingImage(String base64Image) async {
+  Future<ImageAnalysisResult> analyzeClothingImage(
+    String base64Image, {
+    String language = 'zh',
+  }) async {
     if (_apiKey.isEmpty) {
       throw Exception(
         'DASHSCOPE_API_KEY 未配置。请通过 --dart-define=DASHSCOPE_API_KEY=your_key 传入。',
       );
     }
 
-    const prompt = '''
+    final langInstruction = language == 'en'
+        ? '\\nPlease return the JSON values (name, color, material) in English.'
+        : '';
+
+    final prompt =
+        '''
 请分析这张衣物图片，以 JSON 格式返回以下信息：
 {
   "name": "衣物名称（简短描述，如'白色圆领T恤'）",
@@ -39,7 +47,7 @@ class QianwenImageAnalyzer implements AIImageAnalyzer {
   "season": "适合季节（spring/summer/autumn/winter/all 之一）",
   "material": "材质（如: 纯棉、涤纶、羊毛等）"
 }
-只返回 JSON，不要包含其他文字说明。
+只返回 JSON，不要包含其他文字说明。$langInstruction
 ''';
 
     try {

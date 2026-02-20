@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 
 // Enums and Models for WhatToWear Flutter
 
@@ -577,6 +578,7 @@ class UserPreference {
   final List<Occasion> occasions;
   final Map<String, bool> notifications;
   final String theme;
+  final String language;
 
   UserPreference({
     required this.id,
@@ -587,9 +589,10 @@ class UserPreference {
     required this.occasions,
     required this.notifications,
     required this.theme,
+    required this.language,
   });
 
-  UserPreference copyWith({String? theme}) {
+  UserPreference copyWith({String? theme, String? language}) {
     return UserPreference(
       id: id,
       style: style,
@@ -599,6 +602,7 @@ class UserPreference {
       occasions: occasions,
       notifications: notifications,
       theme: theme ?? this.theme,
+      language: language ?? this.language,
     );
   }
 
@@ -611,6 +615,7 @@ class UserPreference {
     'occasions': occasions.map((o) => o.name).toList(),
     'notifications': notifications,
     'theme': theme,
+    'language': language,
   };
 
   factory UserPreference.fromJson(Map<String, dynamic> json) => UserPreference(
@@ -640,6 +645,7 @@ class UserPreference {
         [],
     notifications: Map<String, bool>.from(json['notifications'] ?? {}),
     theme: json['theme'] as String? ?? 'dark',
+    language: json['language'] as String? ?? 'zh',
   );
 
   static UserPreference get defaultPreference => UserPreference(
@@ -651,6 +657,7 @@ class UserPreference {
     occasions: [],
     notifications: {'dailyRecommendation': false, 'weatherAlert': false},
     theme: 'dark',
+    language: 'zh',
   );
 }
 
@@ -710,4 +717,39 @@ class UserProfile {
         : null,
     onboardingCompletedAt: json['onboardingCompletedAt'] as String?,
   );
+}
+
+// ═══════ L10n Extensions ═══════
+extension LocalizedClothingCategory on ClothingCategory {
+  String localizedName(BuildContext context) {
+    switch (this) {
+      case ClothingCategory.top:
+        return AppLocalizations.of(context)?.top ?? label;
+      case ClothingCategory.bottom:
+        return AppLocalizations.of(context)?.bottom ?? label;
+      case ClothingCategory.shoes:
+        return AppLocalizations.of(context)?.shoes ?? label;
+      case ClothingCategory.accessory:
+        return AppLocalizations.of(context)?.accessory ?? label;
+      case ClothingCategory.outerwear:
+        return AppLocalizations.of(context)?.outerwear ?? label;
+    }
+  }
+}
+
+extension LocalizedSeason on Season {
+  String localizedName(BuildContext context) {
+    switch (this) {
+      case Season.spring:
+        return AppLocalizations.of(context)?.spring ?? label;
+      case Season.summer:
+        return AppLocalizations.of(context)?.summer ?? label;
+      case Season.autumn:
+        return AppLocalizations.of(context)?.autumn ?? label;
+      case Season.winter:
+        return AppLocalizations.of(context)?.winter ?? label;
+      case Season.all:
+        return AppLocalizations.of(context)?.fourSeasons ?? label;
+    }
+  }
 }

@@ -10,11 +10,18 @@ abstract class AIImageGenerator {
   /// [base64Image] 原始图片 base64 数据。
   /// [color] 可选，衣物主色调，用于智能推荐互补背景色。
   /// 返回优化后图片的原始 base64 字符串（不含 data URI 前缀）。
-  Future<String> optimizeClothingImage(String base64Image, {String? color});
+  Future<String> optimizeClothingImage(
+    String base64Image, {
+    String? color,
+    String language = 'zh',
+  });
 
   /// 根据推荐搭配生成穿衣效果图（虚拟试穿）。
   ///
   /// [recommendation] 包含搭配单品信息的推荐对象。
   /// 返回生成的穿衣图 data URI 或 base64 字符串。
-  Future<String> generateOutfitImage(Recommendation recommendation);
+  Future<String> generateOutfitImage(
+    Recommendation recommendation, {
+    String language = 'zh',
+  });
 }

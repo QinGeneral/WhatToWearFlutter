@@ -22,6 +22,7 @@ class ZhipuOutfitRecommender implements AIOutfitRecommender {
     required UserRequest request,
     required List<WardrobeItem> wardrobe,
     required WeatherInfo weather,
+    String language = 'zh',
   }) async {
     if (_apiKey.isEmpty) {
       throw Exception(
@@ -44,6 +45,8 @@ class ZhipuOutfitRecommender implements AIOutfitRecommender {
             },
           )
           .toList();
+
+      final langInstruction = language == 'en' ? 'in English' : 'in Chinese';
 
       final prompt =
           '''
@@ -68,7 +71,7 @@ ${jsonEncode(simplifiedWardrobe)}
 1. Recommend exactly 3 outfits (if possible) ranked by suitability.
 2. Use ONLY items from the provided wardrobe. Use the exact 'id' for each item.
 3. Each outfit MUST have at least a top and a bottom (or a dress/suit if applicable), and shoes. Outerwear and accessories are optional but recommended if the weather requires it.
-4. Provide a reasoning for each recommendation in Chinese.
+4. Provide a reasoning for each recommendation $langInstruction.
 5. Assign a match percentage (0-100) based on how well it fits the occasion and weather.
 
 **Output Format:**

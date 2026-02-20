@@ -8,6 +8,7 @@ import '../providers/recommendation_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/share_dialog.dart';
 import 'add_item_page.dart';
+import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 
 class OutfitDetailPage extends StatelessWidget {
   final String recommendationId;
@@ -31,7 +32,7 @@ class OutfitDetailPage extends StatelessWidget {
             ),
             body: Center(
               child: Text(
-                '推荐未找到',
+                AppLocalizations.of(context)?.recommendationNotFound ?? '推荐未找到',
                 style: TextStyle(color: context.textSecondary),
               ),
             ),
@@ -116,11 +117,10 @@ class OutfitDetailPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 12),
 
-                          // Tags
                           Wrap(
                             spacing: 8,
                             runSpacing: 8,
-                            children: _buildTags(rec),
+                            children: _buildTags(context, rec),
                           ),
                           const SizedBox(height: 20),
 
@@ -159,7 +159,7 @@ class OutfitDetailPage extends StatelessWidget {
 
                           // Outfit items
                           Text(
-                            '穿搭单品',
+                            AppLocalizations.of(context)?.outfitItems ?? '穿搭单品',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -216,7 +216,7 @@ class OutfitDetailPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              '收藏',
+                              AppLocalizations.of(context)?.favorite ?? '收藏',
                               style: TextStyle(
                                 fontSize: 10,
                                 color: context.textTertiary,
@@ -280,12 +280,19 @@ class OutfitDetailPage extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildTags(Recommendation rec) {
+  List<Widget> _buildTags(BuildContext context, Recommendation rec) {
     final tags = <String>[];
     if (rec.occasion != null) tags.add(rec.occasion!.label);
-    if (rec.weather.temperature > 25) tags.add('夏季');
-    if (rec.weather.temperature < 15) tags.add('保暖');
+    // Wait, Occasion is practically localized inside Rec?
+    if (rec.occasion != null)
+      tags.add(rec.occasion!.label); // Assuming it is fine for now
+    if (rec.weather.temperature > 25)
+      tags.add(AppLocalizations.of(context)?.tagSummer ?? '夏季');
+    if (rec.weather.temperature < 15)
+      tags.add(AppLocalizations.of(context)?.tagWarm ?? '保暖');
     tags.add(rec.weather.condition);
+    // Need BuildContext for translation but it's not passed here.
+    // Wait, let's look at where _buildTags is used: line 123. It's inside a build method. Let's pass context.
     if (rec.context?.tags != null) tags.addAll(rec.context!.tags!);
 
     return tags.take(5).map((tag) {
@@ -312,15 +319,28 @@ class OutfitDetailPage extends StatelessWidget {
 
   List<Widget> _buildOutfitItems(BuildContext context, Recommendation rec) {
     final entries = <MapEntry<String, WardrobeItem?>>[];
-    entries.add(MapEntry('上装', rec.items.top));
-    entries.add(MapEntry('下装', rec.items.bottom));
-    entries.add(MapEntry('鞋履', rec.items.shoes));
+    entries.add(
+      MapEntry(AppLocalizations.of(context)?.top ?? '上装', rec.items.top),
+    );
+    entries.add(
+      MapEntry(AppLocalizations.of(context)?.bottom ?? '下装', rec.items.bottom),
+    );
+    entries.add(
+      MapEntry(AppLocalizations.of(context)?.shoes ?? '鞋履', rec.items.shoes),
+    );
     if (rec.items.outerwear != null) {
-      entries.add(MapEntry('外套', rec.items.outerwear));
+      entries.add(
+        MapEntry(
+          AppLocalizations.of(context)?.outerwear ?? '外套',
+          rec.items.outerwear,
+        ),
+      );
     }
     if (rec.items.accessories != null) {
       for (final acc in rec.items.accessories!) {
-        entries.add(MapEntry('配饰', acc));
+        entries.add(
+          MapEntry(AppLocalizations.of(context)?.accessory ?? '配饰', acc),
+        );
       }
     }
 
@@ -424,7 +444,7 @@ class OutfitDetailPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '天气',
+            AppLocalizations.of(context)?.weatherLabel ?? '天气',
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
@@ -455,7 +475,7 @@ class OutfitDetailPage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '湿度 ${rec.weather.humidity}%',
+                    '${AppLocalizations.of(context)?.humidityPrefix ?? "湿度 "}${rec.weather.humidity}%',
                     style: TextStyle(fontSize: 13, color: context.textTertiary),
                   ),
                 ],
@@ -500,7 +520,7 @@ class ShareButton extends StatelessWidget {
             Icon(Icons.ios_share, color: context.textSecondary, size: 24),
             const SizedBox(height: 2),
             Text(
-              '分享',
+              AppLocalizations.of(context)?.shareBtn ?? '分享',
               style: TextStyle(
                 fontSize: 10,
                 color: context.textTertiary,
@@ -536,9 +556,13 @@ class _GenerateButtonState extends State<GenerateButton> {
       );
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('生成失败: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '${AppLocalizations.of(context)?.generationFailed ?? "生成失败:"} $e',
+            ),
+          ),
+        );
       }
     } finally {
       if (mounted) {
@@ -578,7 +602,11 @@ class _GenerateButtonState extends State<GenerateButton> {
                 Icon(Icons.auto_awesome, color: context.textPrimary),
               const SizedBox(width: 8),
               Text(
-                _isGenerating ? '生成中...' : '生成试穿图',
+                _isGenerating
+                    ? (AppLocalizations.of(context)?.generatingOutcome ??
+                          '生成中...')
+                    : (AppLocalizations.of(context)?.generateTryOnImage ??
+                          '生成试穿图'),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

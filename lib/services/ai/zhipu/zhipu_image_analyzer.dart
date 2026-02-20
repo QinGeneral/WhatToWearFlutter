@@ -18,7 +18,10 @@ class ZhipuImageAnalyzer implements AIImageAnalyzer {
           const String.fromEnvironment('ZHIPU_API_KEY', defaultValue: '');
 
   @override
-  Future<ImageAnalysisResult> analyzeClothingImage(String base64Image) async {
+  Future<ImageAnalysisResult> analyzeClothingImage(
+    String base64Image, {
+    String language = 'zh',
+  }) async {
     if (_apiKey.isEmpty) {
       throw Exception(
         'ZHIPU_API_KEY 未配置。请通过 --dart-define=ZHIPU_API_KEY=your_key 传入。',
@@ -26,17 +29,20 @@ class ZhipuImageAnalyzer implements AIImageAnalyzer {
     }
 
     try {
-      const prompt = '''
+      final langInstruction = language == 'en' ? 'in English' : 'in Chinese';
+
+      final prompt =
+          '''
 Analyze this clothing image and provide the following details.
 Return ONLY a JSON object with these fields:
 {
-    "name": "Short descriptive name in Chinese (e.g. 白色亚麻衬衫)",
+    "name": "Short descriptive name $langInstruction (e.g. 白色亚麻衬衫 or White linen shirt)",
     "brand": "Brand name if visible/detectable, otherwise empty string (e.g. Nike, Uniqlo)",
     "category": "One of ['top', 'bottom', 'shoes', 'accessory', 'outerwear']",
-    "color": "The dominant color definition in Chinese (e.g. 黑色, 白色, 蓝色)",
+    "color": "The dominant color definition $langInstruction (e.g. 黑色, 白色, 蓝色 or Black, White, Blue)",
     "colorHex": "The dominant color hex code (e.g. #FFFFFF)",
     "season": "One of ['spring', 'summer', 'autumn', 'winter', 'all']",
-    "material": "Likely material in Chinese (e.g. 棉, 麻, 羊毛, 丝绸, 牛仔, 皮革, 聚酯纤维)"
+    "material": "Likely material $langInstruction (e.g. 棉, 麻, 羊毛, 聚酯纤维 or Cotton, Linen, Wool)"
 }
 
 Strictly follow the allowed values for 'category' and 'season'.
