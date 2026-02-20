@@ -195,5 +195,6 @@
   "comfortHot": "Hot",
   "comfortCold": "Cold",
   "comfortComfortable": "Comfortable",
-  "dailyLimitReached": "Daily limit reached (3/3)"
+  "dailyLimitReached": "Daily limit reached (3/3)",
+  "privacyPolicy": "Privacy Policy"
 }

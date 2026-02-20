@@ -600,4 +600,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dailyLimitReached => 'Daily limit reached (3/3)';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
 }

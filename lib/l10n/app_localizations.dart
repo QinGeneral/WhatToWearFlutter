@@ -1273,6 +1273,12 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'今日优化次数已达上限 (3/3)'**
   String get dailyLimitReached;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In zh, this message translates to:
+  /// **'隐私协议'**
+  String get privacyPolicy;
 }
 
 class _AppLocalizationsDelegate

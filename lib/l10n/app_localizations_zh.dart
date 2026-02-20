@@ -596,4 +596,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get dailyLimitReached => '今日优化次数已达上限 (3/3)';
+
+  @override
+  String get privacyPolicy => '隐私协议';
 }

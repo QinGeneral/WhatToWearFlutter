@@ -10,6 +10,7 @@ import 'developer_page.dart';
 import 'history_page.dart';
 import 'onboarding_page.dart';
 import 'help_feedback_page.dart';
+import 'privacy_policy_page.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 import 'package:what_to_wear_flutter/l10n/weather_localizations.dart';
 
@@ -254,6 +255,33 @@ class ProfilePage extends StatelessWidget {
                       ],
                     ),
                   ),
+
+                  const SizedBox(height: 32),
+
+                  // Privacy Policy Link
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const PrivacyPolicyPage(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          AppLocalizations.of(context)?.privacyPolicy ?? '隐私协议',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: context.textTertiary,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
