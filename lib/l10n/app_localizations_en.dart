@@ -597,4 +597,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get comfortComfortable => 'Comfortable';
+
+  @override
+  String get dailyLimitReached => 'Daily limit reached (3/3)';
 }

@@ -194,5 +194,6 @@
   "weatherUnknown": "Unknown",
   "comfortHot": "Hot",
   "comfortCold": "Cold",
-  "comfortComfortable": "Comfortable"
+  "comfortComfortable": "Comfortable",
+  "dailyLimitReached": "Daily limit reached (3/3)"
 }

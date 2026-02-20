@@ -593,4 +593,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get comfortComfortable => '舒适';
+
+  @override
+  String get dailyLimitReached => '今日优化次数已达上限 (3/3)';
 }

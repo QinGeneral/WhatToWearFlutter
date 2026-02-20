@@ -194,5 +194,6 @@
   "weatherUnknown": "未知",
   "comfortHot": "炎热",
   "comfortCold": "寒冷",
-  "comfortComfortable": "舒适"
+  "comfortComfortable": "舒适",
+  "dailyLimitReached": "今日优化次数已达上限 (3/3)"
 }

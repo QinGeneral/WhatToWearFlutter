@@ -1267,6 +1267,12 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'舒适'**
   String get comfortComfortable;
+
+  /// No description provided for @dailyLimitReached.
+  ///
+  /// In zh, this message translates to:
+  /// **'今日优化次数已达上限 (3/3)'**
+  String get dailyLimitReached;
 }
 
 class _AppLocalizationsDelegate

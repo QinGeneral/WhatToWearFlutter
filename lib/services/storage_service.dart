@@ -9,6 +9,7 @@ class StorageService {
   static const _recommendationsKey = 'whattowear_recommendations';
   static const _currentRecommendationKey = 'whattowear_current_recommendation';
   static const _historyKey = 'whattowear_recommendation_history';
+  static const _dailyUsageKey = 'whattowear_daily_usage';
 
   late SharedPreferences _prefs;
 
@@ -112,6 +113,20 @@ class StorageService {
       _historyKey,
       jsonEncode(history.map((r) => r.toJson()).toList()),
     );
+  }
+
+  // ═══════ Daily Usage Limits ═══════
+  int getDailyUsageCount(String featureKey) {
+    final today = DateTime.now().toIso8601String().split('T').first;
+    final key = '${_dailyUsageKey}_${featureKey}_$today';
+    return _prefs.getInt(key) ?? 0;
+  }
+
+  Future<void> incrementDailyUsageCount(String featureKey) async {
+    final today = DateTime.now().toIso8601String().split('T').first;
+    final key = '${_dailyUsageKey}_${featureKey}_$today';
+    final count = getDailyUsageCount(featureKey);
+    await _prefs.setInt(key, count + 1);
   }
 
   // ═══════ Clear ═══════

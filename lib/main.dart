@@ -88,6 +88,7 @@ class WhatToWearApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider<StorageService>.value(value: storageService),
         Provider<AIServiceProvider>.value(value: aiServiceProvider),
         ChangeNotifierProvider(
           create: (_) => ProfileProvider(storageService)..loadProfile(),

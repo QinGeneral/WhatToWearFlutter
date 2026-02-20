@@ -490,6 +490,10 @@ class RecommendationProvider extends ChangeNotifier {
   }
 
   Future<void> generateTryOnImage(Recommendation recommendation) async {
+    if (_storage.getDailyUsageCount('generate_outfit') >= 3) {
+      throw Exception('今日生成穿搭次数已达上限 (3/3)');
+    }
+
     _isLoading = true;
     notifyListeners();
 
@@ -502,12 +506,14 @@ class RecommendationProvider extends ChangeNotifier {
         language: lang,
       );
       await updateRecommendationImage(recommendation.id, imageUrl);
+      await _storage.incrementDailyUsageCount('generate_outfit');
     } catch (e) {
       _error = '生成试穿图失败：$e';
       debugPrint('[RecommendationProvider] Generate Try-On error: $e');
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 }

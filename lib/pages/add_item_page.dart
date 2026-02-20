@@ -7,6 +7,7 @@ import '../models/models.dart';
 import '../providers/profile_provider.dart';
 import '../providers/wardrobe_provider.dart';
 import '../services/ai/ai_service_provider.dart';
+import '../services/storage_service.dart';
 import '../theme/app_theme.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 
@@ -184,6 +185,20 @@ class _AddItemPageState extends State<AddItemPage> {
   Future<void> _optimizeImage() async {
     if (_imageBase64 == null || _isOptimizing) return;
 
+    final storage = context.read<StorageService>();
+    if (storage.getDailyUsageCount('optimize_clothes') >= 3) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)?.dailyLimitReached ??
+                '今日优化次数已达上限 (3/3)',
+          ),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
     setState(() => _isOptimizing = true);
 
     try {
@@ -207,6 +222,8 @@ class _AddItemPageState extends State<AddItemPage> {
         _optimizedImageBase64 = optimized;
         _showOptimized = true;
       });
+
+      await storage.incrementDailyUsageCount('optimize_clothes');
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
