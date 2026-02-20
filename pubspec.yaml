@@ -1,7 +1,7 @@
 name: what_to_wear_flutter
 description: "智能穿搭推荐应用 - Flutter 版"
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ^3.10.7
