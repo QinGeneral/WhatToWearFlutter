@@ -9,6 +9,7 @@ import 'favorite_outfits_page.dart';
 import 'developer_page.dart';
 import 'history_page.dart';
 import 'onboarding_page.dart';
+import 'help_feedback_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -191,7 +192,11 @@ class ProfilePage extends StatelessWidget {
                           icon: Icons.help_outline,
                           label: '帮助与反馈',
                           color: AppTheme.accentPurple,
-                          onTap: () {},
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const HelpFeedbackPage(),
+                            ),
+                          ),
                         ),
                         if (kDebugMode) ...[
                           const SizedBox(height: 12),

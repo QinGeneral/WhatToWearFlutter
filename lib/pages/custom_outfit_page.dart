@@ -574,6 +574,7 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                           color: AppTheme.primaryBlue,
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
+                          decoration: TextDecoration.none,
                         ),
                       ),
                     ],
