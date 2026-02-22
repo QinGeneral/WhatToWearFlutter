@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'providers/profile_provider.dart';
@@ -41,6 +43,17 @@ void main() async {
       statusBarIconBrightness: Brightness.light,
     ),
   );
+
+  // Initialize UMeng if privacy policy agreed
+  final prefs = await SharedPreferences.getInstance();
+  final agreedPrivacy = prefs.getBool('agreed_privacy') ?? false;
+  if (agreedPrivacy) {
+    UmengCommonSdk.initCommon(
+      '699b155d6f259537c7605e61',
+      '699b155d6f259537c7605e61',
+      'Umeng',
+    );
+  }
 
   // Create AI service provider based on AI_PROVIDER env var
   // Usage: --dart-define=AI_PROVIDER=zhipu (default: gemini)

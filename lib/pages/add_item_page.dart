@@ -13,6 +13,7 @@ import '../services/ai/ai_service_provider.dart';
 import '../services/storage_service.dart';
 import '../theme/app_theme.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'privacy_policy_page.dart';
 
 class AddItemPage extends StatefulWidget {
@@ -115,18 +116,17 @@ class _AddItemPageState extends State<AddItemPage> {
     super.dispose();
   }
 
-  // 声明 MethodChannel
-  static const MethodChannel _umengChannel = MethodChannel(
-    'com.whattowear.what_to_wear_flutter/umeng',
-  );
-
   // 在用户点击“同意”按钮时调用：
   Future<void> agreePrivacyPolicy() async {
     try {
-      await _umengChannel.invokeMethod('agreePrivacy');
-      print("友盟 SDK 已正式初始化");
+      await UmengCommonSdk.initCommon(
+        '699b155d6f259537c7605e61',
+        '699b155d6f259537c7605e61',
+        'Umeng',
+      );
+      debugPrint("友盟 SDK 已正式初始化");
     } catch (e) {
-      print("通知 Android 端初始化友盟失败: \$e");
+      debugPrint("初始化友盟失败: \$e");
     }
   }
 

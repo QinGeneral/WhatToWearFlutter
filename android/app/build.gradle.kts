@@ -69,8 +69,4 @@ flutter {
 }
 
 dependencies {
-    // UMeng SDK
-    implementation("com.umeng.umsdk:common:9.4.7")
-    implementation("com.umeng.umsdk:asms:1.4.0")
-    implementation("com.umeng.umsdk:abtest:1.0.0") // User requested for ABTest
 }
