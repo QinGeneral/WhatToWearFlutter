@@ -196,5 +196,12 @@
   "comfortCold": "Cold",
   "comfortComfortable": "Comfortable",
   "dailyLimitReached": "Daily limit reached (3/3)",
-  "privacyPolicy": "Privacy Policy"
+  "privacyPolicy": "Privacy Policy",
+  "privacyDialogTitle": "Privacy Policy & User Agreement",
+  "privacyDialogContentPart1": "Welcome to What To Wear! We take your privacy and personal information very seriously. Before you start using our app, please carefully read and understand our ",
+  "privacyDialogContentPart2": " and ",
+  "userAgreement": "User Agreement",
+  "privacyDialogContentPart3": ".\n\nTo provide you with outfit recommendations and related services, we will collect necessary device information when you use specific features. We will strict security measures to protect your data.\n\nIf you agree, please click \"Agree and Continue\" to start using our services.",
+  "decline": "Decline",
+  "agreeAndContinue": "Agree & Continue"
 }

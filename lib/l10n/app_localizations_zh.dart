@@ -598,5 +598,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dailyLimitReached => '今日优化次数已达上限 (3/3)';
 
   @override
-  String get privacyPolicy => '隐私协议';
+  String get privacyPolicy => '隐私政策';
+
+  @override
+  String get privacyDialogTitle => '温馨提示及隐私保护指引';
+
+  @override
+  String get privacyDialogContentPart1 =>
+      '欢迎使用今天穿什么！我们非常重视您的隐私保护和个人信息安全。在使用本应用前，请您认真阅读并充分理解';
+
+  @override
+  String get privacyDialogContentPart2 => '和';
+
+  @override
+  String get userAgreement => '《用户协议》';
+
+  @override
+  String get privacyDialogContentPart3 =>
+      '。\n\n为了向您提供穿搭推荐及相关服务，我们会在您使用特定功能时，按需收集您的设备信息等必要数据。我们将按业界成熟的安全标准，采取严格的安全保护措施来保护您的个人信息。\n\n如您同意，请点击“同意并继续”开始使用我们的服务。';
+
+  @override
+  String get decline => '不同意并退出';
+
+  @override
+  String get agreeAndContinue => '同意并继续';
 }

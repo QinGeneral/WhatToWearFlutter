@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/models.dart';
 import '../providers/profile_provider.dart';
 import '../providers/wardrobe_provider.dart';
@@ -10,6 +13,7 @@ import '../services/ai/ai_service_provider.dart';
 import '../services/storage_service.dart';
 import '../theme/app_theme.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
+import 'privacy_policy_page.dart';
 
 class AddItemPage extends StatefulWidget {
   final String? itemId;
@@ -87,6 +91,20 @@ class _AddItemPageState extends State<AddItemPage> {
         }
       }
     }
+
+    // 自动检查隐私协议
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      final prefs = await SharedPreferences.getInstance();
+      final agreed = prefs.getBool('agreed_privacy') ?? false;
+      if (!agreed) {
+        final hasAgreed = await _checkAndShowPrivacyDialog();
+        if (!hasAgreed && mounted) {
+          // 如果用户不同意并且仍在该页面，则退出页面
+          Navigator.of(context).pop();
+        }
+      }
+    });
   }
 
   @override
@@ -97,8 +115,124 @@ class _AddItemPageState extends State<AddItemPage> {
     super.dispose();
   }
 
+  // 声明 MethodChannel
+  static const MethodChannel _umengChannel = MethodChannel(
+    'com.whattowear.what_to_wear_flutter/umeng',
+  );
+
+  // 在用户点击“同意”按钮时调用：
+  Future<void> agreePrivacyPolicy() async {
+    try {
+      await _umengChannel.invokeMethod('agreePrivacy');
+      print("友盟 SDK 已正式初始化");
+    } catch (e) {
+      print("通知 Android 端初始化友盟失败: \$e");
+    }
+  }
+
+  Future<bool> _checkAndShowPrivacyDialog() async {
+    final prefs = await SharedPreferences.getInstance();
+    final agreed = prefs.getBool('agreed_privacy') ?? false;
+    if (agreed) return true;
+
+    final l10n = AppLocalizations.of(context)!;
+
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return WillPopScope(
+          onWillPop: () async => false, // 禁止返回键关闭
+          child: AlertDialog(
+            title: Text(l10n.privacyDialogTitle),
+            content: SingleChildScrollView(
+              child: RichText(
+                text: TextSpan(
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(height: 1.5),
+                  children: [
+                    TextSpan(text: l10n.privacyDialogContentPart1),
+                    TextSpan(
+                      text: '《${l10n.privacyPolicy}》',
+                      style: const TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PrivacyPolicyPage(),
+                            ),
+                          );
+                        },
+                    ),
+                    TextSpan(text: l10n.privacyDialogContentPart2),
+                    TextSpan(
+                      text: l10n.userAgreement,
+                      style: const TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          // 这里也暂时跳隐私政策，或者后续您有单独的用户协议再改
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PrivacyPolicyPage(),
+                            ),
+                          );
+                        },
+                    ),
+                    TextSpan(text: l10n.privacyDialogContentPart3),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(false);
+                },
+                child: Text(
+                  l10n.decline,
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  await prefs.setBool('agreed_privacy', true);
+                  await agreePrivacyPolicy();
+                  if (dialogContext.mounted) {
+                    Navigator.of(dialogContext).pop(true);
+                  }
+                },
+                child: Text(
+                  l10n.agreeAndContinue,
+                  style: TextStyle(
+                    color: AppTheme.primaryBlue,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    return result ?? false;
+  }
+
   Future<void> _pickImage() async {
     if (_isAnalyzing) return;
+
+    // Check privacy agreement first
+    final hasAgreed = await _checkAndShowPrivacyDialog();
+    if (!hasAgreed) return;
 
     final picker = ImagePicker();
     final file = await picker.pickImage(

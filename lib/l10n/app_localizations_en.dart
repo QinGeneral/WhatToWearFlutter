@@ -603,4 +603,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get privacyDialogTitle => 'Privacy Policy & User Agreement';
+
+  @override
+  String get privacyDialogContentPart1 =>
+      'Welcome to What To Wear! We take your privacy and personal information very seriously. Before you start using our app, please carefully read and understand our ';
+
+  @override
+  String get privacyDialogContentPart2 => ' and ';
+
+  @override
+  String get userAgreement => 'User Agreement';
+
+  @override
+  String get privacyDialogContentPart3 =>
+      '.\n\nTo provide you with outfit recommendations and related services, we will collect necessary device information when you use specific features. We will strict security measures to protect your data.\n\nIf you agree, please click \"Agree and Continue\" to start using our services.';
+
+  @override
+  String get decline => 'Decline';
+
+  @override
+  String get agreeAndContinue => 'Agree & Continue';
 }

@@ -1277,8 +1277,50 @@ abstract class AppLocalizations {
   /// No description provided for @privacyPolicy.
   ///
   /// In zh, this message translates to:
-  /// **'隐私协议'**
+  /// **'隐私政策'**
   String get privacyPolicy;
+
+  /// No description provided for @privacyDialogTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'温馨提示及隐私保护指引'**
+  String get privacyDialogTitle;
+
+  /// No description provided for @privacyDialogContentPart1.
+  ///
+  /// In zh, this message translates to:
+  /// **'欢迎使用今天穿什么！我们非常重视您的隐私保护和个人信息安全。在使用本应用前，请您认真阅读并充分理解'**
+  String get privacyDialogContentPart1;
+
+  /// No description provided for @privacyDialogContentPart2.
+  ///
+  /// In zh, this message translates to:
+  /// **'和'**
+  String get privacyDialogContentPart2;
+
+  /// No description provided for @userAgreement.
+  ///
+  /// In zh, this message translates to:
+  /// **'《用户协议》'**
+  String get userAgreement;
+
+  /// No description provided for @privacyDialogContentPart3.
+  ///
+  /// In zh, this message translates to:
+  /// **'。\n\n为了向您提供穿搭推荐及相关服务，我们会在您使用特定功能时，按需收集您的设备信息等必要数据。我们将按业界成熟的安全标准，采取严格的安全保护措施来保护您的个人信息。\n\n如您同意，请点击“同意并继续”开始使用我们的服务。'**
+  String get privacyDialogContentPart3;
+
+  /// No description provided for @decline.
+  ///
+  /// In zh, this message translates to:
+  /// **'不同意并退出'**
+  String get decline;
+
+  /// No description provided for @agreeAndContinue.
+  ///
+  /// In zh, this message translates to:
+  /// **'同意并继续'**
+  String get agreeAndContinue;
 }
 
 class _AppLocalizationsDelegate

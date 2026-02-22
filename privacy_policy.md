@@ -27,6 +27,12 @@ Cloova（以下简称“本应用”）尊重并保护所有使用服务用户�
 
 *   **人工智能大模型服务 (AI Models)：** 本应用接入了 Google Gemini、智谱AI (Zhipu)、通义千问 (Qwen) 等生成式AI模型。当您使用AI分析衣物或生成推荐穿搭时，您的**文本输入、衣物图片**会通过加密连接传输给上述提供商。数据的使用将遵守其各自的隐私政策，且不会用于追踪您的个人身份。
 
+*   **统计分析服务 (Analytics)：**
+    *   **使用SDK名称：** 友盟SDK
+    *   **服务类型：** 统计分析
+    *   **收集个人信息类型：** 设备信息（IMEI/MAC/Android ID/IDFA/OpenUDID/GUID/IP地址/SIM 卡 IMSI 信息等）
+    *   **隐私权政策链接：** [https://www.umeng.com/page/policy](https://www.umeng.com/page/policy)
+
 除提供本应用核心服务所必需的情况外，我们不会将您的个人数据出售或共享给任何无关的第三方用于营销目的。
 
 ## 3. 信息安全

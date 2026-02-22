@@ -31,6 +31,13 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        ndk {
+            abiFilters.add("armeabi-v7a")
+            abiFilters.add("arm64-v8a")
+            abiFilters.add("x86")
+            abiFilters.add("x86_64")
+        }
     }
 
     signingConfigs {
@@ -52,10 +59,18 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("release")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 }
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // UMeng SDK
+    implementation("com.umeng.umsdk:common:9.4.7")
+    implementation("com.umeng.umsdk:asms:1.4.0")
+    implementation("com.umeng.umsdk:abtest:1.0.0") // User requested for ABTest
 }
