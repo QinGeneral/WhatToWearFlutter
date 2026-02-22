@@ -5,6 +5,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import '../models/models.dart';
+import '../theme/app_theme.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 import 'package:what_to_wear_flutter/l10n/weather_localizations.dart';
 
@@ -58,7 +59,7 @@ class _ShareDialogState extends State<ShareDialog> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1E293B),
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
           // Backdrop
@@ -72,11 +73,11 @@ class _ShareDialogState extends State<ShareDialog> {
               width: MediaQuery.of(context).size.width * 0.85,
               constraints: const BoxConstraints(maxWidth: 380),
               decoration: BoxDecoration(
-                color: const Color(0xFF1E293B), // Slate 800-ish
+                color: context.surfaceColor,
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.5),
+                    color: Colors.black.withValues(alpha: 0.3),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
@@ -93,10 +94,10 @@ class _ShareDialogState extends State<ShareDialog> {
                       children: [
                         Text(
                           AppLocalizations.of(context)?.shareOutfit ?? '分享穿搭',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: context.textPrimary,
                           ),
                         ),
                         GestureDetector(
@@ -104,12 +105,12 @@ class _ShareDialogState extends State<ShareDialog> {
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.1),
+                              color: context.borderColor,
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.close,
-                              color: Colors.white70,
+                              color: context.textSecondary,
                               size: 20,
                             ),
                           ),
@@ -119,10 +120,7 @@ class _ShareDialogState extends State<ShareDialog> {
                   ),
 
                   // Divider
-                  Container(
-                    height: 1,
-                    color: Colors.white.withValues(alpha: 0.1),
-                  ),
+                  Container(height: 1, color: context.borderColor),
 
                   // Card Content (Scrollable if needed, but usually fits)
                   Flexible(
@@ -144,11 +142,9 @@ class _ShareDialogState extends State<ShareDialog> {
                           child: Container(
                             clipBehavior: Clip.antiAlias,
                             decoration: BoxDecoration(
-                              color: const Color(0xFF0F172A), // Slate 900
+                              color: context.bgPrimary,
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.1),
-                              ),
+                              border: Border.all(color: context.borderColor),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -257,8 +253,8 @@ class _ShareDialogState extends State<ShareDialog> {
                                     children: [
                                       Text(
                                         _getCardTitle(context),
-                                        style: const TextStyle(
-                                          color: Colors.white,
+                                        style: TextStyle(
+                                          color: context.textPrimary,
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -318,14 +314,12 @@ class _ShareDialogState extends State<ShareDialog> {
                   // Footer
                   Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1E293B),
+                      color: context.surfaceColor,
                       borderRadius: const BorderRadius.vertical(
                         bottom: Radius.circular(24),
                       ),
                       border: Border(
-                        top: BorderSide(
-                          color: Colors.white.withValues(alpha: 0.05),
-                        ),
+                        top: BorderSide(color: context.borderColor),
                       ),
                     ),
                     padding: const EdgeInsets.all(16),
@@ -334,7 +328,7 @@ class _ShareDialogState extends State<ShareDialog> {
                       child: Container(
                         height: 48,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF334155), // Slate 700
+                          color: Theme.of(context).primaryColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -420,9 +414,9 @@ class _ShareDialogState extends State<ShareDialog> {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
+        color: context.bgPrimary,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+        border: Border.all(color: context.borderColor),
       ),
       child: Row(
         children: [
@@ -434,12 +428,12 @@ class _ShareDialogState extends State<ShareDialog> {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(color: Colors.white54, fontSize: 10),
+                  style: TextStyle(color: context.textSecondary, fontSize: 10),
                 ),
                 Text(
                   value,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: context.textPrimary,
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
