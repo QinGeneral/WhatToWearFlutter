@@ -20,8 +20,11 @@ class _WardrobePageState extends State<WardrobePage> {
   @override
   void initState() {
     super.initState();
-    final wp = context.read<WardrobeProvider>();
-    if (wp.items.isEmpty) wp.loadWardrobe();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final wp = context.read<WardrobeProvider>();
+      if (wp.items.isEmpty) wp.loadWardrobe();
+    });
   }
 
   @override
@@ -38,10 +41,14 @@ class _WardrobePageState extends State<WardrobePage> {
         return Scaffold(
           backgroundColor: context.bgAlt,
           floatingActionButton: FloatingActionButton(
+            heroTag: 'wardrobe_fab',
             onPressed: () async {
-              await Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (_) => const AddItemPage()));
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  settings: const RouteSettings(name: '/AddItemPage'),
+                  builder: (_) => const AddItemPage(),
+                ),
+              );
               if (mounted) wp.loadWardrobe();
             },
             backgroundColor: AppTheme.primaryBlue,
@@ -213,9 +220,12 @@ class _WardrobeItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        await Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (_) => AddItemPage(itemId: item.id)));
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            settings: const RouteSettings(name: '/AddItemPage'),
+            builder: (_) => AddItemPage(itemId: item.id),
+          ),
+        );
         if (context.mounted) {
           context.read<WardrobeProvider>().loadWardrobe();
         }

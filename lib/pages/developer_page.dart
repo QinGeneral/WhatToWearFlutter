@@ -168,7 +168,10 @@ class _DeveloperPageState extends State<DeveloperPage> {
               label: '天气组件测试',
               color: const Color(0xFF4A90D9),
               onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const WeatherTestPage()),
+                MaterialPageRoute(
+                  settings: const RouteSettings(name: '/WeatherTestPage'),
+                  builder: (_) => const WeatherTestPage(),
+                ),
               ),
             ),
 

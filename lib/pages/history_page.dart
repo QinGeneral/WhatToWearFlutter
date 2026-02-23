@@ -17,7 +17,10 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   void initState() {
     super.initState();
-    context.read<RecommendationProvider>().loadHistory();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<RecommendationProvider>().loadHistory();
+    });
   }
 
   @override
@@ -110,6 +113,9 @@ class _HistoryPageState extends State<HistoryPage> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
+                              settings: const RouteSettings(
+                                name: '/OutfitDetailPage',
+                              ),
                               builder: (_) =>
                                   OutfitDetailPage(recommendationId: rec.id),
                             ),

@@ -72,6 +72,9 @@ class FavoriteOutfitsPage extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
+                            settings: const RouteSettings(
+                              name: '/OutfitDetailPage',
+                            ),
                             builder: (_) =>
                                 OutfitDetailPage(recommendationId: rec.id),
                           ),

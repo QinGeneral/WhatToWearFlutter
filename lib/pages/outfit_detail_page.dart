@@ -349,7 +349,10 @@ class OutfitDetailPage extends StatelessWidget {
       return GestureDetector(
         onTap: () {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => AddItemPage(itemId: item.id)),
+            MaterialPageRoute(
+              settings: const RouteSettings(name: '/AddItemPage'),
+              builder: (_) => AddItemPage(itemId: item.id),
+            ),
           );
         },
         child: Container(

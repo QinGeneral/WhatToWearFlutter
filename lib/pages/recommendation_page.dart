@@ -22,10 +22,13 @@ class _RecommendationPageState extends State<RecommendationPage> {
   @override
   void initState() {
     super.initState();
-    final recProvider = context.read<RecommendationProvider>();
-    recProvider.fetchWeather();
-    recProvider.loadFavorites();
-    recProvider.loadCurrentRecommendation();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final recProvider = context.read<RecommendationProvider>();
+      recProvider.fetchWeather();
+      recProvider.loadFavorites();
+      recProvider.loadCurrentRecommendation();
+    });
   }
 
   @override
@@ -35,9 +38,13 @@ class _RecommendationPageState extends State<RecommendationPage> {
         return Scaffold(
           backgroundColor: context.bgPrimary,
           floatingActionButton: FloatingActionButton(
+            heroTag: 'recommendation_fab',
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const CustomOutfitPage()),
+                MaterialPageRoute(
+                  settings: const RouteSettings(name: '/CustomOutfitPage'),
+                  builder: (_) => const CustomOutfitPage(),
+                ),
               );
             },
             backgroundColor: AppTheme.primaryBlue,
@@ -293,6 +300,7 @@ class _TopPickCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
+            settings: const RouteSettings(name: '/OutfitDetailPage'),
             builder: (_) =>
                 OutfitDetailPage(recommendationId: recommendation.id),
           ),
@@ -500,6 +508,7 @@ class _AlternativeCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
+            settings: const RouteSettings(name: '/OutfitDetailPage'),
             builder: (_) => OutfitDetailPage(recommendationId: alt.id),
           ),
         );

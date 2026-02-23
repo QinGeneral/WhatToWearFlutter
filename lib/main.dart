@@ -25,6 +25,9 @@ import 'pages/onboarding_page.dart';
 import 'pages/recommendation_page.dart';
 import 'pages/wardrobe_page.dart';
 import 'pages/profile_page.dart';
+import 'utils/privacy_utils.dart';
+import 'services/analytics_service.dart';
+import 'utils/analytics_route_observer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,6 +56,7 @@ void main() async {
       '699b155d6f259537c7605e61',
       'Umeng',
     );
+    AnalyticsService.init();
   }
 
   // Create AI service provider based on AI_PROVIDER env var
@@ -131,6 +135,7 @@ class WhatToWearApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: const [Locale('zh'), Locale('en')],
+            navigatorObservers: [AnalyticsRouteObserver()],
             home: profileProvider.isLoading
                 ? const _SplashScreen()
                 : profileProvider.hasCompletedOnboarding()
@@ -192,6 +197,18 @@ class _MainShellState extends State<_MainShell> {
   int _currentIndex = 0;
 
   final _pages = const [RecommendationPage(), WardrobePage(), ProfilePage()];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      final hasAgreed = await checkAndShowPrivacyDialog(context);
+      if (!hasAgreed) {
+        SystemNavigator.pop();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

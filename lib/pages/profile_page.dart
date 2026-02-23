@@ -85,6 +85,9 @@ class ProfilePage extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
+                            settings: const RouteSettings(
+                              name: '/OnboardingPage',
+                            ),
                             builder: (_) =>
                                 const OnboardingPage(fromProfile: true),
                           ),
@@ -176,6 +179,9 @@ class ProfilePage extends StatelessWidget {
                           color: AppTheme.errorRed,
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
+                              settings: const RouteSettings(
+                                name: '/FavoriteOutfitsPage',
+                              ),
                               builder: (_) => const FavoriteOutfitsPage(),
                             ),
                           ),
@@ -189,6 +195,9 @@ class ProfilePage extends StatelessWidget {
                           color: AppTheme.primaryBlue,
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
+                              settings: const RouteSettings(
+                                name: '/HistoryPage',
+                              ),
                               builder: (_) => const HistoryPage(),
                             ),
                           ),
@@ -231,6 +240,9 @@ class ProfilePage extends StatelessWidget {
                           color: AppTheme.accentPurple,
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
+                              settings: const RouteSettings(
+                                name: '/HelpFeedbackPage',
+                              ),
                               builder: (_) => const HelpFeedbackPage(),
                             ),
                           ),
@@ -247,6 +259,9 @@ class ProfilePage extends StatelessWidget {
                             color: Colors.teal,
                             onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(
+                                settings: const RouteSettings(
+                                  name: '/DeveloperPage',
+                                ),
                                 builder: (_) => const DeveloperPage(),
                               ),
                             ),
@@ -266,6 +281,9 @@ class ProfilePage extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
+                              settings: const RouteSettings(
+                                name: '/PrivacyPolicyPage',
+                              ),
                               builder: (_) => const PrivacyPolicyPage(),
                             ),
                           );
