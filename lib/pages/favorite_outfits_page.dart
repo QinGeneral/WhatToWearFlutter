@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/recommendation_provider.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_colors.dart';
 import 'outfit_detail_page.dart';
 
 class FavoriteOutfitsPage extends StatelessWidget {
@@ -41,18 +42,12 @@ class FavoriteOutfitsPage extends StatelessWidget {
                       const SizedBox(height: 16),
                       Text(
                         '还没有收藏的穿搭',
-                        style: TextStyle(
-                          color: context.textSecondary,
-                          fontSize: 14,
-                        ),
+                        style: context.textTheme.bodyMedium?.copyWith(color: context.textSecondary),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         '在推荐中点击❤️收藏喜欢的穿搭',
-                        style: TextStyle(
-                          color: context.textTertiary,
-                          fontSize: 12,
-                        ),
+                        style: context.textTheme.bodySmall?.copyWith(color: context.textTertiary),
                       ),
                     ],
                   ),
@@ -111,7 +106,7 @@ class FavoriteOutfitsPage extends StatelessWidget {
                                         ),
                                         child: const Icon(
                                           Icons.favorite,
-                                          color: AppTheme.errorRed,
+                                          color: AppColors.errorRed,
                                           size: 16,
                                         ),
                                       ),
@@ -127,22 +122,14 @@ class FavoriteOutfitsPage extends StatelessWidget {
                                 children: [
                                   Text(
                                     rec.title,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: context.textPrimary,
-                                    ),
+                                    style: context.textTheme.bodyMedium?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     '${rec.matchPercentage ?? 85}% 匹配',
-                                    style: const TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppTheme.primaryBlue,
-                                    ),
+                                    style: context.textTheme.labelSmall?.copyWith(color: AppColors.primaryBlue, fontWeight: FontWeight.w600),
                                   ),
                                 ],
                               ),

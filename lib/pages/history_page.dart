@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../providers/recommendation_provider.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_colors.dart';
 import 'outfit_detail_page.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -56,10 +57,7 @@ class _HistoryPageState extends State<HistoryPage> {
                       const SizedBox(height: 16),
                       Text(
                         '暂无历史记录',
-                        style: TextStyle(
-                          color: context.textSecondary,
-                          fontSize: 14,
-                        ),
+                        style: context.textTheme.bodyMedium?.copyWith(color: context.textSecondary),
                       ),
                     ],
                   ),
@@ -81,7 +79,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         alignment: Alignment.centerRight,
                         padding: const EdgeInsets.only(right: 20),
                         decoration: BoxDecoration(
-                          color: AppTheme.errorRed,
+                          color: AppColors.errorRed,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Icon(Icons.delete, color: Colors.white),
@@ -146,39 +144,28 @@ class _HistoryPageState extends State<HistoryPage> {
                                   children: [
                                     Text(
                                       rec.title,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: context.textPrimary,
-                                      ),
+                                      style: context.textTheme.titleMedium?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       dateStr,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: context.textTertiary,
-                                      ),
+                                      style: context.textTheme.bodySmall?.copyWith(color: context.textTertiary),
                                     ),
                                     const SizedBox(height: 4),
                                     Row(
                                       children: [
                                         Text(
                                           '${rec.matchPercentage ?? 85}% 匹配',
-                                          style: const TextStyle(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppTheme.primaryBlue,
-                                          ),
+                                          style: context.textTheme.labelSmall?.copyWith(color: AppColors.primaryBlue, fontWeight: FontWeight.w600),
                                         ),
                                         if (rec.isFavorite) ...[
                                           const SizedBox(width: 8),
                                           const Icon(
                                             Icons.favorite,
                                             size: 14,
-                                            color: AppTheme.errorRed,
+                                            color: AppColors.errorRed,
                                           ),
                                         ],
                                       ],

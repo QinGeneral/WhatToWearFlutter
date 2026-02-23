@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../models/models.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_colors.dart';
 
 /// All distinct weather states from WeatherService._mapWeatherCode
 const _allWeatherStates = <Map<String, String>>[
@@ -53,7 +54,7 @@ class WeatherTestPage extends StatelessWidget {
               padding: const EdgeInsets.only(right: 16),
               child: Text(
                 '${_allWeatherStates.length} 种',
-                style: TextStyle(fontSize: 13, color: context.textTertiary),
+                style: context.textTheme.bodyMedium?.copyWith(color: context.textTertiary),
               ),
             ),
           ),
@@ -81,12 +82,7 @@ class WeatherTestPage extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 4, bottom: 4),
                 child: Text(
                   '#${index + 1}  ${state['condition']}',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: context.textTertiary,
-                    letterSpacing: 0.5,
-                  ),
+                  style: context.textTheme.labelSmall?.copyWith(color: context.textTertiary, fontWeight: FontWeight.w600, letterSpacing: 0.5),
                 ),
               ),
               _WeatherCardPreview(weather: weather),
@@ -178,11 +174,7 @@ class _WeatherCardPreview extends StatelessWidget {
                   children: [
                     Text(
                       '${weather.temperature}°C',
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: context.textPrimary,
-                      ),
+                      style: context.textTheme.displayLarge?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(width: 8),
                     if (weather.icon != null && weather.icon!.endsWith('.svg'))
@@ -190,7 +182,7 @@ class _WeatherCardPreview extends StatelessWidget {
                     else
                       Text(
                         weather.icon ?? '☀️',
-                        style: const TextStyle(fontSize: 28),
+                        style: context.textTheme.displayMedium,
                       ),
                   ],
                 ),
@@ -199,11 +191,7 @@ class _WeatherCardPreview extends StatelessWidget {
                   children: [
                     Text(
                       weather.condition,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: context.textPrimary,
-                      ),
+                      style: context.textTheme.titleMedium?.copyWith(color: context.textPrimary, fontWeight: FontWeight.w500),
                     ),
                     if (weather.location != null) ...[
                       const SizedBox(width: 8),
@@ -222,26 +210,17 @@ class _WeatherCardPreview extends StatelessWidget {
                   children: [
                     Text(
                       '紫外线${weather.uvIndex ?? "中"}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: context.textTertiary,
-                      ),
+                      style: context.textTheme.bodySmall?.copyWith(color: context.textTertiary),
                     ),
                     const SizedBox(width: 12),
                     Text(
                       '湿度 ${weather.humidity}%',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: context.textTertiary,
-                      ),
+                      style: context.textTheme.bodySmall?.copyWith(color: context.textTertiary),
                     ),
                     const SizedBox(width: 12),
                     Text(
                       '舒适度：${weather.comfortLevel ?? "一般"}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: context.textTertiary,
-                      ),
+                      style: context.textTheme.bodySmall?.copyWith(color: context.textTertiary),
                     ),
                   ],
                 ),
@@ -256,7 +235,10 @@ class _WeatherCardPreview extends StatelessWidget {
               gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Color(0xFF87CEEB), Color(0xFF4A90D9)],
+                colors: [
+                  AppColors.weatherSunnyStart,
+                  AppColors.weatherSunnyEnd,
+                ],
               ),
             ),
             child: Center(

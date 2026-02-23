@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
+import 'package:what_to_wear_flutter/theme/app_colors.dart';
 
 // Enums and Models for WhatToWear Flutter
 
@@ -181,19 +182,19 @@ enum UserIdentity {
   Color get color {
     switch (this) {
       case student:
-        return const Color(0xFF3B82F6);
+        return AppColors.primaryBlue;
       case it:
-        return const Color(0xFFA855F7);
+        return AppColors.accentPurple;
       case business:
-        return const Color(0xFF64748B);
+        return AppColors.darkTextTertiary;
       case freelancer:
-        return const Color(0xFFF59E0B);
+        return AppColors.warningYellow;
       case fashionista:
-        return const Color(0xFFEC4899);
+        return AppColors.accentPink;
       case artist:
-        return const Color(0xFF14B8A6);
+        return AppColors.accentTeal;
       case other:
-        return const Color(0xFF64748B);
+        return AppColors.darkTextTertiary;
     }
   }
 }

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/models.dart';
 import '../providers/profile_provider.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_colors.dart';
 
 class OnboardingPage extends StatefulWidget {
   final bool fromProfile;
@@ -61,19 +62,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
           const SizedBox(height: 48),
           Text(
             '你的昵称',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+            style: context.textTheme.bodySmall?.copyWith(
               color: context.textTertiary,
+              fontWeight: FontWeight.w600,
               letterSpacing: 1.2,
             ),
           ),
           const SizedBox(height: 12),
           TextField(
             onChanged: (v) => setState(() => _name = v),
-            style: TextStyle(
+            style: context.textTheme.titleLarge?.copyWith(
               color: context.textPrimary,
-              fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
@@ -103,7 +102,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     ? () => setState(() => _currentStep = 'identity')
                     : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryBlue,
+                  backgroundColor: AppColors.primaryBlue,
                   disabledBackgroundColor: context.cardAlt,
                   padding: const EdgeInsets.symmetric(vertical: 18),
                   shape: RoundedRectangleBorder(
@@ -185,7 +184,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     ? () => _completeOnboarding()
                     : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryBlue,
+                  backgroundColor: AppColors.primaryBlue,
                   disabledBackgroundColor: context.cardAlt,
                   padding: const EdgeInsets.symmetric(vertical: 18),
                   shape: RoundedRectangleBorder(
@@ -197,12 +196,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   children: [
                     Text(
                       widget.fromProfile ? '保存修改' : '开启推荐之旅',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                      style: context.textTheme.titleMedium?.copyWith(
                         color: _selectedIdentity != null
                             ? Colors.white
                             : context.textTertiary,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     if (_selectedIdentity != null) ...[
@@ -255,13 +253,13 @@ class _IdentityCard extends StatelessWidget {
           color: context.cardColor,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: selected ? AppTheme.primaryBlue : Colors.transparent,
+            color: selected ? AppColors.primaryBlue : Colors.transparent,
             width: 2,
           ),
           boxShadow: selected
               ? [
                   BoxShadow(
-                    color: AppTheme.primaryBlue.withValues(alpha: 0.2),
+                    color: AppColors.primaryBlue.withValues(alpha: 0.2),
                     blurRadius: 15,
                   ),
                 ]
@@ -277,7 +275,7 @@ class _IdentityCard extends StatelessWidget {
                   width: 20,
                   height: 20,
                   decoration: const BoxDecoration(
-                    color: AppTheme.primaryBlue,
+                    color: AppColors.primaryBlue,
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(Icons.check, color: Colors.white, size: 14),
@@ -299,16 +297,17 @@ class _IdentityCard extends StatelessWidget {
                   const SizedBox(height: 16),
                   Text(
                     identity.name,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                    style: context.textTheme.titleMedium?.copyWith(
                       color: context.textPrimary,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     identity.description,
-                    style: TextStyle(fontSize: 12, color: context.textTertiary),
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.textTertiary,
+                    ),
                   ),
                 ],
               ),

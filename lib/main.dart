@@ -1,3 +1,4 @@
+import 'package:what_to_wear_flutter/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -162,7 +163,7 @@ class _SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.darkBackground,
+      backgroundColor: AppColors.darkBackground,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -172,7 +173,7 @@ class _SplashScreen extends StatelessWidget {
               height: 80,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [AppTheme.primaryBlue, AppTheme.accentPurple],
+                  colors: [AppColors.primaryBlue, AppColors.accentPurple],
                 ),
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -291,7 +292,7 @@ class _NavItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         decoration: BoxDecoration(
           color: isActive
-              ? AppTheme.primaryBlue.withValues(alpha: 0.1)
+              ? AppColors.primaryBlue.withValues(alpha: 0.1)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
         ),
@@ -300,7 +301,7 @@ class _NavItem extends StatelessWidget {
           children: [
             Icon(
               isActive ? activeIcon : icon,
-              color: isActive ? AppTheme.primaryBlue : context.textTertiary,
+              color: isActive ? AppColors.primaryBlue : context.textTertiary,
               size: 24,
             ),
             const SizedBox(height: 4),
@@ -309,7 +310,7 @@ class _NavItem extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-                color: isActive ? AppTheme.primaryBlue : context.textTertiary,
+                color: isActive ? AppColors.primaryBlue : context.textTertiary,
               ),
             ),
           ],

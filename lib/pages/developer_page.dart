@@ -5,6 +5,7 @@ import '../providers/recommendation_provider.dart';
 import '../providers/wardrobe_provider.dart';
 import '../services/storage_service.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_colors.dart';
 import 'weather_test_page.dart';
 
 class DeveloperPage extends StatefulWidget {
@@ -50,16 +51,15 @@ class _DeveloperPageState extends State<DeveloperPage> {
             margin: const EdgeInsets.only(right: 12),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: AppTheme.errorRed.withValues(alpha: 0.15),
+              color: AppColors.errorRed.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Center(
+            child: Center(
               child: Text(
                 'DEBUG',
-                style: TextStyle(
-                  fontSize: 11,
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: AppColors.errorRed,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.errorRed,
                   letterSpacing: 1,
                 ),
               ),
@@ -166,7 +166,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
             _ActionButton(
               icon: Icons.cloud,
               label: '天气组件测试',
-              color: const Color(0xFF4A90D9),
+              color: AppColors.weatherSunnyEnd,
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   settings: const RouteSettings(name: '/WeatherTestPage'),
@@ -183,7 +183,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
             _ActionButton(
               icon: Icons.refresh,
               label: '重新获取天气',
-              color: AppTheme.primaryBlue,
+              color: AppColors.primaryBlue,
               onTap: () async {
                 _addLog('开始获取天气...');
                 try {
@@ -198,7 +198,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
             _ActionButton(
               icon: Icons.delete_sweep,
               label: '清空推荐历史',
-              color: AppTheme.warningYellow,
+              color: AppColors.warningYellow,
               onTap: () async {
                 final confirmed = await _showConfirmDialog(
                   context,
@@ -214,7 +214,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
             _ActionButton(
               icon: Icons.delete_forever,
               label: '清空所有数据',
-              color: AppTheme.errorRed,
+              color: AppColors.errorRed,
               onTap: () async {
                 final confirmed = await _showConfirmDialog(
                   context,
@@ -232,7 +232,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
             _ActionButton(
               icon: Icons.person_off,
               label: '重置 Onboarding',
-              color: AppTheme.accentPurple,
+              color: AppColors.accentPurple,
               onTap: () async {
                 final confirmed = await _showConfirmDialog(
                   context,
@@ -266,10 +266,9 @@ class _DeveloperPageState extends State<DeveloperPage> {
                           padding: const EdgeInsets.symmetric(vertical: 2),
                           child: Text(
                             log,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              fontFamily: 'monospace',
+                            style: context.textTheme.labelSmall?.copyWith(
                               color: Colors.greenAccent,
+                              fontFamily: 'monospace',
                             ),
                           ),
                         ),
@@ -301,7 +300,10 @@ class _DeveloperPageState extends State<DeveloperPage> {
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('确定', style: TextStyle(color: AppTheme.errorRed)),
+            child: const Text(
+              '确定',
+              style: TextStyle(color: AppColors.errorRed),
+            ),
           ),
         ],
       ),
@@ -319,10 +321,9 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
+      style: context.textTheme.titleMedium?.copyWith(
         color: context.textPrimary,
+        fontWeight: FontWeight.bold,
       ),
     );
   }
@@ -354,8 +355,7 @@ class _InfoCard extends StatelessWidget {
                   children: [
                     Text(
                       row.label,
-                      style: TextStyle(
-                        fontSize: 13,
+                      style: context.textTheme.bodyMedium?.copyWith(
                         color: context.textTertiary,
                       ),
                     ),
@@ -363,10 +363,9 @@ class _InfoCard extends StatelessWidget {
                     Flexible(
                       child: Text(
                         row.value,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
+                        style: context.textTheme.bodyMedium?.copyWith(
                           color: context.textPrimary,
+                          fontWeight: FontWeight.w600,
                         ),
                         textAlign: TextAlign.end,
                         overflow: TextOverflow.ellipsis,
@@ -431,10 +430,9 @@ class _ActionButton extends StatelessWidget {
               const SizedBox(width: 14),
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                style: context.textTheme.bodyMedium?.copyWith(
                   color: context.textPrimary,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const Spacer(),

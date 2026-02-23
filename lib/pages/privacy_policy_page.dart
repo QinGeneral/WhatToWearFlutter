@@ -22,11 +22,7 @@ class PrivacyPolicyPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context)?.privacyPolicy ?? '隐私协议',
-          style: TextStyle(
-            color: context.textPrimary,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
+          style: context.textTheme.titleLarge?.copyWith(color: context.textPrimary, fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -51,26 +47,10 @@ class PrivacyPolicyPage extends StatelessWidget {
             data: snapshot.data!,
             padding: const EdgeInsets.all(16.0),
             styleSheet: MarkdownStyleSheet(
-              p: TextStyle(
-                color: context.textPrimary,
-                fontSize: 14,
-                height: 1.5,
-              ),
-              h1: TextStyle(
-                color: context.textPrimary,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-              h2: TextStyle(
-                color: context.textPrimary,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-              h3: TextStyle(
-                color: context.textPrimary,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
+              p: context.textTheme.bodyMedium?.copyWith(color: context.textPrimary, height: 1.5),
+              h1: context.textTheme.displayMedium?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold),
+              h2: context.textTheme.displaySmall?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold),
+              h3: context.textTheme.titleLarge?.copyWith(color: context.textPrimary, fontWeight: FontWeight.w600),
               listBullet: TextStyle(color: context.textPrimary),
               blockSpacing: 16.0,
             ),

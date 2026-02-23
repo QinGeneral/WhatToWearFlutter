@@ -5,6 +5,7 @@ import '../providers/profile_provider.dart';
 import '../providers/recommendation_provider.dart';
 import '../providers/wardrobe_provider.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_colors.dart';
 import 'favorite_outfits_page.dart';
 import 'developer_page.dart';
 import 'history_page.dart';
@@ -40,11 +41,11 @@ class ProfilePage extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: const LinearGradient(
-                        colors: [AppTheme.primaryBlue, AppTheme.accentPurple],
+                        colors: [AppColors.primaryBlue, AppColors.accentPurple],
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppTheme.primaryBlue.withValues(alpha: 0.3),
+                          color: AppColors.primaryBlue.withValues(alpha: 0.3),
                           blurRadius: 20,
                           spreadRadius: 2,
                         ),
@@ -55,11 +56,7 @@ class ProfilePage extends StatelessWidget {
                         (profile?.nickname?.isNotEmpty == true)
                             ? profile!.nickname![0].toUpperCase()
                             : '?',
-                        style: const TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                        style: context.textTheme.displayLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -70,12 +67,7 @@ class ProfilePage extends StatelessWidget {
                     profile?.nickname ??
                         AppLocalizations.of(context)?.guest ??
                         'Guest',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: context.textPrimary,
-                      letterSpacing: -0.5,
-                    ),
+                    style: context.textTheme.displayMedium?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold, letterSpacing: -0.5),
                   ),
                   const SizedBox(height: 8),
 
@@ -113,11 +105,7 @@ class ProfilePage extends StatelessWidget {
                             const SizedBox(width: 6),
                             Text(
                               identityConfig.name,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: identityConfig.color,
-                              ),
+                              style: context.textTheme.bodyMedium?.copyWith(color: identityConfig.color, fontWeight: FontWeight.w600),
                             ),
                           ],
                         ),
@@ -131,10 +119,7 @@ class ProfilePage extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       '📍 ${rp.weather!.location ?? AppLocalizations.of(context)?.unknown ?? "未知"} · ${rp.weather!.temperature}°C ${AppLocalizations.of(context)?.translateWeatherCondition(rp.weather!.condition) ?? rp.weather!.condition}',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: context.textTertiary,
-                      ),
+                      style: context.textTheme.bodyMedium?.copyWith(color: context.textTertiary),
                     ),
                   ],
 
@@ -150,7 +135,7 @@ class ProfilePage extends StatelessWidget {
                           label:
                               AppLocalizations.of(context)?.favoriteOutfits ??
                               '收藏穿搭',
-                          color: AppTheme.errorRed,
+                          color: AppColors.errorRed,
                         ),
                         const SizedBox(width: 16),
                         _StatCard(
@@ -158,7 +143,7 @@ class ProfilePage extends StatelessWidget {
                           label:
                               AppLocalizations.of(context)?.outfitHistory ??
                               '穿搭历史',
-                          color: AppTheme.primaryBlue,
+                          color: AppColors.primaryBlue,
                         ),
                       ],
                     ),
@@ -176,7 +161,7 @@ class ProfilePage extends StatelessWidget {
                           label:
                               AppLocalizations.of(context)?.favoriteOutfits ??
                               '收藏穿搭',
-                          color: AppTheme.errorRed,
+                          color: AppColors.errorRed,
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
                               settings: const RouteSettings(
@@ -192,7 +177,7 @@ class ProfilePage extends StatelessWidget {
                           label:
                               AppLocalizations.of(context)?.outfitHistory ??
                               '穿搭历史',
-                          color: AppTheme.primaryBlue,
+                          color: AppColors.primaryBlue,
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
                               settings: const RouteSettings(
@@ -214,7 +199,7 @@ class ProfilePage extends StatelessWidget {
                                     '切换浅色主题')
                               : (AppLocalizations.of(context)?.switchDarkMode ??
                                     '切换深色主题'),
-                          color: AppTheme.warningYellow,
+                          color: AppColors.warningYellow,
                           onTap: () => pp.toggleTheme(),
                         ),
                         const SizedBox(height: 12),
@@ -223,7 +208,7 @@ class ProfilePage extends StatelessWidget {
                           label:
                               AppLocalizations.of(context)?.switchLanguage ??
                               '切换语言',
-                          color: AppTheme.successGreen,
+                          color: AppColors.successGreen,
                           onTap: () {
                             final newLang = pp.locale.languageCode == 'zh'
                                 ? 'en'
@@ -237,7 +222,7 @@ class ProfilePage extends StatelessWidget {
                           label:
                               AppLocalizations.of(context)?.helpAndFeedback ??
                               '帮助与反馈',
-                          color: AppTheme.accentPurple,
+                          color: AppColors.accentPurple,
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
                               settings: const RouteSettings(
@@ -290,11 +275,7 @@ class ProfilePage extends StatelessWidget {
                         },
                         child: Text(
                           AppLocalizations.of(context)?.privacyPolicy ?? '隐私协议',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: context.textTertiary,
-                            decoration: TextDecoration.underline,
-                          ),
+                          style: context.textTheme.bodySmall?.copyWith(color: context.textTertiary, decoration: TextDecoration.underline),
                         ),
                       ),
                     ),
@@ -336,21 +317,12 @@ class _StatCard extends StatelessWidget {
           children: [
             Text(
               value,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+              style: context.textTheme.displayMedium?.copyWith(color: color, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
               label,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w500,
-                color: context.textTertiary,
-                letterSpacing: 0.5,
-              ),
+              style: context.textTheme.labelSmall?.copyWith(color: context.textTertiary, fontWeight: FontWeight.w500, letterSpacing: 0.5),
             ),
           ],
         ),
@@ -401,11 +373,7 @@ class _FunctionButton extends StatelessWidget {
               Expanded(
                 child: Text(
                   label,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: context.textPrimary,
-                  ),
+                  style: context.textTheme.titleMedium?.copyWith(color: context.textPrimary, fontWeight: FontWeight.w600),
                 ),
               ),
               Icon(Icons.chevron_right, color: context.textTertiary, size: 20),

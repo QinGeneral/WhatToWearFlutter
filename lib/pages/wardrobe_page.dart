@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/models.dart';
 import '../providers/wardrobe_provider.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_colors.dart';
 import 'add_item_page.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 
@@ -51,7 +52,7 @@ class _WardrobePageState extends State<WardrobePage> {
               );
               if (mounted) wp.loadWardrobe();
             },
-            backgroundColor: AppTheme.primaryBlue,
+            backgroundColor: AppColors.primaryBlue,
             child: const Icon(Icons.add, color: Colors.white, size: 28),
           ),
           body: SafeArea(
@@ -137,9 +138,8 @@ class _WardrobePageState extends State<WardrobePage> {
                                             context,
                                           )?.noMatchingClothing ??
                                           '没有找到匹配的衣物',
-                                style: TextStyle(
+                                style: context.textTheme.bodyMedium?.copyWith(
                                   color: context.textSecondary,
-                                  fontSize: 14,
                                 ),
                               ),
                             ],
@@ -191,18 +191,17 @@ class _CategoryChip extends StatelessWidget {
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           decoration: BoxDecoration(
-            color: selected ? AppTheme.primaryBlue : context.cardColor,
+            color: selected ? AppColors.primaryBlue : context.cardColor,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: selected ? AppTheme.primaryBlue : context.borderColor,
+              color: selected ? AppColors.primaryBlue : context.borderColor,
             ),
           ),
           child: Text(
             label,
-            style: TextStyle(
-              fontSize: 13,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: selected ? Colors.white : context.textPrimary,
               fontWeight: FontWeight.w600,
-              color: selected ? Colors.white : context.textSecondary,
             ),
           ),
         ),
@@ -258,10 +257,9 @@ class _WardrobeItemCard extends StatelessWidget {
                 children: [
                   Text(
                     item.name,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                    style: context.textTheme.bodyMedium?.copyWith(
                       color: context.textPrimary,
+                      fontWeight: FontWeight.bold,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -269,7 +267,9 @@ class _WardrobeItemCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     item.category.localizedName(context),
-                    style: TextStyle(fontSize: 11, color: context.textTertiary),
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: context.textTertiary,
+                    ),
                   ),
                 ],
               ),
@@ -293,8 +293,8 @@ class _WardrobeItemCard extends StatelessWidget {
           gaplessPlayback: true,
         );
       } catch (e) {
-      debugPrint('Caught error: $e');
-    }
+        debugPrint('Caught error: $e');
+      }
     }
     return Container(
       color: context.surfaceColor,

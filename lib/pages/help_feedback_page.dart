@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HelpFeedbackPage extends StatefulWidget {
@@ -39,7 +40,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: const Text('无法打开邮件应用，请直接发送邮件至 $email'),
-              backgroundColor: AppTheme.errorRed,
+              backgroundColor: AppColors.errorRed,
             ),
           );
         }
@@ -49,7 +50,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('无法打开邮件应用，请直接发送邮件至 $email'),
-            backgroundColor: AppTheme.errorRed,
+            backgroundColor: AppColors.errorRed,
           ),
         );
       }
@@ -97,10 +98,9 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
             // FAQ Section
             Text(
               '常见问题',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+              style: context.textTheme.titleLarge?.copyWith(
                 color: context.textPrimary,
+                fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 16),
@@ -111,16 +111,17 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
             // Feedback Section
             Text(
               '意见反馈',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+              style: context.textTheme.titleLarge?.copyWith(
                 color: context.textPrimary,
+                fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               '如果您遇到了问题，或者有任何建议，欢迎告诉我们：',
-              style: TextStyle(fontSize: 14, color: context.textSecondary),
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.textSecondary,
+              ),
             ),
             const SizedBox(height: 16),
             SizedBox(
@@ -128,12 +129,14 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
               child: ElevatedButton.icon(
                 onPressed: _launchEmail,
                 icon: const Icon(Icons.email_outlined, color: Colors.white),
-                label: const Text(
+                label: Text(
                   '发送邮件给开发者',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryBlue,
+                  backgroundColor: AppColors.primaryBlue,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
@@ -147,7 +150,9 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
             Center(
               child: Text(
                 '或者直接发送至: qingeneral@gmail.com',
-                style: TextStyle(color: context.textTertiary, fontSize: 13),
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.textTertiary,
+                ),
               ),
             ),
             const SizedBox(height: 40),
@@ -177,14 +182,13 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
-          iconColor: AppTheme.primaryBlue,
+          iconColor: AppColors.primaryBlue,
           collapsedIconColor: context.textTertiary,
           title: Text(
             question,
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
+            style: context.textTheme.titleMedium?.copyWith(
               color: context.textPrimary,
+              fontWeight: FontWeight.w600,
             ),
           ),
           childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -192,8 +196,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
           children: [
             Text(
               answer,
-              style: TextStyle(
-                fontSize: 14,
+              style: context.textTheme.bodyMedium?.copyWith(
                 color: context.textSecondary,
                 height: 1.5,
               ),

@@ -6,6 +6,7 @@ import 'dart:convert';
 import '../models/models.dart';
 import '../providers/recommendation_provider.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_colors.dart';
 import '../widgets/share_dialog.dart';
 import 'add_item_page.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
@@ -83,11 +84,11 @@ class OutfitDetailPage extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   rec.title,
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: context.textPrimary,
-                                  ),
+                                  style: context.textTheme.displayMedium
+                                      ?.copyWith(
+                                        color: context.textPrimary,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                 ),
                               ),
                               Container(
@@ -98,18 +99,17 @@ class OutfitDetailPage extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
-                                      AppTheme.primaryBlue,
-                                      AppTheme.accentPurple,
+                                      AppColors.primaryBlue,
+                                      AppColors.accentPurple,
                                     ],
                                   ),
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: Text(
                                   '${rec.matchPercentage ?? 85}%',
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
+                                  style: context.textTheme.bodyMedium?.copyWith(
                                     color: Colors.white,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
@@ -136,19 +136,19 @@ class OutfitDetailPage extends StatelessWidget {
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
+                                  Text(
                                     '💡',
-                                    style: TextStyle(fontSize: 20),
+                                    style: context.textTheme.displaySmall,
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Text(
                                       rec.reasoning!,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        height: 1.6,
-                                        color: context.textSecondary,
-                                      ),
+                                      style: context.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            color: context.textSecondary,
+                                            height: 1.6,
+                                          ),
                                     ),
                                   ),
                                 ],
@@ -160,10 +160,9 @@ class OutfitDetailPage extends StatelessWidget {
                           // Outfit items
                           Text(
                             AppLocalizations.of(context)?.outfitItems ?? '穿搭单品',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                            style: context.textTheme.titleLarge?.copyWith(
                               color: context.textPrimary,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -210,15 +209,14 @@ class OutfitDetailPage extends StatelessWidget {
                                   ? Icons.favorite
                                   : Icons.favorite_border,
                               color: rec.isFavorite
-                                  ? AppTheme.errorRed
+                                  ? AppColors.errorRed
                                   : context.textSecondary,
                               size: 24,
                             ),
                             const SizedBox(height: 2),
                             Text(
                               AppLocalizations.of(context)?.favorite ?? '收藏',
-                              style: TextStyle(
-                                fontSize: 10,
+                              style: context.textTheme.labelSmall?.copyWith(
                                 color: context.textTertiary,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -262,8 +260,8 @@ class OutfitDetailPage extends StatelessWidget {
           gaplessPlayback: true,
         );
       } catch (e) {
-      debugPrint('Caught error: $e');
-    }
+        debugPrint('Caught error: $e');
+      }
     }
     return Container(
       decoration: BoxDecoration(
@@ -271,8 +269,8 @@ class OutfitDetailPage extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppTheme.primaryBlue.withValues(alpha: 0.3),
-            AppTheme.accentPurple.withValues(alpha: 0.3),
+            AppColors.primaryBlue.withValues(alpha: 0.3),
+            AppColors.accentPurple.withValues(alpha: 0.3),
           ],
         ),
       ),
@@ -305,18 +303,17 @@ class OutfitDetailPage extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: AppTheme.primaryBlue.withValues(alpha: 0.1),
+          color: AppColors.primaryBlue.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: AppTheme.primaryBlue.withValues(alpha: 0.3),
+            color: AppColors.primaryBlue.withValues(alpha: 0.3),
           ),
         ),
         child: Text(
           tag,
-          style: const TextStyle(
-            fontSize: 12,
+          style: context.textTheme.bodySmall?.copyWith(
+            color: AppColors.primaryBlue,
             fontWeight: FontWeight.w600,
-            color: AppTheme.primaryBlue,
           ),
         ),
       );
@@ -386,17 +383,15 @@ class OutfitDetailPage extends StatelessWidget {
                   children: [
                     Text(
                       item.name,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
+                      style: context.textTheme.titleMedium?.copyWith(
                         color: context.textPrimary,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '${entry.key} · ${item.category.label}',
-                      style: TextStyle(
-                        fontSize: 12,
+                      style: context.textTheme.bodySmall?.copyWith(
                         color: context.textTertiary,
                       ),
                     ),
@@ -434,8 +429,8 @@ class OutfitDetailPage extends StatelessWidget {
           gaplessPlayback: true,
         );
       } catch (e) {
-      debugPrint('Caught error: $e');
-    }
+        debugPrint('Caught error: $e');
+      }
     }
     return Container(
       color: context.surfaceColor,
@@ -460,10 +455,9 @@ class OutfitDetailPage extends StatelessWidget {
         children: [
           Text(
             AppLocalizations.of(context)?.weatherLabel ?? '天气',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
+            style: context.textTheme.bodyMedium?.copyWith(
               color: context.textPrimary,
+              fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 12),
@@ -475,7 +469,7 @@ class OutfitDetailPage extends StatelessWidget {
               else
                 Text(
                   rec.weather.icon ?? '☀️',
-                  style: const TextStyle(fontSize: 32),
+                  style: context.textTheme.displayLarge,
                 ),
               const SizedBox(width: 12),
               Column(
@@ -483,15 +477,16 @@ class OutfitDetailPage extends StatelessWidget {
                 children: [
                   Text(
                     '${rec.weather.temperature}°C · ${rec.weather.condition}',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                    style: context.textTheme.titleMedium?.copyWith(
                       color: context.textPrimary,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
                     '${AppLocalizations.of(context)?.humidityPrefix ?? "湿度 "}${rec.weather.humidity}%',
-                    style: TextStyle(fontSize: 13, color: context.textTertiary),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.textTertiary,
+                    ),
                   ),
                 ],
               ),
@@ -536,8 +531,7 @@ class ShareButton extends StatelessWidget {
             const SizedBox(height: 2),
             Text(
               AppLocalizations.of(context)?.shareBtn ?? '分享',
-              style: TextStyle(
-                fontSize: 10,
+              style: context.textTheme.labelSmall?.copyWith(
                 color: context.textTertiary,
                 fontWeight: FontWeight.w500,
               ),
@@ -622,10 +616,9 @@ class _GenerateButtonState extends State<GenerateButton> {
                           '生成中...')
                     : (AppLocalizations.of(context)?.generateTryOnImage ??
                           '生成试穿图'),
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                style: context.textTheme.titleMedium?.copyWith(
                   color: context.textPrimary,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],

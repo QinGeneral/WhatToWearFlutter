@@ -4,6 +4,7 @@ import '../providers/recommendation_provider.dart';
 import '../providers/wardrobe_provider.dart';
 import '../services/ai/ai_outfit_recommender.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_colors.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 
 class CustomOutfitPage extends StatefulWidget {
@@ -203,7 +204,7 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primaryBlue,
+                backgroundColor: AppColors.primaryBlue,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -323,8 +324,7 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                   context,
                                 )?.customOutfitDescription ??
                                 '按指引填写日期、地点、活动和人物，获取精准方案',
-                            style: TextStyle(
-                              fontSize: 13,
+                            style: context.textTheme.bodyMedium?.copyWith(
                               color: context.textSecondary,
                             ),
                           ),
@@ -347,9 +347,8 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                 TextField(
                                   controller: _textController,
                                   maxLines: 8,
-                                  style: TextStyle(
+                                  style: context.textTheme.bodyMedium?.copyWith(
                                     color: context.textPrimary,
-                                    fontSize: 14,
                                     height: 1.6,
                                   ),
                                   decoration: InputDecoration(
@@ -385,10 +384,10 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                       ),
                                       child: Text(
                                         '${_textController.text.length}/200',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: context.textTertiary,
-                                        ),
+                                        style: context.textTheme.labelSmall
+                                            ?.copyWith(
+                                              color: context.textTertiary,
+                                            ),
                                       ),
                                     ),
                                   ],
@@ -421,12 +420,12 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                     ),
                                     decoration: BoxDecoration(
                                       color: isActive
-                                          ? AppTheme.primaryBlue
+                                          ? AppColors.primaryBlue
                                           : context.cardColor,
                                       borderRadius: BorderRadius.circular(20),
                                       border: Border.all(
                                         color: isActive
-                                            ? AppTheme.primaryBlue
+                                            ? AppColors.primaryBlue
                                             : context.borderColor.withValues(
                                                 alpha: 0.3,
                                               ),
@@ -435,13 +434,13 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                     child: Center(
                                       child: Text(
                                         _translateCategory(context, cat),
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color: isActive
-                                              ? Colors.white
-                                              : context.textSecondary,
-                                        ),
+                                        style: context.textTheme.bodyMedium
+                                            ?.copyWith(
+                                              color: isActive
+                                                  ? Colors.white
+                                                  : context.textPrimary,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                       ),
                                     ),
                                   ),
@@ -483,14 +482,14 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                       ),
                                       decoration: BoxDecoration(
                                         color: isSelected
-                                            ? AppTheme.primaryBlue.withValues(
+                                            ? AppColors.primaryBlue.withValues(
                                                 alpha: 0.2,
                                               )
                                             : Colors.transparent,
                                         borderRadius: BorderRadius.circular(14),
                                         border: Border.all(
                                           color: isSelected
-                                              ? AppTheme.primaryBlue
+                                              ? AppColors.primaryBlue
                                               : context.borderColor.withValues(
                                                   alpha: 0.3,
                                                 ),
@@ -501,12 +500,12 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                         children: [
                                           Text(
                                             _translateOption(context, option),
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              color: isSelected
-                                                  ? AppTheme.primaryBlue
-                                                  : context.textSecondary,
-                                            ),
+                                            style: context.textTheme.bodyMedium
+                                                ?.copyWith(
+                                                  color: isSelected
+                                                      ? AppColors.primaryBlue
+                                                      : context.textPrimary,
+                                                ),
                                           ),
                                           if (isCustom) ...[
                                             const SizedBox(width: 4),
@@ -636,12 +635,11 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                             context,
                                           )?.getOutfitPlan ??
                                           '获取搭配方案'),
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                style: context.textTheme.titleMedium?.copyWith(
                                   color: rp.isLoading
                                       ? Colors.black38
                                       : Colors.black,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],
@@ -666,7 +664,7 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                         width: 56,
                         height: 56,
                         child: CircularProgressIndicator(
-                          color: AppTheme.primaryBlue,
+                          color: AppColors.primaryBlue,
                           strokeWidth: 4,
                         ),
                       ),
@@ -676,10 +674,9 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                               context,
                             )?.generatingExclusiveOutfit ??
                             '正在为您定制专属穿搭...',
-                        style: TextStyle(
-                          color: AppTheme.primaryBlue,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          color: AppColors.primaryBlue,
                           fontWeight: FontWeight.w500,
-                          fontSize: 15,
                           decoration: TextDecoration.none,
                         ),
                       ),

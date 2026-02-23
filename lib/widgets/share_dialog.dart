@@ -94,11 +94,7 @@ class _ShareDialogState extends State<ShareDialog> {
                       children: [
                         Text(
                           AppLocalizations.of(context)?.shareOutfit ?? '分享穿搭',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: context.textPrimary,
-                          ),
+                          style: context.textTheme.titleLarge?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold),
                         ),
                         GestureDetector(
                           onTap: () => Navigator.of(context).pop(),
@@ -190,11 +186,7 @@ class _ShareDialogState extends State<ShareDialog> {
                                               const SizedBox(width: 4),
                                               Text(
                                                 '${widget.recommendation.matchPercentage ?? 85}${AppLocalizations.of(context)?.matchSuffix ?? "% 匹配"}',
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                                style: context.textTheme.bodySmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                                               ),
                                             ],
                                           ),
@@ -232,11 +224,7 @@ class _ShareDialogState extends State<ShareDialog> {
                                                       context,
                                                     )?.dailyLiteral ??
                                                     '日常搭配'),
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                                            style: context.textTheme.labelSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
                                           ),
                                         ),
                                       ),
@@ -253,11 +241,7 @@ class _ShareDialogState extends State<ShareDialog> {
                                     children: [
                                       Text(
                                         _getCardTitle(context),
-                                        style: TextStyle(
-                                          color: context.textPrimary,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: context.textTheme.titleMedium?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -434,15 +418,11 @@ class _ShareDialogState extends State<ShareDialog> {
               children: [
                 Text(
                   label,
-                  style: TextStyle(color: context.textSecondary, fontSize: 10),
+                  style: context.textTheme.labelSmall?.copyWith(color: context.textSecondary),
                 ),
                 Text(
                   value,
-                  style: TextStyle(
-                    color: context.textPrimary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: context.textTheme.bodySmall?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

@@ -10,6 +10,7 @@ import '../providers/wardrobe_provider.dart';
 import '../services/ai/ai_service_provider.dart';
 import '../services/storage_service.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_colors.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 
 class AddItemPage extends StatefulWidget {
@@ -389,9 +390,8 @@ class _AddItemPageState extends State<AddItemPage> {
           _isEditing
               ? (AppLocalizations.of(context)?.clothingDetails ?? '衣物详情')
               : (AppLocalizations.of(context)?.addClothing ?? '添加衣物'),
-          style: TextStyle(
+          style: context.textTheme.titleLarge?.copyWith(
             color: context.textPrimary,
-            fontSize: 18,
             fontWeight: FontWeight.bold,
             letterSpacing: -0.3,
           ),
@@ -435,7 +435,7 @@ class _AddItemPageState extends State<AddItemPage> {
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(
                           color: _imageBase64 != null
-                              ? AppTheme.primaryBlue.withValues(alpha: 0.3)
+                              ? AppColors.primaryBlue.withValues(alpha: 0.3)
                               : context.borderColor,
                           width: 2,
                           strokeAlign: _imageBase64 != null
@@ -445,7 +445,7 @@ class _AddItemPageState extends State<AddItemPage> {
                         boxShadow: _imageBase64 != null
                             ? [
                                 BoxShadow(
-                                  color: AppTheme.primaryBlue.withValues(
+                                  color: AppColors.primaryBlue.withValues(
                                     alpha: 0.05,
                                   ),
                                   blurRadius: 24,
@@ -558,13 +558,13 @@ class _AddItemPageState extends State<AddItemPage> {
                   child: ElevatedButton(
                     onPressed: _isSaving ? null : _save,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryBlue,
+                      backgroundColor: AppColors.primaryBlue,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                       elevation: 8,
-                      shadowColor: AppTheme.primaryBlue.withValues(alpha: 0.3),
+                      shadowColor: AppColors.primaryBlue.withValues(alpha: 0.3),
                     ),
                     child: _isSaving
                         ? const SizedBox(
@@ -639,7 +639,7 @@ class _AddItemPageState extends State<AddItemPage> {
                   width: 32,
                   height: 32,
                   child: CircularProgressIndicator(
-                    color: AppTheme.primaryBlue,
+                    color: AppColors.primaryBlue,
                     strokeWidth: 3,
                   ),
                 ),
@@ -650,9 +650,8 @@ class _AddItemPageState extends State<AddItemPage> {
                             'AI 优化中...')
                       : (AppLocalizations.of(context)?.aiRecognizing ??
                             'AI 识别中...'),
-                  style: const TextStyle(
+                  style: context.textTheme.bodyMedium?.copyWith(
                     color: Colors.white,
-                    fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -699,11 +698,11 @@ class _AddItemPageState extends State<AddItemPage> {
                       padding: const EdgeInsets.all(10),
                       margin: const EdgeInsets.only(right: 8),
                       decoration: BoxDecoration(
-                        color: AppTheme.primaryBlue.withValues(alpha: 0.9),
+                        color: AppColors.primaryBlue.withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: AppTheme.primaryBlue.withValues(alpha: 0.3),
+                            color: AppColors.primaryBlue.withValues(alpha: 0.3),
                             blurRadius: 8,
                             spreadRadius: 1,
                           ),
@@ -760,16 +759,15 @@ class _AddItemPageState extends State<AddItemPage> {
           child: Icon(
             Icons.add_a_photo_outlined,
             size: 28,
-            color: AppTheme.primaryBlue,
+            color: AppColors.primaryBlue,
           ),
         ),
         const SizedBox(height: 16),
         Text(
           AppLocalizations.of(context)?.clickToUploadPhoto ?? '点击上传照片',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
+          style: context.textTheme.bodyMedium?.copyWith(
             color: context.textTertiary,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ],
@@ -781,10 +779,9 @@ class _AddItemPageState extends State<AddItemPage> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
+      style: context.textTheme.displaySmall?.copyWith(
         color: context.textPrimary,
+        fontWeight: FontWeight.bold,
         letterSpacing: -0.3,
       ),
     );
@@ -793,10 +790,9 @@ class _AddItemPageState extends State<AddItemPage> {
   Widget _buildFieldLabel(String text) {
     return Text(
       text,
-      style: TextStyle(
-        fontSize: 11,
-        fontWeight: FontWeight.w600,
+      style: context.textTheme.labelSmall?.copyWith(
         color: context.textTertiary,
+        fontWeight: FontWeight.w600,
         letterSpacing: 1.2,
       ),
     );
@@ -805,7 +801,9 @@ class _AddItemPageState extends State<AddItemPage> {
   Widget _buildInputField(TextEditingController controller, String hint) {
     return TextField(
       controller: controller,
-      style: TextStyle(color: context.textPrimary, fontSize: 16),
+      style: context.textTheme.titleMedium?.copyWith(
+        color: context.textPrimary,
+      ),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(
@@ -828,7 +826,7 @@ class _AddItemPageState extends State<AddItemPage> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(
-            color: AppTheme.primaryBlue.withValues(alpha: 0.5),
+            color: AppColors.primaryBlue.withValues(alpha: 0.5),
             width: 2,
           ),
         ),
@@ -864,7 +862,9 @@ class _AddItemPageState extends State<AddItemPage> {
           icon: Icon(Icons.expand_more, color: context.textTertiary),
           isExpanded: true,
           dropdownColor: context.cardColor,
-          style: TextStyle(color: context.textPrimary, fontSize: 16),
+          style: context.textTheme.titleMedium?.copyWith(
+            color: context.textPrimary,
+          ),
           items: ClothingCategory.values.map((cat) {
             return DropdownMenuItem<ClothingCategory>(
               value: cat,
@@ -900,14 +900,14 @@ class _AddItemPageState extends State<AddItemPage> {
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: selected
-                      ? AppTheme.primaryBlue
+                      ? AppColors.primaryBlue
                       : context.borderColor.withValues(alpha: 0.5),
                   width: selected ? 3 : 1,
                 ),
                 boxShadow: selected
                     ? [
                         BoxShadow(
-                          color: AppTheme.primaryBlue.withValues(alpha: 0.3),
+                          color: AppColors.primaryBlue.withValues(alpha: 0.3),
                           blurRadius: 8,
                           spreadRadius: 1,
                         ),
@@ -954,17 +954,17 @@ class _AddItemPageState extends State<AddItemPage> {
                   vertical: 12,
                 ),
                 decoration: BoxDecoration(
-                  color: selected ? AppTheme.primaryBlue : context.cardAlt,
+                  color: selected ? AppColors.primaryBlue : context.cardAlt,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: selected
-                        ? AppTheme.primaryBlue
+                        ? AppColors.primaryBlue
                         : context.borderColor.withValues(alpha: 0.5),
                   ),
                   boxShadow: selected
                       ? [
                           BoxShadow(
-                            color: AppTheme.primaryBlue.withValues(alpha: 0.2),
+                            color: AppColors.primaryBlue.withValues(alpha: 0.2),
                             blurRadius: 12,
                             spreadRadius: 1,
                           ),
@@ -973,10 +973,9 @@ class _AddItemPageState extends State<AddItemPage> {
                 ),
                 child: Text(
                   s.localizedName(context),
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: selected ? Colors.white : context.textPrimary,
                     fontWeight: FontWeight.w600,
-                    color: selected ? Colors.white : context.textTertiary,
                   ),
                 ),
               ),
