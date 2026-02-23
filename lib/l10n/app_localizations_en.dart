@@ -626,4 +626,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get agreeAndContinue => 'Agree & Continue';
+
+  @override
+  String get pleaseEnterOrSelectOutfitNeeds =>
+      'Please enter or select your outfit needs';
 }

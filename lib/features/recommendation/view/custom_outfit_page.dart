@@ -238,7 +238,12 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
     if (text.isEmpty && _selections.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('请输入或选择穿搭需求'),
+          content: Text(
+            AppLocalizations.of(
+                  context,
+                )?.pleaseEnterOrSelectOutfitNeeds ??
+                '请输入或选择穿搭需求',
+          ),
           backgroundColor: AppColors.errorRed,
           behavior: SnackBarBehavior.floating,
         ),

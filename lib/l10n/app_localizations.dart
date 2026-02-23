@@ -1321,6 +1321,12 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'同意并继续'**
   String get agreeAndContinue;
+
+  /// No description provided for @pleaseEnterOrSelectOutfitNeeds.
+  ///
+  /// In zh, this message translates to:
+  /// **'请输入或选择穿搭需求'**
+  String get pleaseEnterOrSelectOutfitNeeds;
 }
 
 class _AppLocalizationsDelegate

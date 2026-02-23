@@ -622,4 +622,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get agreeAndContinue => '同意并继续';
+
+  @override
+  String get pleaseEnterOrSelectOutfitNeeds => '请输入或选择穿搭需求';
 }
