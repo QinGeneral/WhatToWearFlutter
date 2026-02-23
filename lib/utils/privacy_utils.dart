@@ -3,7 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
-import '../theme/app_theme.dart';
 import '../pages/privacy_policy_page.dart';
 
 // 在用户点击“同意”按钮时调用：
@@ -62,27 +61,7 @@ Future<bool> checkAndShowPrivacyDialog(BuildContext context) async {
                         );
                       },
                   ),
-                  TextSpan(text: l10n.privacyDialogContentPart2),
-                  TextSpan(
-                    text: l10n.userAgreement,
-                    style: const TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        // 这里也暂时跳隐私政策，或者后续您有单独的用户协议再改
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            settings: const RouteSettings(
-                              name: '/PrivacyPolicyPage',
-                            ),
-                            builder: (context) => const PrivacyPolicyPage(),
-                          ),
-                        );
-                      },
-                  ),
+
                   TextSpan(text: l10n.privacyDialogContentPart3),
                 ],
               ),
@@ -101,7 +80,7 @@ Future<bool> checkAndShowPrivacyDialog(BuildContext context) async {
             ElevatedButton(
               onPressed: () async {
                 await prefs.setBool('agreed_privacy', true);
-                await agreePrivacyPolicy();
+                agreePrivacyPolicy(); // Don't await to avoid UI blocking
                 if (dialogContext.mounted) {
                   Navigator.of(dialogContext).pop(true);
                 }
@@ -109,7 +88,7 @@ Future<bool> checkAndShowPrivacyDialog(BuildContext context) async {
               child: Text(
                 l10n.agreeAndContinue,
                 style: TextStyle(
-                  color: AppTheme.primaryBlue,
+                  color: Theme.of(dialogContext).colorScheme.onPrimary,
                   fontWeight: FontWeight.bold,
                 ),
               ),

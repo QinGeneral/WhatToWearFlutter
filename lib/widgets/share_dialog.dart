@@ -380,10 +380,14 @@ class _ShareDialogState extends State<ShareDialog> {
     if (src != null && src.isNotEmpty) {
       try {
         if (src.startsWith('http')) {
-          return Image.network(src, fit: BoxFit.cover);
+          return Image.network(src, fit: BoxFit.cover, gaplessPlayback: true);
         }
         final decoded = src.startsWith('data:') ? src.split(',').last : src;
-        return Image.memory(base64Decode(decoded), fit: BoxFit.cover);
+        return Image.memory(
+          base64Decode(decoded),
+          fit: BoxFit.cover,
+          gaplessPlayback: true,
+        );
       } catch (_) {}
     }
 

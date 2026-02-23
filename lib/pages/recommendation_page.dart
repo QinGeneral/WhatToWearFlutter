@@ -38,7 +38,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
         return Scaffold(
           backgroundColor: context.bgPrimary,
           floatingActionButton: FloatingActionButton(
-            heroTag: 'recommendation_fab',
+            heroTag: null,
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -427,10 +427,18 @@ class _TopPickCard extends StatelessWidget {
     final src = recommendation.mainImage;
     if (src != null && src.startsWith('data:')) {
       final base64Str = src.split(',').last;
-      return Image.memory(base64Decode(base64Str), fit: BoxFit.cover);
+      return Image.memory(
+        base64Decode(base64Str),
+        fit: BoxFit.cover,
+        gaplessPlayback: true,
+      );
     } else if (src != null && src.isNotEmpty) {
       try {
-        return Image.memory(base64Decode(src), fit: BoxFit.cover);
+        return Image.memory(
+          base64Decode(src),
+          fit: BoxFit.cover,
+          gaplessPlayback: true,
+        );
       } catch (_) {}
     }
     return Container(
@@ -559,7 +567,11 @@ class _AlternativeCard extends StatelessWidget {
     if (src != null && src.isNotEmpty) {
       try {
         final decoded = src.startsWith('data:') ? src.split(',').last : src;
-        return Image.memory(base64Decode(decoded), fit: BoxFit.cover);
+        return Image.memory(
+          base64Decode(decoded),
+          fit: BoxFit.cover,
+          gaplessPlayback: true,
+        );
       } catch (_) {}
     }
     return Container(

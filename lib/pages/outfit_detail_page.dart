@@ -254,9 +254,13 @@ class OutfitDetailPage extends StatelessWidget {
         final decoded = src.startsWith('data:') ? src.split(',').last : src;
         // Check if it's a network URL (though our app mostly uses base64 for now)
         if (src.startsWith('http')) {
-          return Image.network(src, fit: BoxFit.cover);
+          return Image.network(src, fit: BoxFit.cover, gaplessPlayback: true);
         }
-        return Image.memory(base64Decode(decoded), fit: BoxFit.cover);
+        return Image.memory(
+          base64Decode(decoded),
+          fit: BoxFit.cover,
+          gaplessPlayback: true,
+        );
       } catch (_) {}
     }
     return Container(
@@ -422,7 +426,11 @@ class OutfitDetailPage extends StatelessWidget {
     if (src != null && src.isNotEmpty) {
       try {
         final decoded = src.startsWith('data:') ? src.split(',').last : src;
-        return Image.memory(base64Decode(decoded), fit: BoxFit.cover);
+        return Image.memory(
+          base64Decode(decoded),
+          fit: BoxFit.cover,
+          gaplessPlayback: true,
+        );
       } catch (_) {}
     }
     return Container(

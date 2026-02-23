@@ -620,7 +620,11 @@ class _AddItemPageState extends State<AddItemPage> {
     return Stack(
       fit: StackFit.expand,
       children: [
-        Image.memory(base64Decode(imageToShow), fit: BoxFit.cover),
+        Image.memory(
+          base64Decode(imageToShow),
+          fit: BoxFit.cover,
+          gaplessPlayback: true,
+        ),
 
         // AI analyzing overlay
         if (_isAnalyzing || _isOptimizing)

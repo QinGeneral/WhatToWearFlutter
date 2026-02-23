@@ -41,7 +41,7 @@ class _WardrobePageState extends State<WardrobePage> {
         return Scaffold(
           backgroundColor: context.bgAlt,
           floatingActionButton: FloatingActionButton(
-            heroTag: 'wardrobe_fab',
+            heroTag: null,
             onPressed: () async {
               await Navigator.of(context).push(
                 MaterialPageRoute(
@@ -287,7 +287,11 @@ class _WardrobeItemCard extends StatelessWidget {
     if (src != null && src.isNotEmpty) {
       try {
         final decoded = src.startsWith('data:') ? src.split(',').last : src;
-        return Image.memory(base64Decode(decoded), fit: BoxFit.cover);
+        return Image.memory(
+          base64Decode(decoded),
+          fit: BoxFit.cover,
+          gaplessPlayback: true,
+        );
       } catch (_) {}
     }
     return Container(

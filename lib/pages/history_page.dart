@@ -207,7 +207,11 @@ class _HistoryPageState extends State<HistoryPage> {
     if (src != null && src.isNotEmpty) {
       try {
         final decoded = src.startsWith('data:') ? src.split(',').last : src;
-        return Image.memory(base64Decode(decoded), fit: BoxFit.cover);
+        return Image.memory(
+          base64Decode(decoded),
+          fit: BoxFit.cover,
+          gaplessPlayback: true,
+        );
       } catch (_) {}
     }
     return Container(
