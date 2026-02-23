@@ -19,6 +19,9 @@ import 'services/ai/zhipu/zhipu_outfit_recommender.dart';
 import 'services/ai/qianwen/qianwen_image_analyzer.dart';
 import 'services/ai/qianwen/qianwen_image_generator.dart';
 import 'services/ai/qianwen/qianwen_outfit_recommender.dart';
+import 'services/ai/doubao/doubao_image_analyzer.dart';
+import 'services/ai/doubao/doubao_image_generator.dart';
+import 'services/ai/doubao/doubao_outfit_recommender.dart';
 import 'services/storage_service.dart';
 import 'theme/app_theme.dart';
 import 'pages/onboarding_page.dart';
@@ -75,6 +78,11 @@ void main() async {
       imageAnalyzer: QianwenImageAnalyzer(),
       imageGenerator: QianwenImageGenerator(),
       outfitRecommender: QianwenOutfitRecommender(),
+    ),
+    'doubao' => AIServiceProvider(
+      imageAnalyzer: DoubaoImageAnalyzer(),
+      imageGenerator: DoubaoImageGenerator(),
+      outfitRecommender: DoubaoOutfitRecommender(),
     ),
     _ => AIServiceProvider(
       imageAnalyzer: GeminiImageAnalyzer(),
