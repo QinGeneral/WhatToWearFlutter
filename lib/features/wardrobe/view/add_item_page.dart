@@ -779,7 +779,7 @@ class _AddItemPageState extends State<AddItemPage> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: context.textTheme.displaySmall?.copyWith(
+      style: context.textTheme.headlineSmall?.copyWith(
         color: context.textPrimary,
         fontWeight: FontWeight.bold,
         letterSpacing: -0.3,

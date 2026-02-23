@@ -115,7 +115,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
             ).createShader(bounds),
             child: Text(
               AppLocalizations.of(context)?.forYouRecommendation ?? '为你推荐',
-              style: context.textTheme.displayMedium?.copyWith(
+              style: context.textTheme.headlineSmall?.copyWith(
                 color: context.textPrimary,
                 fontWeight: FontWeight.bold,
               ),

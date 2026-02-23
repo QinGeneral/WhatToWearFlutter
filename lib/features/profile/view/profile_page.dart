@@ -66,7 +66,7 @@ class ProfilePage extends StatelessWidget {
                     profile?.nickname ??
                         AppLocalizations.of(context)?.guest ??
                         'Guest',
-                    style: context.textTheme.displayMedium?.copyWith(
+                    style: context.textTheme.headlineSmall?.copyWith(
                       color: context.textPrimary,
                       fontWeight: FontWeight.bold,
                       letterSpacing: -0.5,

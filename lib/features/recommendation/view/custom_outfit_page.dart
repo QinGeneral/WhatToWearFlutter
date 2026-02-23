@@ -235,6 +235,17 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
 
     final text = _textController.text.trim();
 
+    if (text.isEmpty && _selections.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('请输入或选择穿搭需求'),
+          backgroundColor: AppColors.errorRed,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
     // Parse selections from tags or text
     String parseField(String category) {
       final translatedCategory = _translateCategory(context, category);
@@ -588,17 +599,18 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                         child: ElevatedButton(
                           onPressed: rp.isLoading ? null : _handleSubmit,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black,
-                            disabledBackgroundColor: Colors.white.withValues(
-                              alpha: 0.5,
-                            ),
+                            backgroundColor: AppColors.primaryBlue,
+                            foregroundColor: Colors.white,
+                            disabledBackgroundColor: AppColors.primaryBlue
+                                .withValues(alpha: 0.5),
                             padding: const EdgeInsets.symmetric(vertical: 18),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(28),
                             ),
                             elevation: 4,
-                            shadowColor: Colors.white.withValues(alpha: 0.1),
+                            shadowColor: AppColors.primaryBlue.withValues(
+                              alpha: 0.3,
+                            ),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -606,8 +618,8 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                               Icon(
                                 Icons.auto_awesome,
                                 color: rp.isLoading
-                                    ? Colors.black38
-                                    : Colors.black,
+                                    ? Colors.white.withValues(alpha: 0.7)
+                                    : Colors.white,
                                 size: 20,
                               ),
                               const SizedBox(width: 8),
@@ -623,8 +635,8 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                           '获取搭配方案'),
                                 style: context.textTheme.titleMedium?.copyWith(
                                   color: rp.isLoading
-                                      ? Colors.black38
-                                      : Colors.black,
+                                      ? Colors.white.withValues(alpha: 0.7)
+                                      : Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
