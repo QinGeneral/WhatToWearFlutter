@@ -8,8 +8,11 @@ import 'package:what_to_wear_flutter/features/recommendation/provider/recommenda
 import 'package:what_to_wear_flutter/theme/app_theme.dart';
 import 'package:what_to_wear_flutter/theme/app_colors.dart';
 import 'package:what_to_wear_flutter/widgets/share_dialog.dart';
-import 'package:what_to_wear_flutter/features/wardrobe/view/add_item_page.dart';
+
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
+import 'package:what_to_wear_flutter/features/wardrobe/provider/wardrobe_provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:what_to_wear_flutter/core/router/app_routes.dart';
 
 class OutfitDetailPage extends StatelessWidget {
   final String recommendationId;
@@ -351,12 +354,22 @@ class OutfitDetailPage extends StatelessWidget {
       final item = entry.value!;
       return GestureDetector(
         onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              settings: const RouteSettings(name: '/AddItemPage'),
-              builder: (_) => AddItemPage(itemId: item.id),
-            ),
-          );
+          final wp = context.read<WardrobeProvider>();
+          final exists = wp.items.any((i) => i.id == item.id);
+
+          if (!exists) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  AppLocalizations.of(context)?.noMatchingClothing ??
+                      '该衣物已从衣橱移除',
+                ),
+              ),
+            );
+            return;
+          }
+
+          context.push(AppRoutes.addItem, extra: item.id);
         },
         child: Container(
           margin: const EdgeInsets.only(bottom: 12),
