@@ -222,7 +222,9 @@ class _WeatherCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
-                Row(
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 4,
                   children: [
                     Text(
                       '${AppLocalizations.of(context)?.uvIndexPrefix ?? "紫外线"}${weather.uvIndex ?? (AppLocalizations.of(context)?.uvMedium ?? "中")}',
@@ -230,14 +232,12 @@ class _WeatherCard extends StatelessWidget {
                         color: context.textTertiary,
                       ),
                     ),
-                    const SizedBox(width: 12),
                     Text(
                       '${AppLocalizations.of(context)?.humidityPrefix ?? "湿度 "}${weather.humidity}%',
                       style: context.textTheme.bodySmall?.copyWith(
                         color: context.textTertiary,
                       ),
                     ),
-                    const SizedBox(width: 12),
                     Text(
                       '${AppLocalizations.of(context)?.comfortLevelPrefix ?? "舒适度："}${AppLocalizations.of(context)?.translateComfortLevel(weather.comfortLevel ?? "一般") ?? (AppLocalizations.of(context)?.comfortNormal ?? "一般")}',
                       style: context.textTheme.bodySmall?.copyWith(

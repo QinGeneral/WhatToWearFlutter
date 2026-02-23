@@ -8,6 +8,7 @@ import 'package:what_to_wear_flutter/features/developer/view/developer_page.dart
 import 'package:what_to_wear_flutter/features/recommendation/view/recommendation_page.dart';
 import 'package:what_to_wear_flutter/features/recommendation/view/history_page.dart';
 import 'package:what_to_wear_flutter/features/recommendation/view/favorite_outfits_page.dart';
+import 'package:what_to_wear_flutter/features/recommendation/view/custom_outfit_page.dart';
 import 'package:what_to_wear_flutter/features/recommendation/view/outfit_detail_page.dart';
 import 'package:what_to_wear_flutter/features/wardrobe/view/wardrobe_page.dart';
 import 'package:what_to_wear_flutter/features/wardrobe/view/add_item_page.dart';
@@ -44,6 +45,7 @@ class AppRouter {
               routes: [
                 GoRoute(
                   path: 'outfit_detail', // Sub-routes use relative paths
+                  parentNavigatorKey: rootNavigatorKey,
                   builder: (context, state) {
                     final item = state.extra as Recommendation;
                     return OutfitDetailPage(recommendationId: item.id);
@@ -51,11 +53,18 @@ class AppRouter {
                 ),
                 GoRoute(
                   path: 'history',
+                  parentNavigatorKey: rootNavigatorKey,
                   builder: (context, state) => const HistoryPage(),
                 ),
                 GoRoute(
                   path: 'favorites',
+                  parentNavigatorKey: rootNavigatorKey,
                   builder: (context, state) => const FavoriteOutfitsPage(),
+                ),
+                GoRoute(
+                  path: 'custom_outfit',
+                  parentNavigatorKey: rootNavigatorKey,
+                  builder: (context, state) => const CustomOutfitPage(),
                 ),
               ],
             ),
@@ -65,6 +74,7 @@ class AppRouter {
               routes: [
                 GoRoute(
                   path: 'add_item',
+                  parentNavigatorKey: rootNavigatorKey,
                   builder: (context, state) {
                     final itemId = state.extra as String?;
                     return AddItemPage(itemId: itemId);
@@ -78,14 +88,17 @@ class AppRouter {
               routes: [
                 GoRoute(
                   path: 'help',
+                  parentNavigatorKey: rootNavigatorKey,
                   builder: (context, state) => const HelpFeedbackPage(),
                 ),
                 GoRoute(
                   path: 'privacy',
+                  parentNavigatorKey: rootNavigatorKey,
                   builder: (context, state) => const PrivacyPolicyPage(),
                 ),
                 GoRoute(
                   path: 'developer',
+                  parentNavigatorKey: rootNavigatorKey,
                   builder: (context, state) => const DeveloperPage(),
                 ),
               ],

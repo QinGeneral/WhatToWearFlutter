@@ -215,7 +215,7 @@ class _WardrobeItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        await context.push(AppRoutes.addItem, extra: item);
+        await context.push(AppRoutes.addItem, extra: item.id);
         if (context.mounted) {
           context.read<WardrobeProvider>().loadWardrobe();
         }
