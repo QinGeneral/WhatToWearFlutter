@@ -388,7 +388,9 @@ class _ShareDialogState extends State<ShareDialog> {
           fit: BoxFit.cover,
           gaplessPlayback: true,
         );
-      } catch (_) {}
+      } catch (e) {
+      debugPrint('Caught error: $e');
+    }
     }
 
     return Container(

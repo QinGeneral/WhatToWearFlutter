@@ -439,7 +439,9 @@ class _TopPickCard extends StatelessWidget {
           fit: BoxFit.cover,
           gaplessPlayback: true,
         );
-      } catch (_) {}
+      } catch (e) {
+      debugPrint('Caught error: $e');
+    }
     }
     return Container(
       color: context.surfaceColor,
@@ -572,7 +574,9 @@ class _AlternativeCard extends StatelessWidget {
           fit: BoxFit.cover,
           gaplessPlayback: true,
         );
-      } catch (_) {}
+      } catch (e) {
+      debugPrint('Caught error: $e');
+    }
     }
     return Container(
       color: context.cardColor,

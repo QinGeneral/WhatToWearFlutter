@@ -24,6 +24,7 @@ Future<bool> checkAndShowPrivacyDialog(BuildContext context) async {
   final agreed = prefs.getBool('agreed_privacy') ?? false;
   if (agreed) return true;
 
+  if (!context.mounted) return false;
   final l10n = AppLocalizations.of(context)!;
 
   final result = await showDialog<bool>(

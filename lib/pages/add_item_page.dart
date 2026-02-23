@@ -226,6 +226,8 @@ class _AddItemPageState extends State<AddItemPage> {
 
       await storage.incrementDailyUsageCount('optimize_clothes');
 
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

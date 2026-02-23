@@ -54,11 +54,11 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   final agreedPrivacy = prefs.getBool('agreed_privacy') ?? false;
   if (agreedPrivacy) {
-    UmengCommonSdk.initCommon(
-      '699b155d6f259537c7605e61',
-      '699b155d6f259537c7605e61',
-      'Umeng',
+    const umengAppKey = String.fromEnvironment(
+      'UMENG_APP_KEY',
+      defaultValue: '699b155d6f259537c7605e61',
     );
+    UmengCommonSdk.initCommon(umengAppKey, umengAppKey, 'Umeng');
     AnalyticsService.init();
   }
 

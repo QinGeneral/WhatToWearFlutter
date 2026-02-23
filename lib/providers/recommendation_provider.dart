@@ -300,13 +300,19 @@ class RecommendationProvider extends ChangeNotifier {
     if (_currentRecommendation?.id == id) return _currentRecommendation;
     try {
       return _alternativeRecommendations.firstWhere((r) => r.id == id);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Caught error: $e');
+    }
     try {
       return _history.firstWhere((r) => r.id == id);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Caught error: $e');
+    }
     try {
       return _favorites.firstWhere((r) => r.id == id);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Caught error: $e');
+    }
     return null;
   }
 

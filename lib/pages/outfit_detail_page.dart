@@ -261,7 +261,9 @@ class OutfitDetailPage extends StatelessWidget {
           fit: BoxFit.cover,
           gaplessPlayback: true,
         );
-      } catch (_) {}
+      } catch (e) {
+      debugPrint('Caught error: $e');
+    }
     }
     return Container(
       decoration: BoxDecoration(
@@ -431,7 +433,9 @@ class OutfitDetailPage extends StatelessWidget {
           fit: BoxFit.cover,
           gaplessPlayback: true,
         );
-      } catch (_) {}
+      } catch (e) {
+      debugPrint('Caught error: $e');
+    }
     }
     return Container(
       color: context.surfaceColor,
