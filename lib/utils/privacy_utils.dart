@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
-import '../pages/privacy_policy_page.dart';
+import 'package:what_to_wear_flutter/features/profile/view/privacy_policy_page.dart';
 
 // 在用户点击“同意”按钮时调用：
 Future<void> agreePrivacyPolicy() async {

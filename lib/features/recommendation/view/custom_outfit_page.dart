@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/recommendation_provider.dart';
-import '../providers/wardrobe_provider.dart';
-import '../services/ai/ai_outfit_recommender.dart';
-import '../theme/app_theme.dart';
-import '../theme/app_colors.dart';
+import 'package:what_to_wear_flutter/features/recommendation/provider/recommendation_provider.dart';
+import 'package:what_to_wear_flutter/features/wardrobe/provider/wardrobe_provider.dart';
+import 'package:what_to_wear_flutter/services/ai/ai_outfit_recommender.dart';
+import 'package:what_to_wear_flutter/theme/app_theme.dart';
+import 'package:what_to_wear_flutter/theme/app_colors.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 
 class CustomOutfitPage extends StatefulWidget {

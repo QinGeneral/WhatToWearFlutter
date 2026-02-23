@@ -3,12 +3,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 
-import '../models/models.dart';
-import '../providers/recommendation_provider.dart';
-import '../theme/app_theme.dart';
-import '../theme/app_colors.dart';
-import '../widgets/share_dialog.dart';
-import 'add_item_page.dart';
+import 'package:what_to_wear_flutter/models/models.dart';
+import 'package:what_to_wear_flutter/features/recommendation/provider/recommendation_provider.dart';
+import 'package:what_to_wear_flutter/theme/app_theme.dart';
+import 'package:what_to_wear_flutter/theme/app_colors.dart';
+import 'package:what_to_wear_flutter/widgets/share_dialog.dart';
+import 'package:what_to_wear_flutter/features/wardrobe/view/add_item_page.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 
 class OutfitDetailPage extends StatelessWidget {

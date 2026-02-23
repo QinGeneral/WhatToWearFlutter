@@ -1,12 +1,12 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
-import '../models/models.dart';
-import '../services/storage_service.dart';
+import 'package:what_to_wear_flutter/features/wardrobe/repository/wardrobe_repository.dart';
+import 'package:what_to_wear_flutter/models/models.dart';
+import 'package:what_to_wear_flutter/services/storage_service.dart';
 
 class WardrobeProvider extends ChangeNotifier {
   final StorageService _storage;
+  final WardrobeRepository _repository = WardrobeRepository();
   final _uuid = const Uuid();
 
   List<WardrobeItem> _items = [];
@@ -61,8 +61,8 @@ class WardrobeProvider extends ChangeNotifier {
     // Hydrate images from file system
     for (int i = 0; i < _items.length; i++) {
       final item = _items[i];
-      final images = await _loadImages(item.id);
-      final optimized = await _loadOptimizedImage(item.id);
+      final images = await _repository.loadImages(item.id);
+      final optimized = await _repository.loadOptimizedImage(item.id);
       _items[i] = item.copyWith(
         images: images.isNotEmpty ? images : item.images,
         optimizedImage: optimized,
@@ -105,10 +105,10 @@ class WardrobeProvider extends ChangeNotifier {
 
     // Save images to files
     if (images.isNotEmpty) {
-      await _saveImage(id, images.first);
+      await _repository.saveImage(id, images.first);
     }
     if (optimizedImage != null) {
-      await _saveOptimizedImage(id, optimizedImage);
+      await _repository.saveOptimizedImage(id, optimizedImage);
     }
 
     _items = [item, ..._items];
@@ -146,10 +146,10 @@ class WardrobeProvider extends ChangeNotifier {
     );
 
     if (images != null && images.isNotEmpty) {
-      await _saveImage(id, images.first);
+      await _repository.saveImage(id, images.first);
     }
     if (optimizedImage != null) {
-      await _saveOptimizedImage(id, optimizedImage);
+      await _repository.saveOptimizedImage(id, optimizedImage);
     }
 
     await _storage.setWardrobe(_items);
@@ -158,77 +158,8 @@ class WardrobeProvider extends ChangeNotifier {
 
   Future<void> deleteItem(String id) async {
     _items = _items.where((item) => item.id != id).toList();
-    await _deleteImages(id);
+    await _repository.deleteImages(id);
     await _storage.setWardrobe(_items);
     notifyListeners();
-  }
-
-  // ═══════ File-based image storage ═══════
-  Future<String> _getImageDir() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final imageDir = Directory('${dir.path}/wardrobe_images');
-    if (!await imageDir.exists()) {
-      await imageDir.create(recursive: true);
-    }
-    return imageDir.path;
-  }
-
-  Future<void> _saveImage(String itemId, String base64Data) async {
-    try {
-      final dir = await _getImageDir();
-      final file = File('$dir/$itemId.txt');
-      await file.writeAsString(base64Data);
-    } catch (e) {
-      debugPrint('Failed to save image: $e');
-    }
-  }
-
-  Future<void> _saveOptimizedImage(String itemId, String base64Data) async {
-    try {
-      final dir = await _getImageDir();
-      final file = File('$dir/${itemId}_opt.txt');
-      await file.writeAsString(base64Data);
-    } catch (e) {
-      debugPrint('Failed to save optimized image: $e');
-    }
-  }
-
-  Future<List<String>> _loadImages(String itemId) async {
-    try {
-      final dir = await _getImageDir();
-      final file = File('$dir/$itemId.txt');
-      if (await file.exists()) {
-        final data = await file.readAsString();
-        return [data];
-      }
-    } catch (e) {
-      debugPrint('Failed to load images: $e');
-    }
-    return [];
-  }
-
-  Future<String?> _loadOptimizedImage(String itemId) async {
-    try {
-      final dir = await _getImageDir();
-      final file = File('$dir/${itemId}_opt.txt');
-      if (await file.exists()) {
-        return await file.readAsString();
-      }
-    } catch (e) {
-      debugPrint('Failed to load optimized image: $e');
-    }
-    return null;
-  }
-
-  Future<void> _deleteImages(String itemId) async {
-    try {
-      final dir = await _getImageDir();
-      final file = File('$dir/$itemId.txt');
-      if (await file.exists()) await file.delete();
-      final optFile = File('$dir/${itemId}_opt.txt');
-      if (await optFile.exists()) await optFile.delete();
-    } catch (e) {
-      debugPrint('Failed to delete images: $e');
-    }
   }
 }

@@ -3,14 +3,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../models/models.dart';
-import '../providers/recommendation_provider.dart';
-import '../theme/app_theme.dart';
-import '../theme/app_colors.dart';
+import 'package:what_to_wear_flutter/models/models.dart';
+import 'package:what_to_wear_flutter/features/recommendation/provider/recommendation_provider.dart';
+import 'package:what_to_wear_flutter/theme/app_theme.dart';
+import 'package:what_to_wear_flutter/theme/app_colors.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 import 'package:what_to_wear_flutter/l10n/weather_localizations.dart';
-import 'custom_outfit_page.dart';
-import 'outfit_detail_page.dart';
+import 'package:what_to_wear_flutter/features/recommendation/view/custom_outfit_page.dart';
+import 'package:what_to_wear_flutter/features/recommendation/view/outfit_detail_page.dart';
 
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
@@ -108,7 +108,10 @@ class _RecommendationPageState extends State<RecommendationPage> {
         children: [
           Text(
             dateStr,
-            style: context.textTheme.bodySmall?.copyWith(color: AppColors.primaryBlue, fontWeight: FontWeight.w500),
+            style: context.textTheme.bodySmall?.copyWith(
+              color: AppColors.primaryBlue,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           const SizedBox(height: 4),
           ShaderMask(
@@ -117,7 +120,10 @@ class _RecommendationPageState extends State<RecommendationPage> {
             ).createShader(bounds),
             child: Text(
               AppLocalizations.of(context)?.forYouRecommendation ?? '为你推荐',
-              style: context.textTheme.displayMedium?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold),
+              style: context.textTheme.displayMedium?.copyWith(
+                color: context.textPrimary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -144,7 +150,9 @@ class _RecommendationPageState extends State<RecommendationPage> {
           Text(
             AppLocalizations.of(context)?.clickFabToGetRecommendation ??
                 '点击右下角按钮获取穿搭推荐',
-            style: context.textTheme.bodyMedium?.copyWith(color: context.textSecondary),
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.textSecondary,
+            ),
           ),
         ],
       ),
@@ -178,7 +186,10 @@ class _WeatherCard extends StatelessWidget {
                   children: [
                     Text(
                       '${weather.temperature}°C',
-                      style: context.textTheme.displayLarge?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold),
+                      style: context.textTheme.displayLarge?.copyWith(
+                        color: context.textPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     if (weather.icon != null && weather.icon!.endsWith('.svg'))
@@ -198,7 +209,10 @@ class _WeatherCard extends StatelessWidget {
                             context,
                           )?.translateWeatherCondition(weather.condition) ??
                           weather.condition,
-                      style: context.textTheme.titleMedium?.copyWith(color: context.textPrimary, fontWeight: FontWeight.w500),
+                      style: context.textTheme.titleMedium?.copyWith(
+                        color: context.textPrimary,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     if (weather.location != null) ...[
                       const SizedBox(width: 8),
@@ -217,17 +231,23 @@ class _WeatherCard extends StatelessWidget {
                   children: [
                     Text(
                       '${AppLocalizations.of(context)?.uvIndexPrefix ?? "紫外线"}${weather.uvIndex ?? (AppLocalizations.of(context)?.uvMedium ?? "中")}',
-                      style: context.textTheme.bodySmall?.copyWith(color: context.textTertiary),
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.textTertiary,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Text(
                       '${AppLocalizations.of(context)?.humidityPrefix ?? "湿度 "}${weather.humidity}%',
-                      style: context.textTheme.bodySmall?.copyWith(color: context.textTertiary),
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.textTertiary,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Text(
                       '${AppLocalizations.of(context)?.comfortLevelPrefix ?? "舒适度："}${AppLocalizations.of(context)?.translateComfortLevel(weather.comfortLevel ?? "一般") ?? (AppLocalizations.of(context)?.comfortNormal ?? "一般")}',
-                      style: context.textTheme.bodySmall?.copyWith(color: context.textTertiary),
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.textTertiary,
+                      ),
                     ),
                   ],
                 ),
@@ -320,7 +340,11 @@ class _TopPickCard extends StatelessWidget {
                         ),
                         child: Text(
                           '${recommendation.matchPercentage ?? 85}${AppLocalizations.of(context)?.matchSuffix ?? "% 匹配"}',
-                          style: context.textTheme.labelSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.5,
+                          ),
                         ),
                       ),
                     ),
@@ -340,7 +364,10 @@ class _TopPickCard extends StatelessWidget {
                       children: [
                         Text(
                           recommendation.title,
-                          style: context.textTheme.titleLarge?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold),
+                          style: context.textTheme.titleLarge?.copyWith(
+                            color: context.textPrimary,
+                            fontWeight: FontWeight.bold,
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -350,7 +377,9 @@ class _TopPickCard extends StatelessWidget {
                                 context,
                               )?.businessCasualBreathable ??
                               '商务休闲 • 透气棉质',
-                          style: context.textTheme.labelSmall?.copyWith(color: context.textTertiary),
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: context.textTertiary,
+                          ),
                         ),
                       ],
                     ),
@@ -374,7 +403,10 @@ class _TopPickCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   recommendation.reasoning!,
-                  style: context.textTheme.bodyMedium?.copyWith(color: context.textSecondary, height: 1.5),
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.textSecondary,
+                    height: 1.5,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -437,7 +469,10 @@ class _AlternativePlans extends StatelessWidget {
             children: [
               Text(
                 AppLocalizations.of(context)?.alternativePlan ?? '备选方案',
-                style: context.textTheme.titleLarge?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold),
+                style: context.textTheme.titleLarge?.copyWith(
+                  color: context.textPrimary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -502,14 +537,19 @@ class _AlternativeCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: context.textTheme.bodyMedium?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.textPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
                   Text(
                     AppLocalizations.of(context)?.classicBusiness ?? '经典商务',
-                    style: context.textTheme.labelSmall?.copyWith(color: context.textTertiary),
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: context.textTertiary,
+                    ),
                   ),
                 ],
               ),

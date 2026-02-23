@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../providers/recommendation_provider.dart';
-import '../theme/app_theme.dart';
-import '../theme/app_colors.dart';
-import 'outfit_detail_page.dart';
+import 'package:what_to_wear_flutter/features/recommendation/provider/recommendation_provider.dart';
+import 'package:what_to_wear_flutter/theme/app_theme.dart';
+import 'package:what_to_wear_flutter/theme/app_colors.dart';
+import 'package:what_to_wear_flutter/features/recommendation/view/outfit_detail_page.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -57,7 +57,9 @@ class _HistoryPageState extends State<HistoryPage> {
                       const SizedBox(height: 16),
                       Text(
                         '暂无历史记录',
-                        style: context.textTheme.bodyMedium?.copyWith(color: context.textSecondary),
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: context.textSecondary,
+                        ),
                       ),
                     ],
                   ),
@@ -144,21 +146,32 @@ class _HistoryPageState extends State<HistoryPage> {
                                   children: [
                                     Text(
                                       rec.title,
-                                      style: context.textTheme.titleMedium?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold),
+                                      style: context.textTheme.titleMedium
+                                          ?.copyWith(
+                                            color: context.textPrimary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       dateStr,
-                                      style: context.textTheme.bodySmall?.copyWith(color: context.textTertiary),
+                                      style: context.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: context.textTertiary,
+                                          ),
                                     ),
                                     const SizedBox(height: 4),
                                     Row(
                                       children: [
                                         Text(
                                           '${rec.matchPercentage ?? 85}% 匹配',
-                                          style: context.textTheme.labelSmall?.copyWith(color: AppColors.primaryBlue, fontWeight: FontWeight.w600),
+                                          style: context.textTheme.labelSmall
+                                              ?.copyWith(
+                                                color: AppColors.primaryBlue,
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                         ),
                                         if (rec.isFavorite) ...[
                                           const SizedBox(width: 8),
@@ -200,8 +213,8 @@ class _HistoryPageState extends State<HistoryPage> {
           gaplessPlayback: true,
         );
       } catch (e) {
-      debugPrint('Caught error: $e');
-    }
+        debugPrint('Caught error: $e');
+      }
     }
     return Container(
       color: context.surfaceColor,

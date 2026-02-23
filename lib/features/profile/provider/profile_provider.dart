@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import '../models/models.dart';
-import '../services/storage_service.dart';
+import 'package:what_to_wear_flutter/models/models.dart';
+import 'package:what_to_wear_flutter/features/profile/repository/profile_repository.dart';
 
 class ProfileProvider extends ChangeNotifier {
-  final StorageService _storage;
+  final ProfileRepository _repository;
 
   UserProfile? _profile;
   UserPreference _preferences = UserPreference.defaultPreference;
   bool _isLoading = false;
 
-  ProfileProvider(this._storage);
+  ProfileProvider(this._repository);
 
   UserProfile? get profile => _profile;
   UserPreference get preferences => _preferences;
@@ -26,9 +26,9 @@ class ProfileProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    _profile = _storage.getProfile();
+    _profile = _repository.getProfile();
     _preferences =
-        _storage.getPreferences() ?? UserPreference.defaultPreference;
+        _repository.getPreferences() ?? UserPreference.defaultPreference;
 
     _isLoading = false;
     notifyListeners();
@@ -43,14 +43,14 @@ class ProfileProvider extends ChangeNotifier {
       identity: identity,
       onboardingCompletedAt: now,
     );
-    await _storage.setProfile(_profile!);
+    await _repository.saveProfile(_profile!);
     notifyListeners();
   }
 
   Future<void> updateIdentity(UserIdentity identity) async {
     if (_profile != null) {
       _profile = _profile!.copyWith(identity: identity);
-      await _storage.setProfile(_profile!);
+      await _repository.saveProfile(_profile!);
       notifyListeners();
     }
   }
@@ -58,7 +58,7 @@ class ProfileProvider extends ChangeNotifier {
   Future<void> updateNickname(String nickname) async {
     if (_profile != null) {
       _profile = _profile!.copyWith(nickname: nickname);
-      await _storage.setProfile(_profile!);
+      await _repository.saveProfile(_profile!);
       notifyListeners();
     }
   }
@@ -66,19 +66,19 @@ class ProfileProvider extends ChangeNotifier {
   Future<void> toggleTheme() async {
     final newTheme = _preferences.theme == 'dark' ? 'light' : 'dark';
     _preferences = _preferences.copyWith(theme: newTheme);
-    await _storage.setPreferences(_preferences);
+    await _repository.savePreferences(_preferences);
     notifyListeners();
   }
 
   Future<void> setTheme(String theme) async {
     _preferences = _preferences.copyWith(theme: theme);
-    await _storage.setPreferences(_preferences);
+    await _repository.savePreferences(_preferences);
     notifyListeners();
   }
 
   Future<void> setLanguage(String language) async {
     _preferences = _preferences.copyWith(language: language);
-    await _storage.setPreferences(_preferences);
+    await _repository.savePreferences(_preferences);
     notifyListeners();
   }
 
@@ -91,7 +91,7 @@ class ProfileProvider extends ChangeNotifier {
         identity: _profile!.identity,
         onboardingCompletedAt: null,
       );
-      await _storage.setProfile(_profile!);
+      await _repository.saveProfile(_profile!);
       notifyListeners();
     }
   }

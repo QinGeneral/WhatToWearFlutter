@@ -1,17 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/profile_provider.dart';
-import '../providers/recommendation_provider.dart';
-import '../providers/wardrobe_provider.dart';
-import '../theme/app_theme.dart';
-import '../theme/app_colors.dart';
-import 'favorite_outfits_page.dart';
-import 'developer_page.dart';
-import 'history_page.dart';
-import 'onboarding_page.dart';
-import 'help_feedback_page.dart';
-import 'privacy_policy_page.dart';
+import 'package:what_to_wear_flutter/features/profile/provider/profile_provider.dart';
+import 'package:what_to_wear_flutter/features/recommendation/provider/recommendation_provider.dart';
+import 'package:what_to_wear_flutter/features/wardrobe/provider/wardrobe_provider.dart';
+import 'package:what_to_wear_flutter/theme/app_theme.dart';
+import 'package:what_to_wear_flutter/theme/app_colors.dart';
+import 'package:what_to_wear_flutter/features/recommendation/view/favorite_outfits_page.dart';
+import 'package:what_to_wear_flutter/features/developer/view/developer_page.dart';
+import 'package:what_to_wear_flutter/features/recommendation/view/history_page.dart';
+import 'package:what_to_wear_flutter/features/profile/view/onboarding_page.dart';
+import 'package:what_to_wear_flutter/features/profile/view/help_feedback_page.dart';
+import 'package:what_to_wear_flutter/features/profile/view/privacy_policy_page.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 import 'package:what_to_wear_flutter/l10n/weather_localizations.dart';
 
@@ -56,7 +56,10 @@ class ProfilePage extends StatelessWidget {
                         (profile?.nickname?.isNotEmpty == true)
                             ? profile!.nickname![0].toUpperCase()
                             : '?',
-                        style: context.textTheme.displayLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                        style: context.textTheme.displayLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -67,7 +70,11 @@ class ProfilePage extends StatelessWidget {
                     profile?.nickname ??
                         AppLocalizations.of(context)?.guest ??
                         'Guest',
-                    style: context.textTheme.displayMedium?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold, letterSpacing: -0.5),
+                    style: context.textTheme.displayMedium?.copyWith(
+                      color: context.textPrimary,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: -0.5,
+                    ),
                   ),
                   const SizedBox(height: 8),
 
@@ -105,7 +112,10 @@ class ProfilePage extends StatelessWidget {
                             const SizedBox(width: 6),
                             Text(
                               identityConfig.name,
-                              style: context.textTheme.bodyMedium?.copyWith(color: identityConfig.color, fontWeight: FontWeight.w600),
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: identityConfig.color,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ],
                         ),
@@ -119,7 +129,9 @@ class ProfilePage extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       '📍 ${rp.weather!.location ?? AppLocalizations.of(context)?.unknown ?? "未知"} · ${rp.weather!.temperature}°C ${AppLocalizations.of(context)?.translateWeatherCondition(rp.weather!.condition) ?? rp.weather!.condition}',
-                      style: context.textTheme.bodyMedium?.copyWith(color: context.textTertiary),
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: context.textTertiary,
+                      ),
                     ),
                   ],
 
@@ -275,7 +287,10 @@ class ProfilePage extends StatelessWidget {
                         },
                         child: Text(
                           AppLocalizations.of(context)?.privacyPolicy ?? '隐私协议',
-                          style: context.textTheme.bodySmall?.copyWith(color: context.textTertiary, decoration: TextDecoration.underline),
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: context.textTertiary,
+                            decoration: TextDecoration.underline,
+                          ),
                         ),
                       ),
                     ),
@@ -317,12 +332,19 @@ class _StatCard extends StatelessWidget {
           children: [
             Text(
               value,
-              style: context.textTheme.displayMedium?.copyWith(color: color, fontWeight: FontWeight.bold),
+              style: context.textTheme.displayMedium?.copyWith(
+                color: color,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 4),
             Text(
               label,
-              style: context.textTheme.labelSmall?.copyWith(color: context.textTertiary, fontWeight: FontWeight.w500, letterSpacing: 0.5),
+              style: context.textTheme.labelSmall?.copyWith(
+                color: context.textTertiary,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.5,
+              ),
             ),
           ],
         ),
@@ -373,7 +395,10 @@ class _FunctionButton extends StatelessWidget {
               Expanded(
                 child: Text(
                   label,
-                  style: context.textTheme.titleMedium?.copyWith(color: context.textPrimary, fontWeight: FontWeight.w600),
+                  style: context.textTheme.titleMedium?.copyWith(
+                    color: context.textPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               Icon(Icons.chevron_right, color: context.textTertiary, size: 20),

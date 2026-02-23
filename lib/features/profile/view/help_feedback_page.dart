@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
-import '../theme/app_colors.dart';
+import 'package:what_to_wear_flutter/theme/app_theme.dart';
+import 'package:what_to_wear_flutter/theme/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HelpFeedbackPage extends StatefulWidget {

@@ -1,14 +1,15 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import '../models/models.dart';
-import '../services/ai/ai_outfit_recommender.dart';
-import '../services/ai/ai_service_provider.dart';
-import '../services/storage_service.dart';
-import '../services/weather_service.dart';
+import 'package:what_to_wear_flutter/models/models.dart';
+import 'package:what_to_wear_flutter/services/ai/ai_outfit_recommender.dart';
+import 'package:what_to_wear_flutter/core/error/app_failure.dart';
+import 'package:what_to_wear_flutter/features/recommendation/repository/recommendation_repository.dart';
+import 'package:what_to_wear_flutter/services/ai/ai_service_provider.dart';
+import 'package:what_to_wear_flutter/services/weather_service.dart';
 
 class RecommendationProvider extends ChangeNotifier {
-  final StorageService _storage;
+  final RecommendationRepository _repository;
   final AIServiceProvider _aiServices;
   final _uuid = const Uuid();
   final _random = Random();
@@ -22,7 +23,7 @@ class RecommendationProvider extends ChangeNotifier {
   bool _isWeatherLoading = false;
   String? _error;
 
-  RecommendationProvider(this._storage, this._aiServices);
+  RecommendationProvider(this._repository, this._aiServices);
 
   Recommendation? get currentRecommendation => _currentRecommendation;
   List<Recommendation> get alternativeRecommendations =>
@@ -35,7 +36,7 @@ class RecommendationProvider extends ChangeNotifier {
   String? get error => _error;
 
   Future<void> loadCurrentRecommendation() async {
-    final data = _storage.getCurrentRecommendation();
+    final data = _repository.getCurrentRecommendation();
     if (data != null) {
       _currentRecommendation = Recommendation.fromJson(
         data['current'] as Map<String, dynamic>,
@@ -59,12 +60,12 @@ class RecommendationProvider extends ChangeNotifier {
   }
 
   Future<void> loadFavorites() async {
-    _favorites = _storage.getRecommendations();
+    _favorites = _repository.getFavorites();
     notifyListeners();
   }
 
   Future<void> loadHistory() async {
-    _history = _storage.getRecommendationHistory();
+    _history = _repository.getHistory();
 
     // Sync favorite status
     final favIds = _favorites.map((f) => f.id).toSet();
@@ -153,10 +154,14 @@ class RecommendationProvider extends ChangeNotifier {
       // Save to history
       _history = [mainRec, ..._history];
 
-      await _storage.setCurrentRecommendation(mainRec, alts);
-      await _storage.setRecommendationHistory(_history);
+      await _repository.saveCurrentRecommendation(mainRec, alts);
+      await _repository.saveHistory(_history);
     } catch (e) {
-      _error = '生成推荐失败：$e';
+      if (e is AppFailure) {
+        _error = e.message;
+      } else {
+        _error = '生成推荐失败：$e';
+      }
     }
 
     _isLoading = false;
@@ -265,10 +270,10 @@ class RecommendationProvider extends ChangeNotifier {
       return rec.id == updated.id ? updated : rec;
     }).toList();
 
-    await _storage.setRecommendations(_favorites);
-    await _storage.setRecommendationHistory(_history);
+    await _repository.saveFavorites(_favorites);
+    await _repository.saveHistory(_history);
     if (_currentRecommendation != null) {
-      await _storage.setCurrentRecommendation(
+      await _repository.saveCurrentRecommendation(
         _currentRecommendation!,
         _alternativeRecommendations,
       );
@@ -278,7 +283,7 @@ class RecommendationProvider extends ChangeNotifier {
 
   Future<void> deleteHistory(String id) async {
     _history = _history.where((rec) => rec.id != id).toList();
-    await _storage.setRecommendationHistory(_history);
+    await _repository.saveHistory(_history);
     notifyListeners();
   }
 
@@ -286,13 +291,13 @@ class RecommendationProvider extends ChangeNotifier {
     _history = [];
     _currentRecommendation = null;
     _alternativeRecommendations = [];
-    await _storage.setRecommendationHistory(_history);
+    await _repository.saveHistory(_history);
     notifyListeners();
   }
 
   Future<void> deleteRecommendation(String id) async {
     _favorites = _favorites.where((rec) => rec.id != id).toList();
-    await _storage.setRecommendations(_favorites);
+    await _repository.saveFavorites(_favorites);
     notifyListeners();
   }
 
@@ -350,7 +355,7 @@ class RecommendationProvider extends ChangeNotifier {
       }
 
       // Call AI service via interface
-      final prefs = _storage.getPreferences();
+      final prefs = _repository.getPreferences();
       final lang = prefs?.language ?? 'zh';
 
       final result = await _aiServices.outfitRecommender.getRecommendation(
@@ -414,16 +419,20 @@ class RecommendationProvider extends ChangeNotifier {
       // Save to history
       _history = [recommendations[0], ..._history];
 
-      await _storage.setCurrentRecommendation(
+      await _repository.saveCurrentRecommendation(
         _currentRecommendation!,
         _alternativeRecommendations,
       );
-      await _storage.setRecommendationHistory(_history);
+      await _repository.saveHistory(_history);
     } catch (e) {
       debugPrint('[RecommendationProvider] AI Recommendation error: $e');
-      _error = e is Exception
-          ? e.toString().replaceFirst('Exception: ', '')
-          : '生成搭配方案失败，请稍后重试';
+      if (e is AppFailure) {
+        _error = e.message;
+      } else {
+        _error = e is Exception
+            ? e.toString().replaceFirst('Exception: ', '')
+            : '生成搭配方案失败，请稍后重试';
+      }
     }
 
     _isLoading = false;
@@ -486,17 +495,17 @@ class RecommendationProvider extends ChangeNotifier {
 
     // Persist to storage
     if (_currentRecommendation != null) {
-      await _storage.setCurrentRecommendation(
+      await _repository.saveCurrentRecommendation(
         _currentRecommendation!,
         _alternativeRecommendations,
       );
     }
-    await _storage.setRecommendations(_favorites);
-    await _storage.setRecommendationHistory(_history);
+    await _repository.saveFavorites(_favorites);
+    await _repository.saveHistory(_history);
   }
 
   Future<void> generateTryOnImage(Recommendation recommendation) async {
-    if (_storage.getDailyUsageCount('generate_outfit') >= 3) {
+    if (_repository.getDailyUsageCount('generate_outfit') >= 3) {
       throw Exception('今日生成穿搭次数已达上限 (3/3)');
     }
 
@@ -504,7 +513,7 @@ class RecommendationProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final prefs = _storage.getPreferences();
+      final prefs = _repository.getPreferences();
       final lang = prefs?.language ?? 'zh';
 
       final imageUrl = await _aiServices.imageGenerator.generateOutfitImage(
@@ -512,10 +521,14 @@ class RecommendationProvider extends ChangeNotifier {
         language: lang,
       );
       await updateRecommendationImage(recommendation.id, imageUrl);
-      await _storage.incrementDailyUsageCount('generate_outfit');
+      await _repository.incrementDailyUsageCount('generate_outfit');
     } catch (e) {
-      _error = '生成试穿图失败：$e';
       debugPrint('[RecommendationProvider] Generate Try-On error: $e');
+      if (e is AppFailure) {
+        _error = e.message;
+      } else {
+        _error = '生成试穿图失败：$e';
+      }
       rethrow;
     } finally {
       _isLoading = false;

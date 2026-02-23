@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/recommendation_provider.dart';
-import '../theme/app_theme.dart';
-import '../theme/app_colors.dart';
-import 'outfit_detail_page.dart';
+import 'package:what_to_wear_flutter/features/recommendation/provider/recommendation_provider.dart';
+import 'package:what_to_wear_flutter/theme/app_theme.dart';
+import 'package:what_to_wear_flutter/theme/app_colors.dart';
+import 'package:what_to_wear_flutter/features/recommendation/view/outfit_detail_page.dart';
 
 class FavoriteOutfitsPage extends StatelessWidget {
   const FavoriteOutfitsPage({super.key});
@@ -42,12 +42,16 @@ class FavoriteOutfitsPage extends StatelessWidget {
                       const SizedBox(height: 16),
                       Text(
                         '还没有收藏的穿搭',
-                        style: context.textTheme.bodyMedium?.copyWith(color: context.textSecondary),
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: context.textSecondary,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         '在推荐中点击❤️收藏喜欢的穿搭',
-                        style: context.textTheme.bodySmall?.copyWith(color: context.textTertiary),
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.textTertiary,
+                        ),
                       ),
                     ],
                   ),
@@ -122,14 +126,22 @@ class FavoriteOutfitsPage extends StatelessWidget {
                                 children: [
                                   Text(
                                     rec.title,
-                                    style: context.textTheme.bodyMedium?.copyWith(color: context.textPrimary, fontWeight: FontWeight.bold),
+                                    style: context.textTheme.bodyMedium
+                                        ?.copyWith(
+                                          color: context.textPrimary,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     '${rec.matchPercentage ?? 85}% 匹配',
-                                    style: context.textTheme.labelSmall?.copyWith(color: AppColors.primaryBlue, fontWeight: FontWeight.w600),
+                                    style: context.textTheme.labelSmall
+                                        ?.copyWith(
+                                          color: AppColors.primaryBlue,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                   ),
                                 ],
                               ),
@@ -155,8 +167,8 @@ class FavoriteOutfitsPage extends StatelessWidget {
           gaplessPlayback: true,
         );
       } catch (e) {
-      debugPrint('Caught error: $e');
-    }
+        debugPrint('Caught error: $e');
+      }
     }
     return Container(
       color: context.surfaceColor,

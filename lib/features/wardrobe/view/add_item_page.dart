@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import '../models/models.dart';
-import '../providers/profile_provider.dart';
-import '../providers/wardrobe_provider.dart';
-import '../services/ai/ai_service_provider.dart';
-import '../services/storage_service.dart';
-import '../theme/app_theme.dart';
-import '../theme/app_colors.dart';
+import 'package:what_to_wear_flutter/models/models.dart';
+import 'package:what_to_wear_flutter/features/profile/provider/profile_provider.dart';
+import 'package:what_to_wear_flutter/features/wardrobe/provider/wardrobe_provider.dart';
+import 'package:what_to_wear_flutter/services/ai/ai_service_provider.dart';
+import 'package:what_to_wear_flutter/services/storage_service.dart';
+import 'package:what_to_wear_flutter/theme/app_theme.dart';
+import 'package:what_to_wear_flutter/theme/app_colors.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 
 class AddItemPage extends StatefulWidget {

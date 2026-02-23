@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/models.dart';
-import '../providers/profile_provider.dart';
-import '../theme/app_theme.dart';
-import '../theme/app_colors.dart';
+import 'package:what_to_wear_flutter/models/models.dart';
+import 'package:what_to_wear_flutter/features/profile/provider/profile_provider.dart';
+import 'package:what_to_wear_flutter/theme/app_theme.dart';
+import 'package:what_to_wear_flutter/theme/app_colors.dart';
 
 class OnboardingPage extends StatefulWidget {
   final bool fromProfile;

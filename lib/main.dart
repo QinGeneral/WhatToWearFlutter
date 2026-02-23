@@ -7,9 +7,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'providers/profile_provider.dart';
-import 'providers/recommendation_provider.dart';
-import 'providers/wardrobe_provider.dart';
+import 'package:what_to_wear_flutter/features/profile/provider/profile_provider.dart';
+import 'package:what_to_wear_flutter/features/profile/repository/profile_repository.dart';
+import 'package:what_to_wear_flutter/features/recommendation/provider/recommendation_provider.dart';
+import 'package:what_to_wear_flutter/features/recommendation/repository/recommendation_repository.dart';
+import 'package:what_to_wear_flutter/features/wardrobe/provider/wardrobe_provider.dart';
 import 'services/ai/ai_service_provider.dart';
 import 'services/ai/gemini/gemini_image_analyzer.dart';
 import 'services/ai/gemini/gemini_image_generator.dart';
@@ -25,10 +27,10 @@ import 'services/ai/doubao/doubao_image_generator.dart';
 import 'services/ai/doubao/doubao_outfit_recommender.dart';
 import 'services/storage_service.dart';
 import 'theme/app_theme.dart';
-import 'pages/onboarding_page.dart';
-import 'pages/recommendation_page.dart';
-import 'pages/wardrobe_page.dart';
-import 'pages/profile_page.dart';
+import 'package:what_to_wear_flutter/features/profile/view/onboarding_page.dart';
+import 'package:what_to_wear_flutter/features/recommendation/view/recommendation_page.dart';
+import 'package:what_to_wear_flutter/features/wardrobe/view/wardrobe_page.dart';
+import 'package:what_to_wear_flutter/features/profile/view/profile_page.dart';
 import 'utils/privacy_utils.dart';
 import 'services/analytics_service.dart';
 import 'utils/analytics_route_observer.dart';
@@ -116,15 +118,24 @@ class WhatToWearApp extends StatelessWidget {
       providers: [
         Provider<StorageService>.value(value: storageService),
         Provider<AIServiceProvider>.value(value: aiServiceProvider),
+        Provider<ProfileRepository>(
+          create: (_) => ProfileRepository(storageService),
+        ),
         ChangeNotifierProvider(
-          create: (_) => ProfileProvider(storageService)..loadProfile(),
+          create: (context) =>
+              ProfileProvider(context.read<ProfileRepository>())..loadProfile(),
         ),
         ChangeNotifierProvider(
           create: (_) => WardrobeProvider(storageService)..loadWardrobe(),
         ),
+        Provider<RecommendationRepository>(
+          create: (_) => RecommendationRepository(storageService),
+        ),
         ChangeNotifierProvider(
-          create: (_) =>
-              RecommendationProvider(storageService, aiServiceProvider),
+          create: (context) => RecommendationProvider(
+            context.read<RecommendationRepository>(),
+            aiServiceProvider,
+          ),
         ),
       ],
       child: Consumer<ProfileProvider>(
