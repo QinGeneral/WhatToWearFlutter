@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:what_to_wear_flutter/features/recommendation/provider/recommendation_provider.dart';
 import 'package:what_to_wear_flutter/theme/app_theme.dart';
 import 'package:what_to_wear_flutter/theme/app_colors.dart';
-import 'package:what_to_wear_flutter/features/recommendation/view/outfit_detail_page.dart';
+import 'package:go_router/go_router.dart';
+import 'package:what_to_wear_flutter/core/router/app_routes.dart';
 
 class FavoriteOutfitsPage extends StatelessWidget {
   const FavoriteOutfitsPage({super.key});
@@ -19,7 +20,7 @@ class FavoriteOutfitsPage extends StatelessWidget {
             backgroundColor: Colors.transparent,
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: context.textPrimary),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => context.pop(),
             ),
             title: Text(
               '收藏穿搭',
@@ -69,15 +70,7 @@ class FavoriteOutfitsPage extends StatelessWidget {
                     final rec = rp.favorites[index];
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            settings: const RouteSettings(
-                              name: '/OutfitDetailPage',
-                            ),
-                            builder: (_) =>
-                                OutfitDetailPage(recommendationId: rec.id),
-                          ),
-                        );
+                        context.push(AppRoutes.outfitDetail, extra: rec);
                       },
                       child: Container(
                         decoration: BoxDecoration(

@@ -12,6 +12,7 @@ import 'package:what_to_wear_flutter/features/profile/repository/profile_reposit
 import 'package:what_to_wear_flutter/features/recommendation/provider/recommendation_provider.dart';
 import 'package:what_to_wear_flutter/features/recommendation/repository/recommendation_repository.dart';
 import 'package:what_to_wear_flutter/features/wardrobe/provider/wardrobe_provider.dart';
+import 'package:what_to_wear_flutter/core/router/app_routes.dart';
 import 'services/ai/ai_service_provider.dart';
 import 'services/ai/gemini/gemini_image_analyzer.dart';
 import 'services/ai/gemini/gemini_image_generator.dart';
@@ -26,14 +27,12 @@ import 'services/ai/doubao/doubao_image_analyzer.dart';
 import 'services/ai/doubao/doubao_image_generator.dart';
 import 'services/ai/doubao/doubao_outfit_recommender.dart';
 import 'services/storage_service.dart';
-import 'theme/app_theme.dart';
-import 'package:what_to_wear_flutter/features/profile/view/onboarding_page.dart';
-import 'package:what_to_wear_flutter/features/recommendation/view/recommendation_page.dart';
-import 'package:what_to_wear_flutter/features/wardrobe/view/wardrobe_page.dart';
-import 'package:what_to_wear_flutter/features/profile/view/profile_page.dart';
+import 'package:what_to_wear_flutter/theme/app_theme.dart';
 import 'utils/privacy_utils.dart';
 import 'services/analytics_service.dart';
-import 'utils/analytics_route_observer.dart';
+
+import 'package:go_router/go_router.dart';
+import 'package:what_to_wear_flutter/core/router/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -140,7 +139,12 @@ class WhatToWearApp extends StatelessWidget {
       ],
       child: Consumer<ProfileProvider>(
         builder: (context, profileProvider, _) {
-          return MaterialApp(
+          final router = AppRouter.createRouter(
+            hasCompletedOnboarding: profileProvider.hasCompletedOnboarding(),
+          );
+
+          return MaterialApp.router(
+            routerConfig: router,
             onGenerateTitle: (context) =>
                 AppLocalizations.of(context)?.appName ?? '今天穿什么',
             debugShowCheckedModeBanner: false,
@@ -155,12 +159,6 @@ class WhatToWearApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: const [Locale('zh'), Locale('en')],
-            navigatorObservers: [AnalyticsRouteObserver()],
-            home: profileProvider.isLoading
-                ? const _SplashScreen()
-                : profileProvider.hasCompletedOnboarding()
-                ? const _MainShell()
-                : const OnboardingPage(),
           );
         },
       ),
@@ -168,55 +166,16 @@ class WhatToWearApp extends StatelessWidget {
   }
 }
 
-class _SplashScreen extends StatelessWidget {
-  const _SplashScreen();
+class MainShell extends StatefulWidget {
+  final Widget child;
+  const MainShell({super.key, required this.child});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.darkBackground,
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [AppColors.primaryBlue, AppColors.accentPurple],
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Icon(Icons.checkroom, color: Colors.white, size: 40),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              AppLocalizations.of(context)?.appName ?? '今天穿什么',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  State<MainShell> createState() => _MainShellState();
 }
 
-class _MainShell extends StatefulWidget {
-  const _MainShell();
-
-  @override
-  State<_MainShell> createState() => _MainShellState();
-}
-
-class _MainShellState extends State<_MainShell> {
+class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
-
-  final _pages = const [RecommendationPage(), WardrobePage(), ProfilePage()];
 
   @override
   void initState() {
@@ -233,7 +192,7 @@ class _MainShellState extends State<_MainShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _pages),
+      body: widget.child,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: context.bgAlt,
@@ -253,21 +212,30 @@ class _MainShellState extends State<_MainShell> {
                   label:
                       AppLocalizations.of(context)?.tabRecommendation ?? '推荐',
                   isActive: _currentIndex == 0,
-                  onTap: () => setState(() => _currentIndex = 0),
+                  onTap: () {
+                    setState(() => _currentIndex = 0);
+                    context.go(AppRoutes.home);
+                  },
                 ),
                 _NavItem(
                   icon: Icons.checkroom_outlined,
                   activeIcon: Icons.checkroom,
                   label: AppLocalizations.of(context)?.tabWardrobe ?? '衣橱',
                   isActive: _currentIndex == 1,
-                  onTap: () => setState(() => _currentIndex = 1),
+                  onTap: () {
+                    setState(() => _currentIndex = 1);
+                    context.go(AppRoutes.wardrobe);
+                  },
                 ),
                 _NavItem(
                   icon: Icons.person_outline,
                   activeIcon: Icons.person,
                   label: AppLocalizations.of(context)?.tabProfile ?? '我的',
                   isActive: _currentIndex == 2,
-                  onTap: () => setState(() => _currentIndex = 2),
+                  onTap: () {
+                    setState(() => _currentIndex = 2);
+                    context.go(AppRoutes.profile);
+                  },
                 ),
               ],
             ),

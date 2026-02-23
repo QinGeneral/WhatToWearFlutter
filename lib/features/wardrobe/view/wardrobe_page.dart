@@ -5,7 +5,8 @@ import 'package:what_to_wear_flutter/models/models.dart';
 import 'package:what_to_wear_flutter/features/wardrobe/provider/wardrobe_provider.dart';
 import 'package:what_to_wear_flutter/theme/app_theme.dart';
 import 'package:what_to_wear_flutter/theme/app_colors.dart';
-import 'package:what_to_wear_flutter/features/wardrobe/view/add_item_page.dart';
+import 'package:go_router/go_router.dart';
+import 'package:what_to_wear_flutter/core/router/app_routes.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 
 class WardrobePage extends StatefulWidget {
@@ -44,12 +45,7 @@ class _WardrobePageState extends State<WardrobePage> {
           floatingActionButton: FloatingActionButton(
             heroTag: null,
             onPressed: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(
-                  settings: const RouteSettings(name: '/AddItemPage'),
-                  builder: (_) => const AddItemPage(),
-                ),
-              );
+              await context.push(AppRoutes.addItem);
               if (mounted) wp.loadWardrobe();
             },
             backgroundColor: AppColors.primaryBlue,
@@ -219,12 +215,7 @@ class _WardrobeItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            settings: const RouteSettings(name: '/AddItemPage'),
-            builder: (_) => AddItemPage(itemId: item.id),
-          ),
-        );
+        await context.push(AppRoutes.addItem, extra: item);
         if (context.mounted) {
           context.read<WardrobeProvider>().loadWardrobe();
         }

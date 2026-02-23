@@ -6,12 +6,8 @@ import 'package:what_to_wear_flutter/features/recommendation/provider/recommenda
 import 'package:what_to_wear_flutter/features/wardrobe/provider/wardrobe_provider.dart';
 import 'package:what_to_wear_flutter/theme/app_theme.dart';
 import 'package:what_to_wear_flutter/theme/app_colors.dart';
-import 'package:what_to_wear_flutter/features/recommendation/view/favorite_outfits_page.dart';
-import 'package:what_to_wear_flutter/features/developer/view/developer_page.dart';
-import 'package:what_to_wear_flutter/features/recommendation/view/history_page.dart';
-import 'package:what_to_wear_flutter/features/profile/view/onboarding_page.dart';
-import 'package:what_to_wear_flutter/features/profile/view/help_feedback_page.dart';
-import 'package:what_to_wear_flutter/features/profile/view/privacy_policy_page.dart';
+import 'package:go_router/go_router.dart';
+import 'package:what_to_wear_flutter/core/router/app_routes.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 import 'package:what_to_wear_flutter/l10n/weather_localizations.dart';
 
@@ -82,15 +78,7 @@ class ProfilePage extends StatelessWidget {
                   if (identityConfig != null)
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            settings: const RouteSettings(
-                              name: '/OnboardingPage',
-                            ),
-                            builder: (_) =>
-                                const OnboardingPage(fromProfile: true),
-                          ),
-                        );
+                        context.push(AppRoutes.onboarding);
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
@@ -174,14 +162,7 @@ class ProfilePage extends StatelessWidget {
                               AppLocalizations.of(context)?.favoriteOutfits ??
                               '收藏穿搭',
                           color: AppColors.errorRed,
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              settings: const RouteSettings(
-                                name: '/FavoriteOutfitsPage',
-                              ),
-                              builder: (_) => const FavoriteOutfitsPage(),
-                            ),
-                          ),
+                          onTap: () => context.push(AppRoutes.favorites),
                         ),
                         const SizedBox(height: 12),
                         _FunctionButton(
@@ -190,14 +171,7 @@ class ProfilePage extends StatelessWidget {
                               AppLocalizations.of(context)?.outfitHistory ??
                               '穿搭历史',
                           color: AppColors.primaryBlue,
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              settings: const RouteSettings(
-                                name: '/HistoryPage',
-                              ),
-                              builder: (_) => const HistoryPage(),
-                            ),
-                          ),
+                          onTap: () => context.push(AppRoutes.history),
                         ),
                         const SizedBox(height: 12),
                         _FunctionButton(
@@ -235,14 +209,7 @@ class ProfilePage extends StatelessWidget {
                               AppLocalizations.of(context)?.helpAndFeedback ??
                               '帮助与反馈',
                           color: AppColors.accentPurple,
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              settings: const RouteSettings(
-                                name: '/HelpFeedbackPage',
-                              ),
-                              builder: (_) => const HelpFeedbackPage(),
-                            ),
-                          ),
+                          onTap: () => context.push(AppRoutes.profileHelp),
                         ),
                         if (kDebugMode) ...[
                           const SizedBox(height: 12),
@@ -254,14 +221,8 @@ class ProfilePage extends StatelessWidget {
                                 )?.developerOptions ??
                                 '开发者选项',
                             color: Colors.teal,
-                            onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                settings: const RouteSettings(
-                                  name: '/DeveloperPage',
-                                ),
-                                builder: (_) => const DeveloperPage(),
-                              ),
-                            ),
+                            onTap: () =>
+                                context.push(AppRoutes.profileDeveloper),
                           ),
                         ],
                       ],
@@ -276,14 +237,7 @@ class ProfilePage extends StatelessWidget {
                     child: Center(
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              settings: const RouteSettings(
-                                name: '/PrivacyPolicyPage',
-                              ),
-                              builder: (_) => const PrivacyPolicyPage(),
-                            ),
-                          );
+                          context.push(AppRoutes.profilePrivacy);
                         },
                         child: Text(
                           AppLocalizations.of(context)?.privacyPolicy ?? '隐私协议',

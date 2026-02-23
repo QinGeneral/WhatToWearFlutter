@@ -8,9 +8,9 @@ import 'package:what_to_wear_flutter/features/recommendation/provider/recommenda
 import 'package:what_to_wear_flutter/theme/app_theme.dart';
 import 'package:what_to_wear_flutter/theme/app_colors.dart';
 import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
+import 'package:what_to_wear_flutter/core/router/app_routes.dart';
 import 'package:what_to_wear_flutter/l10n/weather_localizations.dart';
-import 'package:what_to_wear_flutter/features/recommendation/view/custom_outfit_page.dart';
-import 'package:what_to_wear_flutter/features/recommendation/view/outfit_detail_page.dart';
 
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
@@ -41,12 +41,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
           floatingActionButton: FloatingActionButton(
             heroTag: null,
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  settings: const RouteSettings(name: '/CustomOutfitPage'),
-                  builder: (_) => const CustomOutfitPage(),
-                ),
-              );
+              context.push(AppRoutes.customOutfit);
             },
             backgroundColor: AppColors.primaryBlue,
             child: const Icon(Icons.auto_awesome, color: Colors.white),
@@ -297,13 +292,7 @@ class _TopPickCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            settings: const RouteSettings(name: '/OutfitDetailPage'),
-            builder: (_) =>
-                OutfitDetailPage(recommendationId: recommendation.id),
-          ),
-        );
+        context.push(AppRoutes.outfitDetail, extra: recommendation);
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -510,12 +499,7 @@ class _AlternativeCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            settings: const RouteSettings(name: '/OutfitDetailPage'),
-            builder: (_) => OutfitDetailPage(recommendationId: alt.id),
-          ),
-        );
+        context.push(AppRoutes.outfitDetail, extra: alt);
       },
       child: SizedBox(
         width: 160,
