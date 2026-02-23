@@ -35,7 +35,7 @@ class AppColors {
   static const lightCard = Color(0xFFF1F5F9);
   static const lightCardAlt = Color(0xFFE2E8F0);
   static const lightSurface = Color(0xFFE2E8F0);
-  static const lightBorder = Color(0x1A000000); // black/10
+  static const lightBorder = Color(0xFFE2E8F0); // slate-200
   static const lightTextPrimary = Color(0xFF0F172A);
   static const lightTextSecondary = Color(0xFF475569);
   static const lightTextTertiary = Color(0xFF64748B);

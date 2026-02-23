@@ -813,15 +813,11 @@ class _AddItemPageState extends State<AddItemPage> {
         fillColor: context.cardAlt,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(
-            color: context.borderColor.withValues(alpha: 0.5),
-          ),
+          borderSide: BorderSide(color: context.borderColor),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(
-            color: context.borderColor.withValues(alpha: 0.5),
-          ),
+          borderSide: BorderSide(color: context.borderColor),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -847,7 +843,7 @@ class _AddItemPageState extends State<AddItemPage> {
       decoration: BoxDecoration(
         color: context.cardAlt,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: context.borderColor.withValues(alpha: 0.5)),
+        border: Border.all(color: context.borderColor),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<ClothingCategory>(
@@ -899,9 +895,7 @@ class _AddItemPageState extends State<AddItemPage> {
                 color: color,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: selected
-                      ? AppColors.primaryBlue
-                      : context.borderColor.withValues(alpha: 0.5),
+                  color: selected ? AppColors.primaryBlue : context.borderColor,
                   width: selected ? 3 : 1,
                 ),
                 boxShadow: selected
@@ -959,7 +953,7 @@ class _AddItemPageState extends State<AddItemPage> {
                   border: Border.all(
                     color: selected
                         ? AppColors.primaryBlue
-                        : context.borderColor.withValues(alpha: 0.5),
+                        : context.borderColor,
                   ),
                   boxShadow: selected
                       ? [

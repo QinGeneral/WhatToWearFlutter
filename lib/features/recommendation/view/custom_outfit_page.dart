@@ -335,11 +335,7 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                             decoration: BoxDecoration(
                               color: context.cardColor,
                               borderRadius: BorderRadius.circular(24),
-                              border: Border.all(
-                                color: context.borderColor.withValues(
-                                  alpha: 0.3,
-                                ),
-                              ),
+                              border: Border.all(color: context.borderColor),
                             ),
                             padding: const EdgeInsets.all(20),
                             child: Column(
@@ -426,9 +422,7 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                       border: Border.all(
                                         color: isActive
                                             ? AppColors.primaryBlue
-                                            : context.borderColor.withValues(
-                                                alpha: 0.3,
-                                              ),
+                                            : context.borderColor,
                                       ),
                                     ),
                                     child: Center(
@@ -456,11 +450,7 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                             decoration: BoxDecoration(
                               color: context.cardColor.withValues(alpha: 0.3),
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: context.borderColor.withValues(
-                                  alpha: 0.3,
-                                ),
-                              ),
+                              border: Border.all(color: context.borderColor),
                             ),
                             child: Wrap(
                               spacing: 10,
@@ -490,9 +480,7 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                         border: Border.all(
                                           color: isSelected
                                               ? AppColors.primaryBlue
-                                              : context.borderColor.withValues(
-                                                  alpha: 0.3,
-                                                ),
+                                              : context.borderColor,
                                         ),
                                       ),
                                       child: Row(
@@ -544,9 +532,7 @@ class _CustomOutfitPageState extends State<CustomOutfitPage> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(14),
                                       border: Border.all(
-                                        color: context.borderColor.withValues(
-                                          alpha: 0.3,
-                                        ),
+                                        color: context.borderColor,
                                         style: BorderStyle.solid,
                                       ),
                                     ),
