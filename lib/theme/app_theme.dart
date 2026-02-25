@@ -10,7 +10,7 @@ class AppTheme {
       primaryColor: AppColors.primaryBlue,
       colorScheme: const ColorScheme.dark(
         primary: AppColors.primaryBlue,
-        secondary: Color(0xFF334155),
+        secondary: AppColors.darkSecondary,
         surface: AppColors.darkCard,
         error: AppColors.errorRed,
       ),
@@ -28,7 +28,7 @@ class AppTheme {
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.darkBackgroundAlt,
         selectedItemColor: AppColors.primaryBlue,
-        unselectedItemColor: Color(0xFF6B7280),
+        unselectedItemColor: AppColors.darkUnselected,
       ),
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
@@ -56,11 +56,11 @@ class AppTheme {
           fontSize: 16,
           fontWeight: FontWeight.w600,
         ),
-        bodyLarge: TextStyle(color: Color(0xFFD1D5DB), fontSize: 16),
-        bodyMedium: TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
-        bodySmall: TextStyle(color: Color(0xFF64748B), fontSize: 12),
+        bodyLarge: TextStyle(color: AppColors.darkBodyLarge, fontSize: 16),
+        bodyMedium: TextStyle(color: AppColors.darkTextSecondary, fontSize: 14),
+        bodySmall: TextStyle(color: AppColors.darkTextTertiary, fontSize: 12),
         labelSmall: TextStyle(
-          color: Color(0xFF64748B),
+          color: AppColors.darkTextTertiary,
           fontSize: 10,
           fontWeight: FontWeight.w500,
         ),
@@ -72,7 +72,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
-        hintStyle: const TextStyle(color: Color(0xFF4B5563)),
+        hintStyle: const TextStyle(color: AppColors.darkHint),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -100,7 +100,7 @@ class AppTheme {
       primaryColor: AppColors.primaryBlueDark,
       colorScheme: const ColorScheme.light(
         primary: AppColors.primaryBlueDark,
-        secondary: Color(0xFFE2E8F0),
+        secondary: AppColors.lightSecondary,
         surface: AppColors.lightCard,
         error: AppColors.errorRed,
       ),
@@ -109,48 +109,48 @@ class AppTheme {
         elevation: 0,
         centerTitle: true,
         titleTextStyle: TextStyle(
-          color: Color(0xFF0F172A),
+          color: AppColors.lightTextPrimary,
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
-        iconTheme: IconThemeData(color: Color(0xFF0F172A)),
+        iconTheme: IconThemeData(color: AppColors.lightTextPrimary),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.lightBackgroundAlt,
         selectedItemColor: AppColors.primaryBlueDark,
-        unselectedItemColor: Color(0xFF94A3B8),
+        unselectedItemColor: AppColors.lightUnselected,
       ),
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
-          color: Color(0xFF0F172A),
+          color: AppColors.lightTextPrimary,
           fontSize: 28,
           fontWeight: FontWeight.bold,
         ),
         headlineMedium: TextStyle(
-          color: Color(0xFF0F172A),
+          color: AppColors.lightTextPrimary,
           fontSize: 24,
           fontWeight: FontWeight.bold,
         ),
         headlineSmall: TextStyle(
-          color: Color(0xFF0F172A),
+          color: AppColors.lightTextPrimary,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
         titleLarge: TextStyle(
-          color: Color(0xFF0F172A),
+          color: AppColors.lightTextPrimary,
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
         titleMedium: TextStyle(
-          color: Color(0xFF0F172A),
+          color: AppColors.lightTextPrimary,
           fontSize: 16,
           fontWeight: FontWeight.w600,
         ),
-        bodyLarge: TextStyle(color: Color(0xFF334155), fontSize: 16),
-        bodyMedium: TextStyle(color: Color(0xFF475569), fontSize: 14),
-        bodySmall: TextStyle(color: Color(0xFF64748B), fontSize: 12),
+        bodyLarge: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16),
+        bodyMedium: TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
+        bodySmall: TextStyle(color: AppColors.lightTextTertiary, fontSize: 12),
         labelSmall: TextStyle(
-          color: Color(0xFF94A3B8),
+          color: AppColors.lightTextQuaternary,
           fontSize: 10,
           fontWeight: FontWeight.w500,
         ),
@@ -162,7 +162,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
-        hintStyle: const TextStyle(color: Color(0xFF94A3B8)),
+        hintStyle: const TextStyle(color: AppColors.lightHint),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(

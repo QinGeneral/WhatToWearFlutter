@@ -40,4 +40,16 @@ class AppColors {
   static const lightTextSecondary = Color(0xFF475569);
   static const lightTextTertiary = Color(0xFF64748B);
   static const lightTextQuaternary = Color(0xFF94A3B8);
+
+  // ═══════ Additional Theme Colors (for consistency) ═══════
+  // Dark theme additional
+  static const darkSecondary = Color(0xFF334155);
+  static const darkUnselected = Color(0xFF6B7280);
+  static const darkHint = Color(0xFF4B5563);
+  static const darkBodyLarge = Color(0xFFD1D5DB);
+
+  // Light theme additional
+  static const lightSecondary = Color(0xFFE2E8F0);
+  static const lightUnselected = Color(0xFF94A3B8);
+  static const lightHint = Color(0xFF94A3B8);
 }

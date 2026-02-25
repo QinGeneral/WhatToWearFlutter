@@ -457,3 +457,101 @@ class _ShareDialogState extends State<ShareDialog> {
     );
   }
 }
+
+// ═══════ Extracted Widgets ═══════
+
+/// Display the main outfit image (extracted from helper method)
+class OutfitMainImage extends StatelessWidget {
+  final String? generatedImage;
+  final String? mainImage;
+
+  const OutfitMainImage({
+    super.key,
+    this.generatedImage,
+    this.mainImage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final src = generatedImage ?? mainImage;
+
+    if (src != null && src.isNotEmpty) {
+      try {
+        if (src.startsWith('http')) {
+          return Image.network(src, fit: BoxFit.cover, gaplessPlayback: true);
+        }
+        final decoded = src.startsWith('data:') ? src.split(',').last : src;
+        return Image.memory(
+          base64Decode(decoded),
+          fit: BoxFit.cover,
+          gaplessPlayback: true,
+        );
+      } catch (e) {
+        debugPrint('Caught error: $e');
+      }
+    }
+
+    return Container(
+      color: Colors.grey[800],
+      child: const Center(
+        child: Icon(Icons.checkroom, color: Colors.white54, size: 48),
+      ),
+    );
+  }
+}
+
+/// Info badge widget for displaying label-value pairs (extracted from helper method)
+class OutfitInfoBadge extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String label;
+  final String value;
+
+  const OutfitInfoBadge({
+    super.key,
+    required this.icon,
+    required this.iconColor,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: context.bgPrimary,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: context.borderColor),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: iconColor, size: 20),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.textSecondary,
+                  ),
+                ),
+                Text(
+                  value,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.textPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
