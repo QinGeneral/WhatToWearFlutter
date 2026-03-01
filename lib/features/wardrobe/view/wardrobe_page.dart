@@ -46,7 +46,6 @@ class _WardrobePageState extends State<WardrobePage> {
             heroTag: null,
             onPressed: () async {
               await context.push(AppRoutes.addItem);
-              if (mounted) wp.loadWardrobe();
             },
             backgroundColor: AppColors.primaryBlue,
             child: const Icon(Icons.add, color: Colors.white, size: 28),
@@ -216,9 +215,6 @@ class _WardrobeItemCard extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         await context.push(AppRoutes.addItem, extra: item.id);
-        if (context.mounted) {
-          context.read<WardrobeProvider>().loadWardrobe();
-        }
       },
       child: Container(
         decoration: BoxDecoration(

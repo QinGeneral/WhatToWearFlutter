@@ -56,19 +56,20 @@ class WardrobeProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    _items = _storage.getWardrobe();
+    final newItems = _storage.getWardrobe();
 
     // Hydrate images from file system
-    for (int i = 0; i < _items.length; i++) {
-      final item = _items[i];
+    for (int i = 0; i < newItems.length; i++) {
+      final item = newItems[i];
       final images = await _repository.loadImages(item.id);
       final optimized = await _repository.loadOptimizedImage(item.id);
-      _items[i] = item.copyWith(
+      newItems[i] = item.copyWith(
         images: images.isNotEmpty ? images : item.images,
         optimizedImage: optimized,
       );
     }
 
+    _items = newItems;
     _isLoading = false;
     notifyListeners();
   }
