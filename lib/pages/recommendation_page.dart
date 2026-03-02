@@ -202,7 +202,10 @@ class _WeatherCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                Row(
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Text(
                       AppLocalizations.of(
@@ -215,8 +218,7 @@ class _WeatherCard extends StatelessWidget {
                         color: context.textPrimary,
                       ),
                     ),
-                    if (weather.location != null) ...[
-                      const SizedBox(width: 8),
+                    if (weather.location != null)
                       Text(
                         '📍 ${weather.location}',
                         style: TextStyle(
@@ -224,11 +226,12 @@ class _WeatherCard extends StatelessWidget {
                           color: context.textSecondary.withValues(alpha: 0.8),
                         ),
                       ),
-                    ],
                   ],
                 ),
                 const SizedBox(height: 8),
-                Row(
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 4,
                   children: [
                     Text(
                       '${AppLocalizations.of(context)?.uvIndexPrefix ?? "紫外线"}${weather.uvIndex ?? (AppLocalizations.of(context)?.uvMedium ?? "中")}',
@@ -237,7 +240,6 @@ class _WeatherCard extends StatelessWidget {
                         color: context.textTertiary,
                       ),
                     ),
-                    const SizedBox(width: 12),
                     Text(
                       '${AppLocalizations.of(context)?.humidityPrefix ?? "湿度 "}${weather.humidity}%',
                       style: TextStyle(
@@ -245,7 +247,6 @@ class _WeatherCard extends StatelessWidget {
                         color: context.textTertiary,
                       ),
                     ),
-                    const SizedBox(width: 12),
                     Text(
                       '${AppLocalizations.of(context)?.comfortLevelPrefix ?? "舒适度："}${AppLocalizations.of(context)?.translateComfortLevel(weather.comfortLevel ?? "一般") ?? (AppLocalizations.of(context)?.comfortNormal ?? "一般")}',
                       style: TextStyle(
@@ -483,7 +484,7 @@ class _AlternativePlans extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         SizedBox(
-          height: 260,
+          height: 280,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 24),
