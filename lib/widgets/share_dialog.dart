@@ -94,10 +94,9 @@ class _ShareDialogState extends State<ShareDialog> {
                       children: [
                         Text(
                           AppLocalizations.of(context)?.shareOutfit ?? '分享穿搭',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                          style: context.textTheme.titleLarge?.copyWith(
                             color: context.textPrimary,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         GestureDetector(
@@ -190,11 +189,14 @@ class _ShareDialogState extends State<ShareDialog> {
                                               const SizedBox(width: 4),
                                               Text(
                                                 '${widget.recommendation.matchPercentage ?? 85}${AppLocalizations.of(context)?.matchSuffix ?? "% 匹配"}',
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                                style: context
+                                                    .textTheme
+                                                    .bodySmall
+                                                    ?.copyWith(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
                                               ),
                                             ],
                                           ),
@@ -232,11 +234,11 @@ class _ShareDialogState extends State<ShareDialog> {
                                                       context,
                                                     )?.dailyLiteral ??
                                                     '日常搭配'),
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                                            style: context.textTheme.labelSmall
+                                                ?.copyWith(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                           ),
                                         ),
                                       ),
@@ -253,11 +255,11 @@ class _ShareDialogState extends State<ShareDialog> {
                                     children: [
                                       Text(
                                         _getCardTitle(context),
-                                        style: TextStyle(
-                                          color: context.textPrimary,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: context.textTheme.titleMedium
+                                            ?.copyWith(
+                                              color: context.textPrimary,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -388,7 +390,9 @@ class _ShareDialogState extends State<ShareDialog> {
           fit: BoxFit.cover,
           gaplessPlayback: true,
         );
-      } catch (_) {}
+      } catch (e) {
+        debugPrint('Caught error: $e');
+      }
     }
 
     return Container(
@@ -432,13 +436,112 @@ class _ShareDialogState extends State<ShareDialog> {
               children: [
                 Text(
                   label,
-                  style: TextStyle(color: context.textSecondary, fontSize: 10),
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.textSecondary,
+                  ),
                 ),
                 Text(
                   value,
-                  style: TextStyle(
+                  style: context.textTheme.bodySmall?.copyWith(
                     color: context.textPrimary,
-                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ═══════ Extracted Widgets ═══════
+
+/// Display the main outfit image (extracted from helper method)
+class OutfitMainImage extends StatelessWidget {
+  final String? generatedImage;
+  final String? mainImage;
+
+  const OutfitMainImage({
+    super.key,
+    this.generatedImage,
+    this.mainImage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final src = generatedImage ?? mainImage;
+
+    if (src != null && src.isNotEmpty) {
+      try {
+        if (src.startsWith('http')) {
+          return Image.network(src, fit: BoxFit.cover, gaplessPlayback: true);
+        }
+        final decoded = src.startsWith('data:') ? src.split(',').last : src;
+        return Image.memory(
+          base64Decode(decoded),
+          fit: BoxFit.cover,
+          gaplessPlayback: true,
+        );
+      } catch (e) {
+        debugPrint('Caught error: $e');
+      }
+    }
+
+    return Container(
+      color: Colors.grey[800],
+      child: const Center(
+        child: Icon(Icons.checkroom, color: Colors.white54, size: 48),
+      ),
+    );
+  }
+}
+
+/// Info badge widget for displaying label-value pairs (extracted from helper method)
+class OutfitInfoBadge extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String label;
+  final String value;
+
+  const OutfitInfoBadge({
+    super.key,
+    required this.icon,
+    required this.iconColor,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: context.bgPrimary,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: context.borderColor),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: iconColor, size: 20),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.textSecondary,
+                  ),
+                ),
+                Text(
+                  value,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.textPrimary,
                     fontWeight: FontWeight.bold,
                   ),
                   maxLines: 1,

@@ -203,5 +203,6 @@
   "userAgreement": "《用户协议》",
   "privacyDialogContentPart3": "。\n\n为了向您提供穿搭推荐及相关服务，我们会在您使用特定功能时，按需收集您的设备信息等必要数据。我们将按业界成熟的安全标准，采取严格的安全保护措施来保护您的个人信息。\n\n如您同意，请点击“同意并继续”开始使用我们的服务。",
   "decline": "不同意并退出",
-  "agreeAndContinue": "同意并继续"
+  "agreeAndContinue": "同意并继续",
+  "pleaseEnterOrSelectOutfitNeeds": "请输入或选择穿搭需求"
 }

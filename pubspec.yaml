@@ -28,12 +28,24 @@ dependencies:
     sdk: flutter
   flutter_markdown: ^0.7.7+1
   umeng_common_sdk: ^1.3.0
+  go_router: ^17.1.0
+  # Phase 1: 架构依赖
+  dartz: ^0.10.1
+  freezed_annotation: ^2.4.4
+  equatable: ^2.0.7
+  get_it: ^8.0.3
+  json_annotation: ^4.9.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mocktail: ^1.0.3
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
+  # Phase 1: 代码生成
+  freezed: ^2.5.7
+  build_runner: ^2.4.13
+  json_serializable: ^6.8.0
 
 flutter:
   uses-material-design: true

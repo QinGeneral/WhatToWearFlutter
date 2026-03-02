@@ -1,49 +1,18 @@
 import 'package:flutter/material.dart';
 
+import 'app_colors.dart';
+
 class AppTheme {
-  // ═══════ Dark Theme Colors ═══════
-  static const darkBackground = Color(0xFF0F172A);
-  static const darkBackgroundAlt = Color(0xFF0A0F18);
-  static const darkCard = Color(0xFF1A212C);
-  static const darkCardAlt = Color(0xFF161D27);
-  static const darkSurface = Color(0xFF1E293B);
-  static const darkBorder = Color(0x0DFFFFFF); // white/5
-  static const darkTextPrimary = Colors.white;
-  static const darkTextSecondary = Color(0xFF94A3B8); // slate-400
-  static const darkTextTertiary = Color(0xFF64748B); // slate-500
-  static const darkTextQuaternary = Color(0xFF475569); // slate-600
-
-  // ═══════ Light Theme Colors ═══════
-  static const lightBackground = Color(0xFFFFFFFF);
-  static const lightBackgroundAlt = Color(0xFFF8FAFC);
-  static const lightCard = Color(0xFFF1F5F9);
-  static const lightCardAlt = Color(0xFFE2E8F0);
-  static const lightSurface = Color(0xFFE2E8F0);
-  static const lightBorder = Color(0x1A000000); // black/10
-  static const lightTextPrimary = Color(0xFF0F172A);
-  static const lightTextSecondary = Color(0xFF475569);
-  static const lightTextTertiary = Color(0xFF64748B);
-  static const lightTextQuaternary = Color(0xFF94A3B8);
-
-  // ═══════ Shared Colors ═══════
-  static const primaryBlue = Color(0xFF3B82F6);
-  static const primaryBlueDark = Color(0xFF2563EB);
-  static const accentPurple = Color(0xFFA855F7);
-  static const accentPink = Color(0xFFEC4899);
-  static const successGreen = Color(0xFF22C55E);
-  static const errorRed = Color(0xFFEF4444);
-  static const warningYellow = Color(0xFFF59E0B);
-
   static ThemeData darkTheme() {
     return ThemeData(
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: darkBackground,
-      primaryColor: primaryBlue,
+      scaffoldBackgroundColor: AppColors.darkBackground,
+      primaryColor: AppColors.primaryBlue,
       colorScheme: const ColorScheme.dark(
-        primary: primaryBlue,
-        secondary: Color(0xFF334155),
-        surface: darkCard,
-        error: errorRed,
+        primary: AppColors.primaryBlue,
+        secondary: AppColors.darkSecondary,
+        surface: AppColors.darkCard,
+        error: AppColors.errorRed,
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
@@ -57,9 +26,9 @@ class AppTheme {
         iconTheme: IconThemeData(color: Colors.white),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: darkBackgroundAlt,
-        selectedItemColor: primaryBlue,
-        unselectedItemColor: Color(0xFF6B7280),
+        backgroundColor: AppColors.darkBackgroundAlt,
+        selectedItemColor: AppColors.primaryBlue,
+        unselectedItemColor: AppColors.darkUnselected,
       ),
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
@@ -87,27 +56,27 @@ class AppTheme {
           fontSize: 16,
           fontWeight: FontWeight.w600,
         ),
-        bodyLarge: TextStyle(color: Color(0xFFD1D5DB), fontSize: 16),
-        bodyMedium: TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
-        bodySmall: TextStyle(color: Color(0xFF64748B), fontSize: 12),
+        bodyLarge: TextStyle(color: AppColors.darkBodyLarge, fontSize: 16),
+        bodyMedium: TextStyle(color: AppColors.darkTextSecondary, fontSize: 14),
+        bodySmall: TextStyle(color: AppColors.darkTextTertiary, fontSize: 12),
         labelSmall: TextStyle(
-          color: Color(0xFF64748B),
+          color: AppColors.darkTextTertiary,
           fontSize: 10,
           fontWeight: FontWeight.w500,
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: darkCardAlt,
+        fillColor: AppColors.darkCardAlt,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
-        hintStyle: const TextStyle(color: Color(0xFF4B5563)),
+        hintStyle: const TextStyle(color: AppColors.darkHint),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryBlue,
+          backgroundColor: AppColors.primaryBlue,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -117,7 +86,7 @@ class AppTheme {
         ),
       ),
       cardTheme: CardThemeData(
-        color: darkCard,
+        color: AppColors.darkCard,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         elevation: 0,
       ),
@@ -127,77 +96,77 @@ class AppTheme {
   static ThemeData lightTheme() {
     return ThemeData(
       brightness: Brightness.light,
-      scaffoldBackgroundColor: lightBackground,
-      primaryColor: primaryBlueDark,
+      scaffoldBackgroundColor: AppColors.lightBackground,
+      primaryColor: AppColors.primaryBlueDark,
       colorScheme: const ColorScheme.light(
-        primary: primaryBlueDark,
-        secondary: Color(0xFFE2E8F0),
-        surface: lightCard,
-        error: errorRed,
+        primary: AppColors.primaryBlueDark,
+        secondary: AppColors.lightSecondary,
+        surface: AppColors.lightCard,
+        error: AppColors.errorRed,
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         titleTextStyle: TextStyle(
-          color: Color(0xFF0F172A),
+          color: AppColors.lightTextPrimary,
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
-        iconTheme: IconThemeData(color: Color(0xFF0F172A)),
+        iconTheme: IconThemeData(color: AppColors.lightTextPrimary),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: lightBackgroundAlt,
-        selectedItemColor: primaryBlueDark,
-        unselectedItemColor: Color(0xFF94A3B8),
+        backgroundColor: AppColors.lightBackgroundAlt,
+        selectedItemColor: AppColors.primaryBlueDark,
+        unselectedItemColor: AppColors.lightUnselected,
       ),
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
-          color: Color(0xFF0F172A),
+          color: AppColors.lightTextPrimary,
           fontSize: 28,
           fontWeight: FontWeight.bold,
         ),
         headlineMedium: TextStyle(
-          color: Color(0xFF0F172A),
+          color: AppColors.lightTextPrimary,
           fontSize: 24,
           fontWeight: FontWeight.bold,
         ),
         headlineSmall: TextStyle(
-          color: Color(0xFF0F172A),
+          color: AppColors.lightTextPrimary,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
         titleLarge: TextStyle(
-          color: Color(0xFF0F172A),
+          color: AppColors.lightTextPrimary,
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
         titleMedium: TextStyle(
-          color: Color(0xFF0F172A),
+          color: AppColors.lightTextPrimary,
           fontSize: 16,
           fontWeight: FontWeight.w600,
         ),
-        bodyLarge: TextStyle(color: Color(0xFF334155), fontSize: 16),
-        bodyMedium: TextStyle(color: Color(0xFF475569), fontSize: 14),
-        bodySmall: TextStyle(color: Color(0xFF64748B), fontSize: 12),
+        bodyLarge: TextStyle(color: AppColors.lightTextSecondary, fontSize: 16),
+        bodyMedium: TextStyle(color: AppColors.lightTextSecondary, fontSize: 14),
+        bodySmall: TextStyle(color: AppColors.lightTextTertiary, fontSize: 12),
         labelSmall: TextStyle(
-          color: Color(0xFF94A3B8),
+          color: AppColors.lightTextQuaternary,
           fontSize: 10,
           fontWeight: FontWeight.w500,
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: lightCard,
+        fillColor: AppColors.lightCard,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
-        hintStyle: const TextStyle(color: Color(0xFF94A3B8)),
+        hintStyle: const TextStyle(color: AppColors.lightHint),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryBlueDark,
+          backgroundColor: AppColors.primaryBlueDark,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -207,7 +176,7 @@ class AppTheme {
         ),
       ),
       cardTheme: CardThemeData(
-        color: lightCard,
+        color: AppColors.lightCard,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         elevation: 0,
       ),
@@ -219,18 +188,22 @@ class AppTheme {
 extension ThemeColors on BuildContext {
   bool get isDark => Theme.of(this).brightness == Brightness.dark;
   Color get bgPrimary =>
-      isDark ? AppTheme.darkBackground : AppTheme.lightBackground;
+      isDark ? AppColors.darkBackground : AppColors.lightBackground;
   Color get bgAlt =>
-      isDark ? AppTheme.darkBackgroundAlt : AppTheme.lightBackgroundAlt;
-  Color get cardColor => isDark ? AppTheme.darkCard : AppTheme.lightCard;
-  Color get cardAlt => isDark ? AppTheme.darkCardAlt : AppTheme.lightCardAlt;
+      isDark ? AppColors.darkBackgroundAlt : AppColors.lightBackgroundAlt;
+  Color get cardColor => isDark ? AppColors.darkCard : AppColors.lightCard;
+  Color get cardAlt => isDark ? AppColors.darkCardAlt : AppColors.lightCardAlt;
   Color get surfaceColor =>
-      isDark ? AppTheme.darkSurface : AppTheme.lightSurface;
-  Color get borderColor => isDark ? AppTheme.darkBorder : AppTheme.lightBorder;
+      isDark ? AppColors.darkSurface : AppColors.lightSurface;
+  Color get borderColor =>
+      isDark ? AppColors.darkBorder : AppColors.lightBorder;
   Color get textPrimary =>
-      isDark ? AppTheme.darkTextPrimary : AppTheme.lightTextPrimary;
+      isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
   Color get textSecondary =>
-      isDark ? AppTheme.darkTextSecondary : AppTheme.lightTextSecondary;
+      isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
   Color get textTertiary =>
-      isDark ? AppTheme.darkTextTertiary : AppTheme.lightTextTertiary;
+      isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary;
+  Color get textQuaternary =>
+      isDark ? AppColors.darkTextQuaternary : AppColors.lightTextQuaternary;
+  TextTheme get textTheme => Theme.of(this).textTheme;
 }

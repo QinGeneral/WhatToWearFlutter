@@ -203,5 +203,6 @@
   "userAgreement": "User Agreement",
   "privacyDialogContentPart3": ".\n\nTo provide you with outfit recommendations and related services, we will collect necessary device information when you use specific features. We will strict security measures to protect your data.\n\nIf you agree, please click \"Agree and Continue\" to start using our services.",
   "decline": "Decline",
-  "agreeAndContinue": "Agree & Continue"
+  "agreeAndContinue": "Agree & Continue",
+  "pleaseEnterOrSelectOutfitNeeds": "Please enter or select your outfit needs"
 }

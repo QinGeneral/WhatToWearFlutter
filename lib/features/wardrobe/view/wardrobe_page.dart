@@ -1,0 +1,301 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:what_to_wear_flutter/models/models.dart';
+import 'package:what_to_wear_flutter/features/wardrobe/provider/wardrobe_provider.dart';
+import 'package:what_to_wear_flutter/theme/app_theme.dart';
+import 'package:what_to_wear_flutter/theme/app_colors.dart';
+import 'package:go_router/go_router.dart';
+import 'package:what_to_wear_flutter/core/router/app_routes.dart';
+import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
+
+class WardrobePage extends StatefulWidget {
+  const WardrobePage({super.key});
+
+  @override
+  State<WardrobePage> createState() => _WardrobePageState();
+}
+
+class _WardrobePageState extends State<WardrobePage> {
+  final _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final wp = context.read<WardrobeProvider>();
+      if (wp.items.isEmpty) wp.loadWardrobe();
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<WardrobeProvider>(
+      builder: (context, wp, _) {
+        final filtered = wp.filteredItems;
+        return Scaffold(
+          backgroundColor: context.bgAlt,
+          floatingActionButton: FloatingActionButton(
+            heroTag: null,
+            onPressed: () async {
+              await context.push(AppRoutes.addItem);
+              if (mounted) wp.loadWardrobe();
+            },
+            backgroundColor: AppColors.primaryBlue,
+            child: const Icon(Icons.add, color: Colors.white, size: 28),
+          ),
+          body: SafeArea(
+            child: Column(
+              children: [
+                // Search bar
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: (v) => wp.setSearchQuery(v),
+                    style: TextStyle(color: context.textPrimary),
+                    decoration: InputDecoration(
+                      hintText:
+                          AppLocalizations.of(context)?.searchClothing ??
+                          '搜索衣物...',
+                      hintStyle: TextStyle(color: context.textTertiary),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: context.textTertiary,
+                      ),
+                      filled: true,
+                      fillColor: context.cardColor.withValues(alpha: 0.5),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Category filter
+                SizedBox(
+                  height: 48,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    children: [
+                      _CategoryChip(
+                        label: AppLocalizations.of(context)?.all ?? '全部',
+                        selected: wp.selectedCategory == null,
+                        onTap: () => wp.setCategory(null),
+                      ),
+                      ...ClothingCategory.values.map(
+                        (cat) => _CategoryChip(
+                          label: cat.localizedName(context),
+                          selected: wp.selectedCategory == cat,
+                          onTap: () => wp.setCategory(cat),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                // Items grid
+                Expanded(
+                  child: filtered.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.checkroom,
+                                size: 64,
+                                color: context.textTertiary.withValues(
+                                  alpha: 0.5,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                wp.items.isEmpty
+                                    ? AppLocalizations.of(
+                                            context,
+                                          )?.wardrobeEmpty ??
+                                          '衣橱为空，点击 + 添加衣物'
+                                    : AppLocalizations.of(
+                                            context,
+                                          )?.noMatchingClothing ??
+                                          '没有找到匹配的衣物',
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: context.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : GridView.builder(
+                          padding: const EdgeInsets.all(16),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 16,
+                                crossAxisSpacing: 16,
+                                childAspectRatio: 0.72,
+                              ),
+                          itemCount: filtered.length,
+                          itemBuilder: (context, index) {
+                            return _WardrobeItemCard(item: filtered[index]);
+                          },
+                        ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _CategoryChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _CategoryChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 12),
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          decoration: BoxDecoration(
+            color: selected ? AppColors.primaryBlue : context.cardColor,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: selected ? AppColors.primaryBlue : context.borderColor,
+            ),
+          ),
+          child: Text(
+            label,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: selected ? Colors.white : context.textPrimary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _WardrobeItemCard extends StatelessWidget {
+  final WardrobeItem item;
+
+  const _WardrobeItemCard({required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        await context.push(AppRoutes.addItem, extra: item.id);
+        if (context.mounted) {
+          context.read<WardrobeProvider>().loadWardrobe();
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: context.cardColor,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: context.borderColor),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: _buildImage(context),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.name,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.textPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    item.category.localizedName(context),
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: context.textTertiary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImage(BuildContext context) {
+    final src =
+        item.optimizedImage ??
+        (item.images.isNotEmpty ? item.images.first : null);
+    if (src != null && src.isNotEmpty) {
+      try {
+        final decoded = src.startsWith('data:') ? src.split(',').last : src;
+        return Image.memory(
+          base64Decode(decoded),
+          fit: BoxFit.cover,
+          gaplessPlayback: true,
+        );
+      } catch (e) {
+        debugPrint('Caught error: $e');
+      }
+    }
+    return Container(
+      color: context.surfaceColor,
+      child: Center(
+        child: Icon(
+          Icons.checkroom,
+          size: 40,
+          color: context.textTertiary.withValues(alpha: 0.3),
+        ),
+      ),
+    );
+  }
+}
