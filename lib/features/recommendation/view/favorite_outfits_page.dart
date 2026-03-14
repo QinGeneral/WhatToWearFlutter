@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:what_to_wear_flutter/features/recommendation/provider/recommendation_provider.dart';
+import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 import 'package:what_to_wear_flutter/theme/app_theme.dart';
 import 'package:what_to_wear_flutter/theme/app_colors.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +15,7 @@ class FavoriteOutfitsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<RecommendationProvider>(
       builder: (context, rp, _) {
+        final l10n = AppLocalizations.of(context)!;
         return Scaffold(
           backgroundColor: context.bgPrimary,
           appBar: AppBar(
@@ -23,7 +25,7 @@ class FavoriteOutfitsPage extends StatelessWidget {
               onPressed: () => context.pop(),
             ),
             title: Text(
-              '收藏穿搭',
+              l10n.favoriteOutfits,
               style: TextStyle(
                 color: context.textPrimary,
                 fontWeight: FontWeight.bold,
@@ -42,14 +44,14 @@ class FavoriteOutfitsPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        '还没有收藏的穿搭',
+                        l10n.noFavoritesYet,
                         style: context.textTheme.bodyMedium?.copyWith(
                           color: context.textSecondary,
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '在推荐中点击❤️收藏喜欢的穿搭',
+                        l10n.noFavoritesHint,
                         style: context.textTheme.bodySmall?.copyWith(
                           color: context.textTertiary,
                         ),
@@ -129,7 +131,7 @@ class FavoriteOutfitsPage extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    '${rec.matchPercentage ?? 85}% 匹配',
+                                    '${rec.matchPercentage ?? 85}${l10n.matchSuffix}',
                                     style: context.textTheme.labelSmall
                                         ?.copyWith(
                                           color: AppColors.primaryBlue,

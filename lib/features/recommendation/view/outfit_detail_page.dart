@@ -361,7 +361,7 @@ class OutfitDetailPage extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  AppLocalizations.of(context)?.noMatchingClothing ??
+                  AppLocalizations.of(context)?.itemRemovedFromWardrobe ??
                       '该衣物已从衣橱移除',
                 ),
               ),

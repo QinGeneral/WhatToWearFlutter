@@ -1,5 +1,4 @@
 import 'package:get_it/get_it.dart';
-import 'package:what_to_wear_flutter/infrastructure/datasources/local_data_source.dart';
 import 'package:what_to_wear_flutter/infrastructure/datasources/image_data_source.dart';
 import 'package:what_to_wear_flutter/infrastructure/repositories/wardrobe_repository_impl.dart';
 import 'package:what_to_wear_flutter/domain/repositories/wardrobe_repository.dart';
@@ -18,16 +17,12 @@ Future<void> setupDependencies() async {
   getIt.registerSingleton<WeatherService>(weatherService);
 
   // ═══════ Data Sources ═══════
-  final localDataSource = LocalDataSource();
-  await localDataSource.init();
-  getIt.registerSingleton<LocalDataSource>(localDataSource);
-
   getIt.registerSingleton<ImageDataSource>(ImageDataSource());
 
   // ═══════ Repositories (Either pattern) ═══════
   getIt.registerSingleton<WardrobeRepository>(
     WardrobeRepositoryImpl(
-      getIt<LocalDataSource>(),
+      getIt<StorageService>(),
       getIt<ImageDataSource>(),
     ),
   );

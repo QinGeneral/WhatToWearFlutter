@@ -168,14 +168,20 @@ class WhatToWearApp extends StatelessWidget {
 
 class MainShell extends StatefulWidget {
   final Widget child;
-  const MainShell({super.key, required this.child});
+  final String location;
+
+  const MainShell({super.key, required this.child, required this.location});
 
   @override
   State<MainShell> createState() => _MainShellState();
 }
 
 class _MainShellState extends State<MainShell> {
-  int _currentIndex = 0;
+  int _locationToIndex(String location) {
+    if (location.startsWith(AppRoutes.wardrobe)) return 1;
+    if (location.startsWith(AppRoutes.profile)) return 2;
+    return 0;
+  }
 
   @override
   void initState() {
@@ -191,6 +197,7 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
+    final currentIndex = _locationToIndex(widget.location);
     return Scaffold(
       body: widget.child,
       bottomNavigationBar: Container(
@@ -211,31 +218,22 @@ class _MainShellState extends State<MainShell> {
                   activeIcon: Icons.style,
                   label:
                       AppLocalizations.of(context)?.tabRecommendation ?? '推荐',
-                  isActive: _currentIndex == 0,
-                  onTap: () {
-                    setState(() => _currentIndex = 0);
-                    context.go(AppRoutes.home);
-                  },
+                  isActive: currentIndex == 0,
+                  onTap: () => context.go(AppRoutes.home),
                 ),
                 _NavItem(
                   icon: Icons.checkroom_outlined,
                   activeIcon: Icons.checkroom,
                   label: AppLocalizations.of(context)?.tabWardrobe ?? '衣橱',
-                  isActive: _currentIndex == 1,
-                  onTap: () {
-                    setState(() => _currentIndex = 1);
-                    context.go(AppRoutes.wardrobe);
-                  },
+                  isActive: currentIndex == 1,
+                  onTap: () => context.go(AppRoutes.wardrobe),
                 ),
                 _NavItem(
                   icon: Icons.person_outline,
                   activeIcon: Icons.person,
                   label: AppLocalizations.of(context)?.tabProfile ?? '我的',
-                  isActive: _currentIndex == 2,
-                  onTap: () {
-                    setState(() => _currentIndex = 2);
-                    context.go(AppRoutes.profile);
-                  },
+                  isActive: currentIndex == 2,
+                  onTap: () => context.go(AppRoutes.profile),
                 ),
               ],
             ),

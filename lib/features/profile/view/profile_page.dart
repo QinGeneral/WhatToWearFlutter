@@ -99,7 +99,7 @@ class ProfilePage extends StatelessWidget {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              identityConfig.name,
+                              identityConfig.displayName,
                               style: context.textTheme.bodyMedium?.copyWith(
                                 color: identityConfig.color,
                                 fontWeight: FontWeight.w600,

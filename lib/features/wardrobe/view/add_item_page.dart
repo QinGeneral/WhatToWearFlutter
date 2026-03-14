@@ -67,7 +67,7 @@ class _AddItemPageState extends State<AddItemPage> {
       _category = item.category;
       _selectedColor = item.color.isNotEmpty ? item.color.first : null;
       _selectedSeason = item.season;
-      if (item.tags.isNotEmpty) _materialController.text = item.tags.first;
+      if (item.material != null) _materialController.text = item.material!;
       if (item.images.isNotEmpty) _imageBase64 = item.images.first;
       if (item.optimizedImage != null) {
         _optimizedImageBase64 = item.optimizedImage;
@@ -306,9 +306,10 @@ class _AddItemPageState extends State<AddItemPage> {
           images: _imageBase64 != null ? [_imageBase64!] : null,
           color: _selectedColor != null ? [_selectedColor!] : [],
           season: _selectedSeason,
-          tags: [
-            _materialController.text.trim(),
-          ].where((t) => t.isNotEmpty).toList(),
+          tags: const [],
+          material: _materialController.text.trim().isNotEmpty
+              ? _materialController.text.trim()
+              : null,
           brand: _brandController.text.trim().isNotEmpty
               ? _brandController.text.trim()
               : null,
@@ -322,9 +323,10 @@ class _AddItemPageState extends State<AddItemPage> {
           images: _imageBase64 != null ? [_imageBase64!] : [],
           color: _selectedColor != null ? [_selectedColor!] : [],
           season: _selectedSeason!,
-          tags: [
-            _materialController.text.trim(),
-          ].where((t) => t.isNotEmpty).toList(),
+          tags: const [],
+          material: _materialController.text.trim().isNotEmpty
+              ? _materialController.text.trim()
+              : null,
           brand: _brandController.text.trim().isNotEmpty
               ? _brandController.text.trim()
               : null,

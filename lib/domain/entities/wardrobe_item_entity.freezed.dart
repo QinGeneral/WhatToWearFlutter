@@ -35,6 +35,7 @@ mixin _$WardrobeItemEntity {
   String? get brand => throw _privateConstructorUsedError;
   String? get purchaseDate => throw _privateConstructorUsedError;
   List<String> get tags => throw _privateConstructorUsedError;
+  String? get material => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
   String? get updatedAt => throw _privateConstructorUsedError;
 
@@ -69,6 +70,7 @@ abstract class $WardrobeItemEntityCopyWith<$Res> {
     String? brand,
     String? purchaseDate,
     List<String> tags,
+    String? material,
     String createdAt,
     String? updatedAt,
   });
@@ -102,6 +104,7 @@ class _$WardrobeItemEntityCopyWithImpl<$Res, $Val extends WardrobeItemEntity>
     Object? brand = freezed,
     Object? purchaseDate = freezed,
     Object? tags = null,
+    Object? material = freezed,
     Object? createdAt = null,
     Object? updatedAt = freezed,
   }) {
@@ -159,6 +162,10 @@ class _$WardrobeItemEntityCopyWithImpl<$Res, $Val extends WardrobeItemEntity>
                 ? _value.tags
                 : tags // ignore: cast_nullable_to_non_nullable
                       as List<String>,
+            material: freezed == material
+                ? _value.material
+                : material // ignore: cast_nullable_to_non_nullable
+                      as String?,
             createdAt: null == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -196,6 +203,7 @@ abstract class _$$WardrobeItemEntityImplCopyWith<$Res>
     String? brand,
     String? purchaseDate,
     List<String> tags,
+    String? material,
     String createdAt,
     String? updatedAt,
   });
@@ -228,6 +236,7 @@ class __$$WardrobeItemEntityImplCopyWithImpl<$Res>
     Object? brand = freezed,
     Object? purchaseDate = freezed,
     Object? tags = null,
+    Object? material = freezed,
     Object? createdAt = null,
     Object? updatedAt = freezed,
   }) {
@@ -285,6 +294,10 @@ class __$$WardrobeItemEntityImplCopyWithImpl<$Res>
             ? _value._tags
             : tags // ignore: cast_nullable_to_non_nullable
                   as List<String>,
+        material: freezed == material
+            ? _value.material
+            : material // ignore: cast_nullable_to_non_nullable
+                  as String?,
         createdAt: null == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -315,6 +328,7 @@ class _$WardrobeItemEntityImpl implements _WardrobeItemEntity {
     this.brand,
     this.purchaseDate,
     required final List<String> tags,
+    this.material,
     required this.createdAt,
     this.updatedAt,
   }) : _images = images,
@@ -385,13 +399,15 @@ class _$WardrobeItemEntityImpl implements _WardrobeItemEntity {
   }
 
   @override
+  final String? material;
+  @override
   final String createdAt;
   @override
   final String? updatedAt;
 
   @override
   String toString() {
-    return 'WardrobeItemEntity(id: $id, name: $name, category: $category, subCategory: $subCategory, images: $images, optimizedImage: $optimizedImage, color: $color, colorPalette: $colorPalette, style: $style, season: $season, brand: $brand, purchaseDate: $purchaseDate, tags: $tags, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'WardrobeItemEntity(id: $id, name: $name, category: $category, subCategory: $subCategory, images: $images, optimizedImage: $optimizedImage, color: $color, colorPalette: $colorPalette, style: $style, season: $season, brand: $brand, purchaseDate: $purchaseDate, tags: $tags, material: $material, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -419,6 +435,8 @@ class _$WardrobeItemEntityImpl implements _WardrobeItemEntity {
             (identical(other.purchaseDate, purchaseDate) ||
                 other.purchaseDate == purchaseDate) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
+            (identical(other.material, material) ||
+                other.material == material) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -442,6 +460,7 @@ class _$WardrobeItemEntityImpl implements _WardrobeItemEntity {
     brand,
     purchaseDate,
     const DeepCollectionEquality().hash(_tags),
+    material,
     createdAt,
     updatedAt,
   );
@@ -478,6 +497,7 @@ abstract class _WardrobeItemEntity implements WardrobeItemEntity {
     final String? brand,
     final String? purchaseDate,
     required final List<String> tags,
+    final String? material,
     required final String createdAt,
     final String? updatedAt,
   }) = _$WardrobeItemEntityImpl;
@@ -511,6 +531,8 @@ abstract class _WardrobeItemEntity implements WardrobeItemEntity {
   String? get purchaseDate;
   @override
   List<String> get tags;
+  @override
+  String? get material;
   @override
   String get createdAt;
   @override

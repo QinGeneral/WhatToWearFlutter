@@ -1327,6 +1327,46 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'请输入或选择穿搭需求'**
   String get pleaseEnterOrSelectOutfitNeeds;
+
+  String get continueAction;
+  String get onboardingWelcomeTagline;
+  String get onboardingYourNickname;
+  String get onboardingNameHint;
+  String get onboardingWhoAreYou;
+  String get onboardingIdentitySubtitle;
+  String get featureAITitle;
+  String get featureAIDesc;
+  String get featureWardrobeTitle;
+  String get featureWardrobeDesc;
+  String get featureTryOnTitle;
+  String get featureTryOnDesc;
+  String get onboardingCapabilities;
+  String get onboardingSwipeToLearnMore;
+  String get onboardingNext;
+  String get onboardingEnablePermissions;
+  String get onboardingPermissionsSubtitle;
+  String get permissionLocation;
+  String get permissionLocationDesc;
+  String get permissionPhoto;
+  String get permissionPhotoDesc;
+  String get permissionSkip;
+  String get permissionAutoGranted;
+  String get permissionGrant;
+  String get onboardingAddFirstItem;
+  String get onboardingAddFirstItemDesc;
+  String get onboardingAddNow;
+  String get onboardingAddLater;
+  String get noHistoryYet;
+  String get confirmDeleteHistory;
+  String get noFavoritesYet;
+  String get noFavoritesHint;
+  String get itemRemovedFromWardrobe;
+  String get faq;
+  String get feedbackSection;
+  String get feedbackPrompt;
+  String get sendEmailToDeveloper;
+  String get orSendDirectlyTo;
+  String get cannotOpenMailApp;
 }
 
 class _AppLocalizationsDelegate

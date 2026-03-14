@@ -26,6 +26,7 @@ _$WardrobeItemEntityImpl _$$WardrobeItemEntityImplFromJson(
   brand: json['brand'] as String?,
   purchaseDate: json['purchaseDate'] as String?,
   tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
+  material: json['material'] as String?,
   createdAt: json['createdAt'] as String,
   updatedAt: json['updatedAt'] as String?,
 );
@@ -46,6 +47,7 @@ Map<String, dynamic> _$$WardrobeItemEntityImplToJson(
   'brand': instance.brand,
   'purchaseDate': instance.purchaseDate,
   'tags': instance.tags,
+  'material': instance.material,
   'createdAt': instance.createdAt,
   'updatedAt': instance.updatedAt,
 };

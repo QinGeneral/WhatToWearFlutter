@@ -20,6 +20,7 @@ class WardrobeItemEntity with _$WardrobeItemEntity {
     String? brand,
     String? purchaseDate,
     required List<String> tags,
+    String? material,
     required String createdAt,
     String? updatedAt,
   }) = _WardrobeItemEntity;

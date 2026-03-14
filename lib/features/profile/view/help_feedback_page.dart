@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 import 'package:what_to_wear_flutter/theme/app_theme.dart';
 import 'package:what_to_wear_flutter/theme/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -39,7 +40,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('无法打开邮件应用，请直接发送邮件至 $email'),
+              content: Text(AppLocalizations.of(context)!.cannotOpenMailApp),
               backgroundColor: AppColors.errorRed,
             ),
           );
@@ -49,7 +50,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('无法打开邮件应用，请直接发送邮件至 $email'),
+            content: Text(AppLocalizations.of(context)!.cannotOpenMailApp),
             backgroundColor: AppColors.errorRed,
           ),
         );
@@ -68,11 +69,12 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: context.bgPrimary,
       appBar: AppBar(
         title: Text(
-          '帮助与反馈',
+          l10n.helpAndFeedback,
           style: TextStyle(
             color: context.textPrimary,
             fontWeight: FontWeight.bold,
@@ -97,7 +99,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
           children: [
             // FAQ Section
             Text(
-              '常见问题',
+              l10n.faq,
               style: context.textTheme.titleLarge?.copyWith(
                 color: context.textPrimary,
                 fontWeight: FontWeight.bold,
@@ -110,7 +112,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
 
             // Feedback Section
             Text(
-              '意见反馈',
+              l10n.feedbackSection,
               style: context.textTheme.titleLarge?.copyWith(
                 color: context.textPrimary,
                 fontWeight: FontWeight.bold,
@@ -118,7 +120,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
             ),
             const SizedBox(height: 8),
             Text(
-              '如果您遇到了问题，或者有任何建议，欢迎告诉我们：',
+              l10n.feedbackPrompt,
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.textSecondary,
               ),
@@ -130,7 +132,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 onPressed: _launchEmail,
                 icon: const Icon(Icons.email_outlined, color: Colors.white),
                 label: Text(
-                  '发送邮件给开发者',
+                  l10n.sendEmailToDeveloper,
                   style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -149,7 +151,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
             const SizedBox(height: 16),
             Center(
               child: Text(
-                '或者直接发送至: qingeneral@gmail.com',
+                l10n.orSendDirectlyTo,
                 style: context.textTheme.bodyMedium?.copyWith(
                   color: context.textTertiary,
                 ),

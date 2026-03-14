@@ -625,4 +625,121 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get pleaseEnterOrSelectOutfitNeeds => '请输入或选择穿搭需求';
+
+  @override
+  String get continueAction => '继续';
+
+  @override
+  String get onboardingWelcomeTagline => '让我来了解你的风格';
+
+  @override
+  String get onboardingYourNickname => '你的昵称';
+
+  @override
+  String get onboardingNameHint => '输入你的名字';
+
+  @override
+  String get onboardingWhoAreYou => '你的身份是？';
+
+  @override
+  String get onboardingIdentitySubtitle => '帮我更好地了解你的穿衣风格';
+
+  @override
+  String get featureAITitle => 'AI 穿搭推荐';
+
+  @override
+  String get featureAIDesc => '根据实时天气和你的衣橱\n每日自动生成最佳搭配方案';
+
+  @override
+  String get featureWardrobeTitle => '数字衣橱';
+
+  @override
+  String get featureWardrobeDesc => '拍照录入衣物\nAI 自动识别颜色、材质与季节';
+
+  @override
+  String get featureTryOnTitle => '虚拟试穿';
+
+  @override
+  String get featureTryOnDesc => 'AI 生成穿搭效果图\n让搭配结果一目了然';
+
+  @override
+  String get onboardingCapabilities => '你将获得这些能力';
+
+  @override
+  String get onboardingSwipeToLearnMore => '滑动了解更多';
+
+  @override
+  String get onboardingNext => '下一步';
+
+  @override
+  String get onboardingEnablePermissions => '开启必要权限';
+
+  @override
+  String get onboardingPermissionsSubtitle => '以下权限仅用于核心功能，绝不用于其他目的';
+
+  @override
+  String get permissionLocation => '定位权限';
+
+  @override
+  String get permissionLocationDesc => '用于获取实时天气，给你准确的穿搭建议';
+
+  @override
+  String get permissionPhoto => '相册权限';
+
+  @override
+  String get permissionPhotoDesc => '用于上传衣物照片，AI 自动识别衣物属性';
+
+  @override
+  String get permissionSkip => '跳过权限设置';
+
+  @override
+  String get permissionAutoGranted => '使用时自动请求';
+
+  @override
+  String get permissionGrant => '授权';
+
+  @override
+  String get onboardingAddFirstItem => '添加第一件衣物';
+
+  @override
+  String get onboardingAddFirstItemDesc => '拍一张照片，AI 会自动帮你识别\n颜色、材质、季节等属性';
+
+  @override
+  String get onboardingAddNow => '立即添加';
+
+  @override
+  String get onboardingAddLater => '稍后添加';
+
+  @override
+  String get noHistoryYet => '暂无历史记录';
+
+  @override
+  String get confirmDeleteHistory => '确定删除此条历史记录？';
+
+  @override
+  String get noFavoritesYet => '还没有收藏的穿搭';
+
+  @override
+  String get noFavoritesHint => '在推荐中点击❤️收藏喜欢的穿搭';
+
+  @override
+  String get itemRemovedFromWardrobe => '该衣物已从衣橱移除';
+
+  @override
+  String get faq => '常见问题';
+
+  @override
+  String get feedbackSection => '意见反馈';
+
+  @override
+  String get feedbackPrompt => '如果您遇到了问题，或者有任何建议，欢迎告诉我们：';
+
+  @override
+  String get sendEmailToDeveloper => '发送邮件给开发者';
+
+  @override
+  String get orSendDirectlyTo => '或者直接发送至: qingeneral@gmail.com';
+
+  @override
+  String get cannotOpenMailApp => '无法打开邮件应用，请直接发送邮件至 qingeneral@gmail.com';
 }

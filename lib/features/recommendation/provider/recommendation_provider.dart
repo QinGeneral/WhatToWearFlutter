@@ -1,11 +1,13 @@
 import 'dart:math';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:what_to_wear_flutter/models/models.dart';
 import 'package:what_to_wear_flutter/services/ai/ai_outfit_recommender.dart';
-import 'package:what_to_wear_flutter/core/error/app_failure.dart';
+import 'package:what_to_wear_flutter/domain/failures/failures.dart';
 import 'package:what_to_wear_flutter/features/recommendation/repository/recommendation_repository.dart';
 import 'package:what_to_wear_flutter/services/ai/ai_service_provider.dart';
+import 'package:what_to_wear_flutter/services/analytics_service.dart';
 import 'package:what_to_wear_flutter/services/weather_service.dart';
 
 class RecommendationProvider extends ChangeNotifier {
@@ -22,6 +24,8 @@ class RecommendationProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool _isWeatherLoading = false;
   String? _error;
+
+  static const int _maxHistoryCount = 100;
 
   RecommendationProvider(this._repository, this._aiServices);
 
@@ -77,37 +81,35 @@ class RecommendationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ═══════ Public Methods ═══════
+
   Future<void> fetchWeather() async {
     _isWeatherLoading = true;
     notifyListeners();
 
-    try {
-      debugPrint('[RecommendationProvider] Starting weather fetch...');
-      final position = await WeatherService.getCurrentLocation();
-      debugPrint(
-        '[RecommendationProvider] ✅ Got position: (${position.latitude}, ${position.longitude})',
-      );
-      _weather = await WeatherService.getWeather(
-        position.latitude,
-        position.longitude,
-      );
-      debugPrint(
-        '[RecommendationProvider] ✅ Weather fetched: ${_weather?.location}, ${_weather?.temperature}°C',
-      );
-    } catch (e, stackTrace) {
-      debugPrint('[RecommendationProvider] ❌ Weather fetch error: $e');
-      debugPrint('[RecommendationProvider] Stack trace: $stackTrace');
-      // Fallback weather
-      _weather = WeatherInfo(
-        temperature: 22,
-        condition: '晴朗',
-        humidity: 55,
-        icon: '☀️',
-        uvIndex: '中',
-        comfortLevel: '舒适',
-        location: '定位失败',
-      );
-    }
+    final result = await _fetchWeather();
+    result.fold(
+      (failure) {
+        debugPrint(
+          '[RecommendationProvider] ❌ Weather fetch error: ${failure.message}',
+        );
+        _weather = WeatherInfo(
+          temperature: 22,
+          condition: '晴朗',
+          humidity: 55,
+          icon: '☀️',
+          uvIndex: '中',
+          comfortLevel: '舒适',
+          location: '定位失败',
+        );
+      },
+      (weather) {
+        debugPrint(
+          '[RecommendationProvider] ✅ Weather fetched: ${weather.location}, ${weather.temperature}°C',
+        );
+        _weather = weather;
+      },
+    );
 
     _isWeatherLoading = false;
     notifyListeners();
@@ -127,9 +129,239 @@ class RecommendationProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
+    AnalyticsService.onEvent('recommendation_generate', {
+      'type': 'rule',
+      'wardrobe_size': wardrobeItems.length.toString(),
+    });
+    final result = await _generateRuleOutfit(wardrobeItems, context);
+    result.fold(
+      (failure) {
+        _error = failure.message;
+        AnalyticsService.onEvent('recommendation_generate_fail', {'type': 'rule'});
+      },
+      (pair) {
+        _currentRecommendation = pair.$1;
+        _alternativeRecommendations = pair.$2;
+        _history = [pair.$1, ..._history].take(_maxHistoryCount).toList();
+        AnalyticsService.onEvent('recommendation_generate_success', {'type': 'rule'});
+      },
+    );
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> generateAIRecommendation(
+    UserRequest request,
+    List<WardrobeItem> wardrobeItems,
+  ) async {
+    if (wardrobeItems.isEmpty) {
+      _error = '衣橱为空，请先添加衣物';
+      notifyListeners();
+      return;
+    }
+
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    if (_weather == null) {
+      final weatherResult = await _fetchWeather();
+      var earlyExit = false;
+      weatherResult.fold(
+        (failure) {
+          _isLoading = false;
+          _error = '无法获取天气信息，请确保已授予定位权限并检查网络连接。';
+          notifyListeners();
+          earlyExit = true;
+        },
+        (weather) => _weather = weather,
+      );
+      if (earlyExit) return;
+    }
+
+    AnalyticsService.onEvent('recommendation_generate', {
+      'type': 'ai',
+      'activity': request.activity,
+      'wardrobe_size': wardrobeItems.length.toString(),
+    });
+    final result = await _fetchAIRecommendations(request, wardrobeItems);
+    result.fold(
+      (failure) {
+        debugPrint(
+          '[RecommendationProvider] AI Recommendation error: ${failure.message}',
+        );
+        _error = failure.message;
+        AnalyticsService.onEvent('recommendation_generate_fail', {'type': 'ai'});
+      },
+      (recommendations) {
+        _currentRecommendation = recommendations[0];
+        _alternativeRecommendations =
+            recommendations.length > 1 ? recommendations.sublist(1) : [];
+        _history = [recommendations[0], ..._history].take(_maxHistoryCount).toList();
+        AnalyticsService.onEvent('recommendation_generate_success', {'type': 'ai'});
+      },
+    );
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> generateTryOnImage(Recommendation recommendation) async {
+    if (_repository.getDailyUsageCount('generate_outfit') >= 3) {
+      _error = '今日生成穿搭次数已达上限 (3/3)';
+      notifyListeners();
+      return;
+    }
+
+    _isLoading = true;
+    notifyListeners();
+
+    AnalyticsService.onEvent('try_on_start');
+    final result = await _generateTryOn(recommendation);
+    result.fold(
+      (failure) {
+        debugPrint(
+          '[RecommendationProvider] Generate Try-On error: ${failure.message}',
+        );
+        _error = failure.message;
+        AnalyticsService.onEvent('try_on_fail');
+      },
+      (_) {
+        AnalyticsService.onEvent('try_on_success');
+      },
+    );
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> toggleFavorite(Recommendation recommendation) async {
+    final isFav = !recommendation.isFavorite;
+    final updated = recommendation.copyWith(isFavorite: isFav);
+
+    if (isFav) {
+      _favorites = [updated, ..._favorites.where((f) => f.id != updated.id)];
+    } else {
+      _favorites = _favorites.where((f) => f.id != updated.id).toList();
+    }
+
+    if (_currentRecommendation?.id == updated.id) {
+      _currentRecommendation = updated;
+    }
+
+    _history = _history.map((rec) {
+      return rec.id == updated.id ? updated : rec;
+    }).toList();
+
+    _alternativeRecommendations = _alternativeRecommendations.map((rec) {
+      return rec.id == updated.id ? updated : rec;
+    }).toList();
+
+    await _repository.saveFavorites(_favorites);
+    await _repository.saveHistory(_history);
+    if (_currentRecommendation != null) {
+      await _repository.saveCurrentRecommendation(
+        _currentRecommendation!,
+        _alternativeRecommendations,
+      );
+    }
+    AnalyticsService.onEvent(
+      'favorite_toggle',
+      {'is_favorite': isFav.toString()},
+    );
+    notifyListeners();
+  }
+
+  Future<void> deleteHistory(String id) async {
+    _history = _history.where((rec) => rec.id != id).toList();
+    await _repository.saveHistory(_history);
+    AnalyticsService.onEvent('history_delete');
+    notifyListeners();
+  }
+
+  Future<void> clearHistory() async {
+    _history = [];
+    _currentRecommendation = null;
+    _alternativeRecommendations = [];
+    await _repository.saveHistory(_history);
+    AnalyticsService.onEvent('history_clear');
+    notifyListeners();
+  }
+
+  Future<void> deleteRecommendation(String id) async {
+    _favorites = _favorites.where((rec) => rec.id != id).toList();
+    await _repository.saveFavorites(_favorites);
+    notifyListeners();
+  }
+
+  Recommendation? getRecommendationById(String id) {
+    if (_currentRecommendation?.id == id) return _currentRecommendation;
+    return _alternativeRecommendations.where((r) => r.id == id).firstOrNull ??
+        _history.where((r) => r.id == id).firstOrNull ??
+        _favorites.where((r) => r.id == id).firstOrNull;
+  }
+
+  Future<void> updateRecommendationImage(String id, String imageUrl) async {
+    List<Recommendation> updateList(List<Recommendation> list) {
+      return list.map((r) {
+        return r.id == id ? r.copyWith(generatedImage: imageUrl) : r;
+      }).toList();
+    }
+
+    if (_currentRecommendation?.id == id) {
+      _currentRecommendation = _currentRecommendation!.copyWith(
+        generatedImage: imageUrl,
+      );
+    }
+
+    _alternativeRecommendations = updateList(_alternativeRecommendations);
+    _favorites = updateList(_favorites);
+    _history = updateList(_history);
+
+    notifyListeners();
+
+    if (_currentRecommendation != null) {
+      await _repository.saveCurrentRecommendation(
+        _currentRecommendation!,
+        _alternativeRecommendations,
+      );
+    }
+    await _repository.saveFavorites(_favorites);
+    await _repository.saveHistory(_history);
+  }
+
+  // ═══════ Private Either Methods ═══════
+
+  Future<Either<AppFailure, WeatherInfo>> _fetchWeather() async {
     try {
-      final weather =
-          _weather ??
+      debugPrint('[RecommendationProvider] Starting weather fetch...');
+      final position = await WeatherService.getCurrentLocation();
+      debugPrint(
+        '[RecommendationProvider] ✅ Got position: (${position.latitude}, ${position.longitude})',
+      );
+      final weather = await WeatherService.getWeather(
+        position.latitude,
+        position.longitude,
+      );
+      return Right(weather);
+    } on AppFailure catch (f) {
+      return Left(f);
+    } catch (e, stackTrace) {
+      debugPrint('[RecommendationProvider] Stack trace: $stackTrace');
+      return Left(
+        AppFailure.network(message: '无法获取天气信息：$e', originalError: e),
+      );
+    }
+  }
+
+  Future<Either<AppFailure, (Recommendation, List<Recommendation>)>>
+  _generateRuleOutfit(
+    List<WardrobeItem> wardrobeItems,
+    RecommendationContext? context,
+  ) async {
+    try {
+      final weather = _weather ??
           WeatherInfo(
             temperature: 22,
             condition: '晴朗',
@@ -138,34 +370,132 @@ class RecommendationProvider extends ChangeNotifier {
             uvIndex: '中',
             comfortLevel: '舒适',
           );
-
-      // Generate main recommendation
       final mainRec = _createOutfit(wardrobeItems, weather, context: context);
-
-      // Generate 2-3 alternatives
-      final alts = <Recommendation>[];
-      for (int i = 0; i < 3; i++) {
-        alts.add(_createOutfit(wardrobeItems, weather, context: context));
-      }
-
-      _currentRecommendation = mainRec;
-      _alternativeRecommendations = alts;
-
-      // Save to history
-      _history = [mainRec, ..._history];
-
+      final alts = [
+        for (int i = 0; i < 3; i++)
+          _createOutfit(wardrobeItems, weather, context: context),
+      ];
       await _repository.saveCurrentRecommendation(mainRec, alts);
-      await _repository.saveHistory(_history);
+      await _repository.saveHistory([mainRec, ..._history].take(_maxHistoryCount).toList());
+      return Right((mainRec, alts));
+    } on AppFailure catch (f) {
+      return Left(f);
     } catch (e) {
-      if (e is AppFailure) {
-        _error = e.message;
-      } else {
-        _error = '生成推荐失败：$e';
+      return Left(
+        AppFailure.unknown(message: '生成推荐失败：$e', originalError: e),
+      );
+    }
+  }
+
+  Future<Either<AppFailure, List<Recommendation>>> _fetchAIRecommendations(
+    UserRequest request,
+    List<WardrobeItem> wardrobeItems,
+  ) async {
+    try {
+      final prefs = _repository.getPreferences();
+      final lang = prefs?.language ?? 'zh';
+
+      final result = await _aiServices.outfitRecommender.getRecommendation(
+        request: request,
+        wardrobe: wardrobeItems,
+        weather: _weather!,
+        language: lang,
+      );
+
+      if (result.outfits.isEmpty) {
+        return const Left(AppFailure.ai(message: 'AI 未能生成搭配方案'));
       }
+
+      final recommendations = _mapAIResultToRecommendations(
+        result,
+        request,
+        wardrobeItems,
+      );
+      await _repository.saveCurrentRecommendation(
+        recommendations[0],
+        recommendations.length > 1 ? recommendations.sublist(1) : [],
+      );
+      await _repository.saveHistory([recommendations[0], ..._history].take(_maxHistoryCount).toList());
+      return Right(recommendations);
+    } on AppFailure catch (f) {
+      return Left(f);
+    } catch (e) {
+      return Left(
+        AppFailure.ai(
+          message: e is Exception
+              ? e.toString().replaceFirst('Exception: ', '')
+              : '生成搭配方案失败，请稍后重试',
+          originalError: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<AppFailure, Unit>> _generateTryOn(
+    Recommendation recommendation,
+  ) async {
+    try {
+      final prefs = _repository.getPreferences();
+      final lang = prefs?.language ?? 'zh';
+
+      final imageUrl = await _aiServices.imageGenerator.generateOutfitImage(
+        recommendation,
+        language: lang,
+      );
+      await updateRecommendationImage(recommendation.id, imageUrl);
+      await _repository.incrementDailyUsageCount('generate_outfit');
+      return const Right(unit);
+    } on AppFailure catch (f) {
+      return Left(f);
+    } catch (e) {
+      return Left(
+        AppFailure.ai(message: '生成试穿图失败：$e', originalError: e),
+      );
+    }
+  }
+
+  // ═══════ Helpers ═══════
+
+  List<Recommendation> _mapAIResultToRecommendations(
+    AIRecommendationResult result,
+    UserRequest request,
+    List<WardrobeItem> wardrobeItems,
+  ) {
+    WardrobeItem? findItem(String? id) {
+      if (id == null) return null;
+      return wardrobeItems.where((i) => i.id == id).firstOrNull;
     }
 
-    _isLoading = false;
-    notifyListeners();
+    return result.outfits.asMap().entries.map((entry) {
+      final index = entry.key;
+      final outfit = entry.value;
+      return Recommendation(
+        id: '${DateTime.now().millisecondsSinceEpoch}$index',
+        date: DateTime.now().toIso8601String(),
+        weather: _weather!,
+        occasion: _userRequestToOccasion(request.activity),
+        items: RecommendationItems(
+          top: findItem(outfit.topId),
+          bottom: findItem(outfit.bottomId),
+          shoes: findItem(outfit.shoesId),
+          outerwear: findItem(outfit.outerwearId),
+          accessories: outfit.accessoryIds
+              ?.map(findItem)
+              .whereType<WardrobeItem>()
+              .toList(),
+        ),
+        isFavorite: false,
+        matchPercentage: outfit.matchPercentage,
+        reasoning: outfit.reasoning,
+        context: RecommendationContext(
+          date: request.date,
+          location: request.location,
+          activity: request.activity,
+          person: request.person,
+          requirements: request.requirements,
+        ),
+      );
+    }).toList();
   }
 
   Recommendation _createOutfit(
@@ -173,7 +503,6 @@ class RecommendationProvider extends ChangeNotifier {
     WeatherInfo weather, {
     RecommendationContext? context,
   }) {
-    // Filter items by season
     final currentSeason = _getCurrentSeason();
     final seasonItems = items
         .where(
@@ -183,29 +512,26 @@ class RecommendationProvider extends ChangeNotifier {
 
     final availableItems = seasonItems.isNotEmpty ? seasonItems : items;
 
-    // Pick items by category
-    WardrobeItem? top = _pickRandom(
+    final top = _pickRandom(
       availableItems.where((i) => i.category == ClothingCategory.top).toList(),
     );
-    WardrobeItem? bottom = _pickRandom(
+    final bottom = _pickRandom(
       availableItems
           .where((i) => i.category == ClothingCategory.bottom)
           .toList(),
     );
-    WardrobeItem? shoes = _pickRandom(
+    final shoes = _pickRandom(
       availableItems
           .where((i) => i.category == ClothingCategory.shoes)
           .toList(),
     );
-    WardrobeItem? outerwear = weather.temperature < 20
+    final outerwear = weather.temperature < 20
         ? _pickRandom(
             availableItems
                 .where((i) => i.category == ClothingCategory.outerwear)
                 .toList(),
           )
         : null;
-
-    final matchPct = 70 + _random.nextInt(26); // 70-95
 
     final reasonings = [
       '根据今日${weather.condition}天气(${weather.temperature}°C)，为你精选的搭配方案。',
@@ -225,7 +551,7 @@ class RecommendationProvider extends ChangeNotifier {
         outerwear: outerwear,
       ),
       isFavorite: false,
-      matchPercentage: matchPct,
+      matchPercentage: 70 + _random.nextInt(26),
       reasoning: reasonings[_random.nextInt(reasonings.length)],
       context: context,
     );
@@ -244,201 +570,6 @@ class RecommendationProvider extends ChangeNotifier {
     return Season.winter;
   }
 
-  Future<void> toggleFavorite(Recommendation recommendation) async {
-    final isFav = !recommendation.isFavorite;
-    final updated = recommendation.copyWith(isFavorite: isFav);
-
-    // Update favorites list
-    if (isFav) {
-      _favorites = [updated, ..._favorites.where((f) => f.id != updated.id)];
-    } else {
-      _favorites = _favorites.where((f) => f.id != updated.id).toList();
-    }
-
-    // Update current recommendation if it matches
-    if (_currentRecommendation?.id == updated.id) {
-      _currentRecommendation = updated;
-    }
-
-    // Update in history
-    _history = _history.map((rec) {
-      return rec.id == updated.id ? updated : rec;
-    }).toList();
-
-    // Update alternatives
-    _alternativeRecommendations = _alternativeRecommendations.map((rec) {
-      return rec.id == updated.id ? updated : rec;
-    }).toList();
-
-    await _repository.saveFavorites(_favorites);
-    await _repository.saveHistory(_history);
-    if (_currentRecommendation != null) {
-      await _repository.saveCurrentRecommendation(
-        _currentRecommendation!,
-        _alternativeRecommendations,
-      );
-    }
-    notifyListeners();
-  }
-
-  Future<void> deleteHistory(String id) async {
-    _history = _history.where((rec) => rec.id != id).toList();
-    await _repository.saveHistory(_history);
-    notifyListeners();
-  }
-
-  Future<void> clearHistory() async {
-    _history = [];
-    _currentRecommendation = null;
-    _alternativeRecommendations = [];
-    await _repository.saveHistory(_history);
-    notifyListeners();
-  }
-
-  Future<void> deleteRecommendation(String id) async {
-    _favorites = _favorites.where((rec) => rec.id != id).toList();
-    await _repository.saveFavorites(_favorites);
-    notifyListeners();
-  }
-
-  Recommendation? getRecommendationById(String id) {
-    if (_currentRecommendation?.id == id) return _currentRecommendation;
-    try {
-      return _alternativeRecommendations.firstWhere((r) => r.id == id);
-    } catch (e) {
-      debugPrint('Caught error: $e');
-    }
-    try {
-      return _history.firstWhere((r) => r.id == id);
-    } catch (e) {
-      debugPrint('Caught error: $e');
-    }
-    try {
-      return _favorites.firstWhere((r) => r.id == id);
-    } catch (e) {
-      debugPrint('Caught error: $e');
-    }
-    return null;
-  }
-
-  /// Generates AI-powered outfit recommendation using Gemini.
-  Future<void> generateAIRecommendation(
-    UserRequest request,
-    List<WardrobeItem> wardrobeItems,
-  ) async {
-    if (wardrobeItems.isEmpty) {
-      _error = '衣橱为空，请先添加衣物';
-      notifyListeners();
-      return;
-    }
-
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-
-    try {
-      // Ensure weather is available
-      if (_weather == null) {
-        try {
-          final position = await WeatherService.getCurrentLocation();
-          _weather = await WeatherService.getWeather(
-            position.latitude,
-            position.longitude,
-          );
-        } catch (e) {
-          debugPrint('[RecommendationProvider] Weather fetch error: $e');
-          _isLoading = false;
-          _error = '无法获取天气信息，请确保已授予定位权限并检查网络连接。';
-          notifyListeners();
-          return;
-        }
-      }
-
-      // Call AI service via interface
-      final prefs = _repository.getPreferences();
-      final lang = prefs?.language ?? 'zh';
-
-      final result = await _aiServices.outfitRecommender.getRecommendation(
-        request: request,
-        wardrobe: wardrobeItems,
-        weather: _weather!,
-        language: lang,
-      );
-
-      if (result.outfits.isEmpty) {
-        throw Exception('AI 未能生成搭配方案');
-      }
-
-      // Map AI results to Recommendation objects
-      final recommendations = result.outfits.asMap().entries.map((entry) {
-        final index = entry.key;
-        final outfit = entry.value;
-
-        WardrobeItem? findItem(String? id) {
-          if (id == null) return null;
-          try {
-            return wardrobeItems.firstWhere((i) => i.id == id);
-          } catch (_) {
-            return null;
-          }
-        }
-
-        return Recommendation(
-          id: '${DateTime.now().millisecondsSinceEpoch}$index',
-          date: DateTime.now().toIso8601String(),
-          weather: _weather!,
-          occasion: _userRequestToOccasion(request.activity),
-          items: RecommendationItems(
-            top: findItem(outfit.topId),
-            bottom: findItem(outfit.bottomId),
-            shoes: findItem(outfit.shoesId),
-            outerwear: findItem(outfit.outerwearId),
-            accessories: outfit.accessoryIds
-                ?.map((id) => findItem(id))
-                .whereType<WardrobeItem>()
-                .toList(),
-          ),
-          isFavorite: false,
-          matchPercentage: outfit.matchPercentage,
-          reasoning: outfit.reasoning,
-          context: RecommendationContext(
-            date: request.date,
-            location: request.location,
-            activity: request.activity,
-            person: request.person,
-            requirements: request.requirements,
-          ),
-        );
-      }).toList();
-
-      _currentRecommendation = recommendations[0];
-      _alternativeRecommendations = recommendations.length > 1
-          ? recommendations.sublist(1)
-          : [];
-
-      // Save to history
-      _history = [recommendations[0], ..._history];
-
-      await _repository.saveCurrentRecommendation(
-        _currentRecommendation!,
-        _alternativeRecommendations,
-      );
-      await _repository.saveHistory(_history);
-    } catch (e) {
-      debugPrint('[RecommendationProvider] AI Recommendation error: $e');
-      if (e is AppFailure) {
-        _error = e.message;
-      } else {
-        _error = e is Exception
-            ? e.toString().replaceFirst('Exception: ', '')
-            : '生成搭配方案失败，请稍后重试';
-      }
-    }
-
-    _isLoading = false;
-    notifyListeners();
-  }
-
   static Occasion _userRequestToOccasion(String activity) {
     if (activity.contains('上班') ||
         activity.contains('会议') ||
@@ -449,9 +580,7 @@ class RecommendationProvider extends ChangeNotifier {
     if (activity.contains('聚会') || activity.contains('派对')) {
       return Occasion.party;
     }
-    if (activity.contains('约会')) {
-      return Occasion.date;
-    }
+    if (activity.contains('约会')) return Occasion.date;
     if (activity.contains('运动') || activity.contains('健身')) {
       return Occasion.sport;
     }
@@ -461,78 +590,7 @@ class RecommendationProvider extends ChangeNotifier {
     if (activity.contains('旅行') || activity.contains('度假')) {
       return Occasion.travel;
     }
-    if (activity.contains('通勤')) {
-      return Occasion.commute;
-    }
+    if (activity.contains('通勤')) return Occasion.commute;
     return Occasion.casual;
-  }
-
-  Future<void> updateRecommendationImage(String id, String imageUrl) async {
-    // Helper to update a list
-    List<Recommendation> updateList(List<Recommendation> list) {
-      return list.map((r) {
-        return r.id == id ? r.copyWith(generatedImage: imageUrl) : r;
-      }).toList();
-    }
-
-    // Update current if it matches
-    if (_currentRecommendation?.id == id) {
-      _currentRecommendation = _currentRecommendation!.copyWith(
-        generatedImage: imageUrl,
-      );
-    }
-
-    // Update alternatives
-    _alternativeRecommendations = updateList(_alternativeRecommendations);
-
-    // Update favorites
-    _favorites = updateList(_favorites);
-
-    // Update history
-    _history = updateList(_history);
-
-    notifyListeners();
-
-    // Persist to storage
-    if (_currentRecommendation != null) {
-      await _repository.saveCurrentRecommendation(
-        _currentRecommendation!,
-        _alternativeRecommendations,
-      );
-    }
-    await _repository.saveFavorites(_favorites);
-    await _repository.saveHistory(_history);
-  }
-
-  Future<void> generateTryOnImage(Recommendation recommendation) async {
-    if (_repository.getDailyUsageCount('generate_outfit') >= 3) {
-      throw Exception('今日生成穿搭次数已达上限 (3/3)');
-    }
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      final prefs = _repository.getPreferences();
-      final lang = prefs?.language ?? 'zh';
-
-      final imageUrl = await _aiServices.imageGenerator.generateOutfitImage(
-        recommendation,
-        language: lang,
-      );
-      await updateRecommendationImage(recommendation.id, imageUrl);
-      await _repository.incrementDailyUsageCount('generate_outfit');
-    } catch (e) {
-      debugPrint('[RecommendationProvider] Generate Try-On error: $e');
-      if (e is AppFailure) {
-        _error = e.message;
-      } else {
-        _error = '生成试穿图失败：$e';
-      }
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
   }
 }

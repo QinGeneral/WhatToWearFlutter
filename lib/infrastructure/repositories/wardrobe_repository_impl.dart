@@ -2,21 +2,21 @@ import 'package:dartz/dartz.dart';
 import 'package:what_to_wear_flutter/domain/entities/entities.dart';
 import 'package:what_to_wear_flutter/domain/failures/failures.dart';
 import 'package:what_to_wear_flutter/domain/repositories/wardrobe_repository.dart';
-import 'package:what_to_wear_flutter/infrastructure/datasources/local_data_source.dart';
 import 'package:what_to_wear_flutter/infrastructure/datasources/image_data_source.dart';
 import 'package:what_to_wear_flutter/infrastructure/mappers/wardrobe_mapper.dart';
+import 'package:what_to_wear_flutter/services/storage_service.dart';
 
 /// Implementation of WardrobeRepository using Either pattern
 class WardrobeRepositoryImpl implements WardrobeRepository {
-  final LocalDataSource _localDataSource;
+  final StorageService _storageService;
   final ImageDataSource _imageDataSource;
 
-  WardrobeRepositoryImpl(this._localDataSource, this._imageDataSource);
+  WardrobeRepositoryImpl(this._storageService, this._imageDataSource);
 
   @override
   Future<Either<AppFailure, List<WardrobeItemEntity>>> getItems() async {
     try {
-      final data = _localDataSource.getWardrobe();
+      final data = _storageService.getWardrobeRaw();
       final items = data.map(WardrobeMapper.fromJson).toList();
       return Right(items);
     } catch (e) {
@@ -30,7 +30,7 @@ class WardrobeRepositoryImpl implements WardrobeRepository {
   @override
   Future<Either<AppFailure, WardrobeItemEntity>> getItemById(String id) async {
     try {
-      final data = _localDataSource.getWardrobe();
+      final data = _storageService.getWardrobeRaw();
       final item = data.firstWhere(
         (i) => i['id'] == id,
         orElse: () => throw Exception('Item not found'),
@@ -49,9 +49,9 @@ class WardrobeRepositoryImpl implements WardrobeRepository {
     WardrobeItemEntity item,
   ) async {
     try {
-      final data = _localDataSource.getWardrobe();
+      final data = _storageService.getWardrobeRaw();
       data.add(WardrobeMapper.toJson(item));
-      await _localDataSource.setWardrobe(data);
+      await _storageService.setWardrobeRaw(data);
 
       // Save images
       if (item.images.isNotEmpty) {
@@ -78,13 +78,13 @@ class WardrobeRepositoryImpl implements WardrobeRepository {
     WardrobeItemEntity item,
   ) async {
     try {
-      final data = _localDataSource.getWardrobe();
+      final data = _storageService.getWardrobeRaw();
       final index = data.indexWhere((i) => i['id'] == item.id);
       if (index == -1) {
         return const Left(AppFailure.storage(message: 'Item not found'));
       }
       data[index] = WardrobeMapper.toJson(item);
-      await _localDataSource.setWardrobe(data);
+      await _storageService.setWardrobeRaw(data);
       return Right(item);
     } catch (e) {
       return Left(AppFailure.storage(
@@ -97,9 +97,9 @@ class WardrobeRepositoryImpl implements WardrobeRepository {
   @override
   Future<Either<AppFailure, void>> deleteItem(String id) async {
     try {
-      final data = _localDataSource.getWardrobe();
+      final data = _storageService.getWardrobeRaw();
       data.removeWhere((i) => i['id'] == id);
-      await _localDataSource.setWardrobe(data);
+      await _storageService.setWardrobeRaw(data);
       await _imageDataSource.deleteImages(id);
       return const Right(null);
     } catch (e) {

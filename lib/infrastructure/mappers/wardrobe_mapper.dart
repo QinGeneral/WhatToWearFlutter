@@ -60,6 +60,7 @@ class WardrobeMapper {
       brand: json['brand'] as String?,
       purchaseDate: json['purchaseDate'] as String?,
       tags: List<String>.from(json['tags'] ?? []),
+      material: json['material'] as String?,
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String?,
     );
@@ -81,6 +82,7 @@ class WardrobeMapper {
       'brand': entity.brand,
       'purchaseDate': entity.purchaseDate,
       'tags': entity.tags,
+      'material': entity.material,
       'createdAt': entity.createdAt,
       'updatedAt': entity.updatedAt,
     };

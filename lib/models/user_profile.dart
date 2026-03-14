@@ -143,7 +143,8 @@ class UserProfile {
     createdAt: json['createdAt'] as String,
     identity: json['identity'] != null
         ? UserIdentity.values.firstWhere(
-            (i) => i.name == json['identity'],
+            // Support both new English key ('student') and legacy Chinese label ('校园学生')
+            (i) => i.name == json['identity'] || i.displayName == json['identity'],
             orElse: () => UserIdentity.other,
           )
         : null,

@@ -152,7 +152,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                 _InfoRow(label: '昵称', value: pp.profile?.nickname ?? '未设置'),
                 _InfoRow(
                   label: '身份',
-                  value: pp.profile?.identity?.name ?? '未设置',
+                  value: pp.profile?.identity?.displayName ?? '未设置',
                 ),
                 _InfoRow(label: '创建时间', value: pp.profile?.createdAt ?? '未设置'),
               ],

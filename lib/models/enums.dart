@@ -120,7 +120,7 @@ enum UserIdentity {
   artist,
   other;
 
-  String get name {
+  String get displayName {
     switch (this) {
       case student:
         return '校园学生';

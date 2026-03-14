@@ -36,7 +36,7 @@ class AppRouter {
         ShellRoute(
           navigatorKey: shellNavigatorKey,
           builder: (context, state, child) {
-            return MainShell(child: child);
+            return MainShell(location: state.uri.toString(), child: child);
           },
           routes: [
             GoRoute(

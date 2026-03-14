@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import 'package:what_to_wear_flutter/features/wardrobe/repository/wardrobe_repository.dart';
+import 'package:what_to_wear_flutter/infrastructure/datasources/image_data_source.dart';
 import 'package:what_to_wear_flutter/models/models.dart';
+import 'package:what_to_wear_flutter/services/analytics_service.dart';
 import 'package:what_to_wear_flutter/services/storage_service.dart';
 
 class WardrobeProvider extends ChangeNotifier {
   final StorageService _storage;
-  final WardrobeRepository _repository = WardrobeRepository();
+  final _imageDataSource = ImageDataSource();
   final _uuid = const Uuid();
 
   List<WardrobeItem> _items = [];
@@ -61,8 +62,8 @@ class WardrobeProvider extends ChangeNotifier {
     // Hydrate images from file system
     for (int i = 0; i < newItems.length; i++) {
       final item = newItems[i];
-      final images = await _repository.loadImages(item.id);
-      final optimized = await _repository.loadOptimizedImage(item.id);
+      final images = await _imageDataSource.loadImages(item.id);
+      final optimized = await _imageDataSource.loadOptimizedImage(item.id);
       newItems[i] = item.copyWith(
         images: images.isNotEmpty ? images : item.images,
         optimizedImage: optimized,
@@ -82,6 +83,7 @@ class WardrobeProvider extends ChangeNotifier {
     required List<String> color,
     required Season season,
     required List<String> tags,
+    String? material,
     String? brand,
     List<Map<String, String>>? colorPalette,
   }) async {
@@ -100,20 +102,25 @@ class WardrobeProvider extends ChangeNotifier {
       season: season,
       brand: brand,
       tags: tags,
+      material: material,
       createdAt: now,
       updatedAt: now,
     );
 
     // Save images to files
     if (images.isNotEmpty) {
-      await _repository.saveImage(id, images.first);
+      await _imageDataSource.saveImage(id, images.first);
     }
     if (optimizedImage != null) {
-      await _repository.saveOptimizedImage(id, optimizedImage);
+      await _imageDataSource.saveOptimizedImage(id, optimizedImage);
     }
 
     _items = [item, ..._items];
     await _storage.setWardrobe(_items);
+    AnalyticsService.onEvent('wardrobe_add', {
+      'category': category.name,
+      'has_image': images.isNotEmpty.toString(),
+    });
     notifyListeners();
   }
 
@@ -126,6 +133,7 @@ class WardrobeProvider extends ChangeNotifier {
     List<String>? color,
     Season? season,
     List<String>? tags,
+    String? material,
     String? brand,
     List<Map<String, String>>? colorPalette,
   }) async {
@@ -141,26 +149,31 @@ class WardrobeProvider extends ChangeNotifier {
       color: color,
       season: season,
       tags: tags,
+      material: material,
       brand: brand,
       colorPalette: colorPalette,
       updatedAt: DateTime.now().toIso8601String(),
     );
 
     if (images != null && images.isNotEmpty) {
-      await _repository.saveImage(id, images.first);
+      await _imageDataSource.saveImage(id, images.first);
     }
     if (optimizedImage != null) {
-      await _repository.saveOptimizedImage(id, optimizedImage);
+      await _imageDataSource.saveOptimizedImage(id, optimizedImage);
     }
 
     await _storage.setWardrobe(_items);
+    AnalyticsService.onEvent('wardrobe_update', {
+      'category': _items[index].category.name,
+    });
     notifyListeners();
   }
 
   Future<void> deleteItem(String id) async {
     _items = _items.where((item) => item.id != id).toList();
-    await _repository.deleteImages(id);
+    await _imageDataSource.deleteImages(id);
     await _storage.setWardrobe(_items);
+    AnalyticsService.onEvent('wardrobe_delete');
     notifyListeners();
   }
 }

@@ -207,9 +207,13 @@ Setting: Minimalist studio, soft professional lighting, 1k resolution, highly de
         }
       }
 
+      addImageIfPresent(recommendation.items.outerwear?.images.firstOrNull);
       addImageIfPresent(recommendation.items.top?.images.firstOrNull);
       addImageIfPresent(recommendation.items.bottom?.images.firstOrNull);
-      addImageIfPresent(recommendation.items.outerwear?.images.firstOrNull);
+      addImageIfPresent(recommendation.items.shoes?.images.firstOrNull);
+      for (final accessory in recommendation.items.accessories ?? []) {
+        addImageIfPresent(accessory.images.firstOrNull);
+      }
 
       final url = Uri.parse(
         'https://generativelanguage.googleapis.com/v1alpha/models/$_imageGenModel:generateContent?key=$_apiKey',

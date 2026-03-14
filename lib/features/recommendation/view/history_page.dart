@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:what_to_wear_flutter/features/recommendation/provider/recommendation_provider.dart';
+import 'package:what_to_wear_flutter/l10n/app_localizations.dart';
 import 'package:what_to_wear_flutter/theme/app_theme.dart';
 import 'package:what_to_wear_flutter/theme/app_colors.dart';
 import 'package:what_to_wear_flutter/core/router/app_routes.dart';
@@ -29,6 +30,8 @@ class _HistoryPageState extends State<HistoryPage> {
   Widget build(BuildContext context) {
     return Consumer<RecommendationProvider>(
       builder: (context, rp, _) {
+        final l10n = AppLocalizations.of(context)!;
+        final locale = Localizations.localeOf(context).languageCode;
         return Scaffold(
           backgroundColor: context.bgPrimary,
           appBar: AppBar(
@@ -38,7 +41,7 @@ class _HistoryPageState extends State<HistoryPage> {
               onPressed: () => context.pop(),
             ),
             title: Text(
-              '穿搭历史',
+              l10n.outfitHistory,
               style: TextStyle(
                 color: context.textPrimary,
                 fontWeight: FontWeight.bold,
@@ -57,7 +60,7 @@ class _HistoryPageState extends State<HistoryPage> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        '暂无历史记录',
+                        l10n.noHistoryYet,
                         style: context.textTheme.bodyMedium?.copyWith(
                           color: context.textSecondary,
                         ),
@@ -72,7 +75,9 @@ class _HistoryPageState extends State<HistoryPage> {
                     final rec = rp.history[index];
                     final date = DateTime.tryParse(rec.date);
                     final dateStr = date != null
-                        ? DateFormat('MM月dd日 HH:mm').format(date)
+                        ? locale == 'zh'
+                            ? DateFormat('MM月dd日 HH:mm').format(date)
+                            : DateFormat('MMM d, HH:mm').format(date)
                         : rec.date;
 
                     return Dismissible(
@@ -91,18 +96,18 @@ class _HistoryPageState extends State<HistoryPage> {
                         return await showDialog<bool>(
                           context: context,
                           builder: (ctx) => AlertDialog(
-                            title: const Text('确认删除'),
-                            content: const Text('确定删除此条历史记录？'),
+                            title: Text(l10n.confirmDelete),
+                            content: Text(l10n.confirmDeleteHistory),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(ctx, false),
-                                child: const Text('取消'),
+                                child: Text(l10n.cancel),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.pop(ctx, true),
-                                child: const Text(
-                                  '删除',
-                                  style: TextStyle(color: Colors.red),
+                                child: Text(
+                                  l10n.delete,
+                                  style: const TextStyle(color: Colors.red),
                                 ),
                               ),
                             ],
@@ -159,7 +164,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                     Row(
                                       children: [
                                         Text(
-                                          '${rec.matchPercentage ?? 85}% 匹配',
+                                          '${rec.matchPercentage ?? 85}${l10n.matchSuffix}',
                                           style: context.textTheme.labelSmall
                                               ?.copyWith(
                                                 color: AppColors.primaryBlue,

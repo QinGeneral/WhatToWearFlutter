@@ -15,6 +15,7 @@ class WardrobeItem {
   final String? brand;
   final String? purchaseDate;
   final List<String> tags;
+  final String? material;
   final String createdAt;
   final String updatedAt;
 
@@ -32,6 +33,7 @@ class WardrobeItem {
     this.brand,
     this.purchaseDate,
     required this.tags,
+    this.material,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -50,6 +52,7 @@ class WardrobeItem {
     String? brand,
     String? purchaseDate,
     List<String>? tags,
+    String? material,
     String? createdAt,
     String? updatedAt,
   }) {
@@ -67,6 +70,7 @@ class WardrobeItem {
       brand: brand ?? this.brand,
       purchaseDate: purchaseDate ?? this.purchaseDate,
       tags: tags ?? this.tags,
+      material: material ?? this.material,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -86,6 +90,7 @@ class WardrobeItem {
     'brand': brand,
     'purchaseDate': purchaseDate,
     'tags': tags,
+    'material': material,
     'createdAt': createdAt,
     'updatedAt': updatedAt,
   };
@@ -125,7 +130,8 @@ class WardrobeItem {
     brand: json['brand'] as String?,
     purchaseDate: json['purchaseDate'] as String?,
     tags: List<String>.from(json['tags'] ?? []),
+    material: json['material'] as String?,
     createdAt: json['createdAt'] as String,
-    updatedAt: json['updatedAt'] as String,
+    updatedAt: json['updatedAt'] as String? ?? json['createdAt'] as String,
   );
 }

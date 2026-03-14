@@ -630,4 +630,130 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pleaseEnterOrSelectOutfitNeeds =>
       'Please enter or select your outfit needs';
+
+  @override
+  String get continueAction => 'Continue';
+
+  @override
+  String get onboardingWelcomeTagline => 'Let me get to know your style';
+
+  @override
+  String get onboardingYourNickname => 'Your Nickname';
+
+  @override
+  String get onboardingNameHint => 'Enter your name';
+
+  @override
+  String get onboardingWhoAreYou => 'Who are you?';
+
+  @override
+  String get onboardingIdentitySubtitle => 'Help me understand your style better';
+
+  @override
+  String get featureAITitle => 'AI Outfit Recommendations';
+
+  @override
+  String get featureAIDesc =>
+      'Based on real-time weather and your wardrobe\nGenerates the best daily outfit plan';
+
+  @override
+  String get featureWardrobeTitle => 'Digital Wardrobe';
+
+  @override
+  String get featureWardrobeDesc =>
+      'Photograph your items\nAI auto-identifies color, material, and season';
+
+  @override
+  String get featureTryOnTitle => 'Virtual Try-On';
+
+  @override
+  String get featureTryOnDesc =>
+      'AI-generated outfit visuals\nSee your outfit at a glance';
+
+  @override
+  String get onboardingCapabilities => "You'll unlock these abilities";
+
+  @override
+  String get onboardingSwipeToLearnMore => 'Swipe to learn more';
+
+  @override
+  String get onboardingNext => 'Next';
+
+  @override
+  String get onboardingEnablePermissions => 'Enable Necessary Permissions';
+
+  @override
+  String get onboardingPermissionsSubtitle =>
+      'These permissions are used only for core features';
+
+  @override
+  String get permissionLocation => 'Location Permission';
+
+  @override
+  String get permissionLocationDesc =>
+      'Used to get real-time weather for accurate outfit suggestions';
+
+  @override
+  String get permissionPhoto => 'Photo Library Permission';
+
+  @override
+  String get permissionPhotoDesc =>
+      'For uploading clothing photos, AI auto-identifies attributes';
+
+  @override
+  String get permissionSkip => 'Skip Permission Setup';
+
+  @override
+  String get permissionAutoGranted => 'Auto-requested when needed';
+
+  @override
+  String get permissionGrant => 'Grant';
+
+  @override
+  String get onboardingAddFirstItem => 'Add Your First Item';
+
+  @override
+  String get onboardingAddFirstItemDesc =>
+      'Take a photo, AI will automatically identify\ncolors, materials, seasons, and more';
+
+  @override
+  String get onboardingAddNow => 'Add Now';
+
+  @override
+  String get onboardingAddLater => 'Add Later';
+
+  @override
+  String get noHistoryYet => 'No history yet';
+
+  @override
+  String get confirmDeleteHistory => 'Delete this history record?';
+
+  @override
+  String get noFavoritesYet => 'No favorites yet';
+
+  @override
+  String get noFavoritesHint => 'Tap ❤️ on a recommendation to save an outfit';
+
+  @override
+  String get itemRemovedFromWardrobe => 'This item has been removed from wardrobe';
+
+  @override
+  String get faq => 'FAQ';
+
+  @override
+  String get feedbackSection => 'Feedback';
+
+  @override
+  String get feedbackPrompt =>
+      'If you have any issues or suggestions, please let us know:';
+
+  @override
+  String get sendEmailToDeveloper => 'Send Email to Developer';
+
+  @override
+  String get orSendDirectlyTo => 'Or send directly to: qingeneral@gmail.com';
+
+  @override
+  String get cannotOpenMailApp =>
+      'Cannot open mail app, please send email to qingeneral@gmail.com';
 }

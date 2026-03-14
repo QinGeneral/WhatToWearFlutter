@@ -35,6 +35,18 @@ class StorageService {
     await _prefs.setString(_wardrobeKey, jsonEncode(lean));
   }
 
+  /// Raw JSON access for domain layer (WardrobeRepositoryImpl).
+  List<Map<String, dynamic>> getWardrobeRaw() {
+    final data = _prefs.getString(_wardrobeKey);
+    if (data == null) return [];
+    final list = jsonDecode(data) as List;
+    return list.cast<Map<String, dynamic>>();
+  }
+
+  Future<void> setWardrobeRaw(List<Map<String, dynamic>> items) async {
+    await _prefs.setString(_wardrobeKey, jsonEncode(items));
+  }
+
   // ═══════ Profile ═══════
   UserProfile? getProfile() {
     final data = _prefs.getString(_profileKey);
